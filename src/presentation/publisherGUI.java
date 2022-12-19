@@ -1,17 +1,25 @@
-package src.view;
+package presentation;
+
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+
+import business.PublisherBU;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -22,10 +30,12 @@ import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollBar;
+import pojo.PublisherPojo;
 
-public class publisher extends JFrame {
+public class publisherGUI extends JFrame {
 
     private JPanel contentPane;
     private JTextField searchIDInput;
@@ -43,7 +53,7 @@ public class publisher extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    publisher frame = new publisher();
+                    publisherGUI frame = new publisherGUI();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -52,10 +62,82 @@ public class publisher extends JFrame {
         });
     }
 
+    public void closeFrame(){
+      this.setVisible(false);
+      this.dispose();
+    }
+
+    public void showPublisher(){
+      DefaultTableModel model = (DefaultTableModel) listPublisherTable.getModel();
+      model.setRowCount(0);
+      model.fireTableDataChanged();
+      ArrayList<PublisherPojo> listPublisher = new ArrayList<>();
+      PublisherBU publisherBU = new PublisherBU();
+      listPublisher = publisherBU.getAllPublisher();
+      for (PublisherPojo publisherPojo : listPublisher) {
+          String id = publisherPojo.getId();
+          String name = publisherPojo.getName();
+          String address = publisherPojo.getAddress();
+          String phone = publisherPojo.getPhone();
+          boolean disable = publisherPojo.isDisable();
+          String disableText;
+          if(disable){
+              disableText = "1";
+          }else{
+              disableText="0";
+          }
+          String[] row = {id, name, address, phone,disableText};
+          model.addRow(row);
+      }
+    }
+
+    public void showPublisherSearch(String _id, String _name){
+      DefaultTableModel model = (DefaultTableModel) listPublisherTable.getModel();
+      model.setRowCount(0);
+      model.fireTableDataChanged();
+      ArrayList<PublisherPojo> listPublisher = new ArrayList<>();
+      PublisherBU publisherBU = new PublisherBU();
+      listPublisher = publisherBU.getPublisherBySearch(_id, _name);
+      for (PublisherPojo publisherPojo : listPublisher) {
+          String id = publisherPojo.getId();
+          String name = publisherPojo.getName();
+          String address = publisherPojo.getAddress();
+          String phone = publisherPojo.getPhone();
+          boolean disable = publisherPojo.isDisable();
+          String disableText;
+          if(disable){
+              disableText = "1";
+          }else{
+              disableText="0";
+          }
+          String[] row = {id, name, address, phone,disableText};
+          model.addRow(row);
+      }
+    }
+
+    public PublisherPojo getPublisherSelected(){
+      DefaultTableModel model = (DefaultTableModel) listPublisherTable.getModel();
+      int i_row = listPublisherTable.getSelectedRow();
+      String id = (String) model.getValueAt(i_row, 0);
+      String name = (String) model.getValueAt(i_row, 1);
+      String address = (String) model.getValueAt(i_row, 2);
+      String phone = (String)model.getValueAt(i_row, 3);
+      PublisherPojo publisher = new PublisherPojo(id, name, address, phone);
+      return publisher;
+    }
+
+    public void showPublisherSelected(java.awt.event.MouseEvent evt){
+      PublisherPojo publisher = getPublisherSelected();
+      this.manageIDInput.setText(publisher.getId());
+      this.manageNameInput.setText(publisher.getName());
+      this.manageAddressInput.setText(publisher.getAddress());
+      this.managePhoneInput.setText(publisher.getPhone());
+    }
+
     /**
      * Create the frame.
      */
-    public publisher() {
+    public publisherGUI() {
         setResizable(false);
         setTitle("Bookstore Management - Employee");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,7 +179,16 @@ public class publisher extends JFrame {
         contentPane.add(sidebarPane);
         sidebarPane.setLayout(null);
 
-        JButton publisherManageBtn = new JButton("Publisher Management");
+        JButton publisherManageBtn = new JButton("Display publisher");
+        publisherManageBtn.addActionListener(new ActionListener(){
+
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            // TODO Auto-generated method stub
+            showPublisher();
+          }
+          
+        });
         publisherManageBtn.setBounds(0, 61, 173, 41);
         sidebarPane.add(publisherManageBtn);
 
@@ -140,6 +231,17 @@ public class publisher extends JFrame {
         searchNameInput.setColumns(10);
 
         JButton searchBtn = new JButton("Search");
+        searchBtn.addActionListener(new ActionListener(){
+
+          @Override
+          public void actionPerformed(ActionEvent e) {
+              // TODO Auto-generated method stub
+              String IdFind = searchIDInput.getText();
+              String nameFind = searchNameInput.getText();
+              showPublisherSearch(IdFind, nameFind);
+          }
+          
+      });
         searchBtn.setBounds(613, 5, 87, 21);
         searchControlPane.add(searchBtn);
 
@@ -169,9 +271,27 @@ public class publisher extends JFrame {
         managePublisherPane.add(listPublisherPane);
 
 
-        String[] columnNames = {"ID","Name","Address","Phone"};
-        String[][] data = {{"NXB01","Lebron James","Los Angles Laker","1922302"},{"NXB02","Stephen Curry","Golden State Warrior","1922302"},{"NXB03","Kevin Durant","Brooklyn Nets","1922302"}};
-        listPublisherTable = new JTable(data, columnNames);
+        String[] columnNames = {"ID","Name","Address","Phone", "Disable"};
+        listPublisherTable = new JTable(){
+          @Override
+          public java.awt.Component prepareRenderer(TableCellRenderer renderer, int row, int col) {
+              java.awt.Component comp = super.prepareRenderer(renderer, row, col);
+              Object value = getModel().getValueAt(row, 4);
+              if (value.equals("1")) {
+                  comp.setBackground(Color.RED);
+              }  else {
+                  comp.setBackground(Color.WHITE);
+              }
+              return comp;
+          }
+        };
+        listPublisherTable.setModel(new DefaultTableModel(new Object[][] {},columnNames));
+        listPublisherTable.setAutoCreateRowSorter(true);
+        listPublisherTable.addMouseListener(new java.awt.event.MouseAdapter() {
+          public void mouseClicked(java.awt.event.MouseEvent evt) {
+              showPublisherSelected(evt);
+          }
+      });
         listPublisherPane.setViewportView(listPublisherTable);
 
         JScrollBar scrollBar = new JScrollBar();
@@ -225,28 +345,109 @@ public class publisher extends JFrame {
         JButton manageAddBtn = new JButton("Add");
         manageAddBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+              String id = manageIDInput.getText();
+                String name = manageNameInput.getText();
+                String address = manageAddressInput.getText();
+                String phone = managePhoneInput.getText();
+
+                PublisherPojo publisher = new PublisherPojo(id,name,address,phone);
+                PublisherBU publisherBU = new PublisherBU();
+                boolean res = publisherBU.addPublisher(publisher);
+                if(res){
+                    System.out.println("Add publisher successfully");
+                    JOptionPane.showMessageDialog(contentPane, "Add publisher successfully");
+                    DefaultTableModel model = (DefaultTableModel) listPublisherTable.getModel();
+                    model.setRowCount(0);
+                    showPublisher();
+                }else{
+                    JOptionPane.showMessageDialog(contentPane, "Add publisher failed");
+                }
             }
         });
         manageAddBtn.setBounds(17, 151, 93, 39);
         manageControlPane.add(manageAddBtn);
 
         JButton manageUpdateBtn = new JButton("Update");
+        manageUpdateBtn.addActionListener(new ActionListener(){
+
+          @Override
+          public void actionPerformed(ActionEvent e) {
+              // TODO Auto-generated method stub
+              String id = manageIDInput.getText();
+              String name = manageNameInput.getText();
+              String address = manageAddressInput.getText();
+              String phone = managePhoneInput.getText();
+              PublisherPojo publisher = new PublisherPojo(id, name, address, phone);
+              PublisherBU publisherBU = new PublisherBU();
+              boolean res =  publisherBU.updatePublisher(publisher);
+              DefaultTableModel model = (DefaultTableModel) listPublisherTable.getModel();
+              model.setRowCount(0);
+              showPublisher();
+              if(res){
+                  JOptionPane.showMessageDialog(null, "Update publisher successfully");
+              }else{
+                  JOptionPane.showMessageDialog(null, "Update publisher failed");
+              }
+          }
+      });
         manageUpdateBtn.setBounds(131, 151, 93, 39);
         manageControlPane.add(manageUpdateBtn);
 
-        JButton manageDelBtn = new JButton("Delete");
-        manageDelBtn.setBounds(253, 151, 93, 39);
-        manageControlPane.add(manageDelBtn);
-
         JButton manageEnableBtn = new JButton("Enable");
+        manageEnableBtn.addActionListener(new ActionListener(){
+
+          @Override
+          public void actionPerformed(ActionEvent e) {
+              // TODO Auto-generated method stub
+
+              PublisherPojo publisher = getPublisherSelected();
+              PublisherBU publisherBU = new PublisherBU();
+              boolean res = publisherBU.enablePublisher(publisher);
+              showPublisher(); 
+              if(res){
+                  JOptionPane.showMessageDialog(null, "Enable successfully");
+              }else{
+                  JOptionPane.showMessageDialog(null, "Error");
+              }
+                
+          }
+
+      });
+
         manageEnableBtn.setBounds(387, 151, 85, 39);
         manageControlPane.add(manageEnableBtn);
 
         JButton manageDisableBtn = new JButton("Disable");
+        manageDisableBtn.addActionListener(new ActionListener(){
+
+          @Override
+          public void actionPerformed(ActionEvent e) {
+              // TODO Auto-generated method stub
+              PublisherPojo publisher = getPublisherSelected();
+              PublisherBU publisherBU = new PublisherBU();
+              boolean res = publisherBU.disablePublisher(publisher);
+              showPublisher();
+              if(res){
+                  JOptionPane.showMessageDialog(null, "Disable successfully");
+              }else{
+                  JOptionPane.showMessageDialog(null, "Error");
+              }
+          }
+      });
         manageDisableBtn.setBounds(513, 151, 85, 39);
         manageControlPane.add(manageDisableBtn);
 
         JButton manageCancelBtn = new JButton("Cancel");
+        manageCancelBtn.addActionListener(new ActionListener(){
+
+          @Override
+          public void actionPerformed(ActionEvent e) {
+              // TODO Auto-generated method stub
+              closeFrame();
+              
+          }
+          
+      });
         manageCancelBtn.setBounds(628, 151, 93, 39);
         manageControlPane.add(manageCancelBtn);
 
@@ -259,4 +460,5 @@ public class publisher extends JFrame {
         managePublisherPane.add(manageLabel);
     }
 }
+
 
