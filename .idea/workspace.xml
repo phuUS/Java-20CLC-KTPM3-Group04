@@ -2,17 +2,31 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4e409101-b9b5-47be-8c5b-e6ac23aff927" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Java-20CLC-KTPM3-Group04.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mysql-connector-j-8.0.31.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/BUS/UserBUS.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/DAO/UserDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/GUI/UserManagement.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/POJO/UserPOJO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/BUS/BookBUS.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/BUS/BookBUS.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/BookDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/BookDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/Database.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/Database.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/POJO/BookPOJO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/POJO/BookPOJO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -21,24 +35,38 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2IuW8oHoG3TMKbQuhmjgAs1vMu2" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "E:/OneDrive/Documents/GitHub/Java-20CLC-KTPM3-Group04/mysql-connector-j-8.0.31.jar",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/OneDrive/Documents/GitHub/Java-20CLC-KTPM3-Group04/mysql-connector-j-8.0.31.jar&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
-}]]></component>
+}</component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="Java-20CLC-KTPM3-Group04" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -49,6 +77,17 @@
       <updated>1671031794891</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
