@@ -1,9 +1,9 @@
 package src;
 
-import src.view.author;
+import src.presentation.AuthorGUI;
 
 public class main {
     public static void main(String[] args) {
-        author.main(args);
+        AuthorGUI.main(args);
     }
 }
