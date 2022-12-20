@@ -1,4 +1,4 @@
-package src.presentation;
+package GUI;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -9,8 +9,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import src.business.AuthorBU;
-import src.pojo.AuthorPojo;
+import BUS.AuthorBUS;
+import POJO.AuthorPOJO;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -67,10 +67,10 @@ public class AuthorGUI extends JFrame {
         DefaultTableModel model = (DefaultTableModel) listAuthorTable.getModel();
         model.setRowCount(0);
         model.fireTableDataChanged();
-        ArrayList<AuthorPojo> listAuthor = new ArrayList<>();
-        AuthorBU authorBU = new AuthorBU();
+        ArrayList<AuthorPOJO> listAuthor = new ArrayList<>();
+        AuthorBUS authorBU = new AuthorBUS();
         listAuthor = authorBU.getAllAuthor();
-        for (AuthorPojo authorPojo : listAuthor) {
+        for (AuthorPOJO authorPojo : listAuthor) {
             String id = authorPojo.getId();
             String name = authorPojo.getName();
             String address = authorPojo.getAddress();
@@ -93,39 +93,44 @@ public class AuthorGUI extends JFrame {
         DefaultTableModel model = (DefaultTableModel) listAuthorTable.getModel();
         model.setRowCount(0);
         model.fireTableDataChanged();
-        ArrayList<AuthorPojo> listAuthor = new ArrayList<>();
-        AuthorBU authorBU = new AuthorBU();
+        ArrayList<AuthorPOJO> listAuthor = new ArrayList<>();
+        AuthorBUS authorBU = new AuthorBUS();
         listAuthor = authorBU.getAuthorBySearch(_id, _name);
-        for (AuthorPojo authorPojo : listAuthor) {
-            String id = authorPojo.getId();
-            String name = authorPojo.getName();
-            String address = authorPojo.getAddress();
-            String phone = authorPojo.getPhone();
-            boolean disable = authorPojo.isDisable();
-            String disableText;
-            if(disable){
-                disableText = "1";
-            }else{
-                disableText="0";
+        if(listAuthor == null || listAuthor.size()==0){
+            JOptionPane.showMessageDialog(null, "Author not found");
+        }else{
+
+            for (AuthorPOJO authorPojo : listAuthor) {
+                String id = authorPojo.getId();
+                String name = authorPojo.getName();
+                String address = authorPojo.getAddress();
+                String phone = authorPojo.getPhone();
+                boolean disable = authorPojo.isDisable();
+                String disableText;
+                if(disable){
+                    disableText = "1";
+                }else{
+                    disableText="0";
+                }
+                String[] row = {id, name, address, phone,disableText};
+                model.addRow(row);
             }
-            String[] row = {id, name, address, phone,disableText};
-            model.addRow(row);
         }
     }
 
-    public AuthorPojo getAuthorSelected(){
+    public AuthorPOJO getAuthorSelected(){
         DefaultTableModel model = (DefaultTableModel) listAuthorTable.getModel();
         int i_row = listAuthorTable.getSelectedRow();
         String id = (String) model.getValueAt(i_row, 0);
         String name = (String) model.getValueAt(i_row, 1);
         String address = (String) model.getValueAt(i_row, 2);
         String phone = (String)model.getValueAt(i_row, 3);
-        AuthorPojo author = new AuthorPojo(id, name, address, phone);
+        AuthorPOJO author = new AuthorPOJO(id, name, address, phone);
         return author;
     }
 
     public void showAuthorSelected(java.awt.event.MouseEvent evt){
-        AuthorPojo author = getAuthorSelected();
+        AuthorPOJO author = getAuthorSelected();
         this.manageIDInput.setText(author.getId());
         this.manageNameInput.setText(author.getName());
         this.manageAddressInput.setText(author.getAddress());
@@ -356,8 +361,8 @@ public class AuthorGUI extends JFrame {
                 String address = manageAddressInput.getText();
                 String phone = managePhoneInput.getText();
 
-                AuthorPojo author = new AuthorPojo(id,name,address,phone);
-                AuthorBU authorBU = new AuthorBU();
+                AuthorPOJO author = new AuthorPOJO(id,name,address,phone);
+                AuthorBUS authorBU = new AuthorBUS();
                 boolean res = authorBU.addAuthor(author);
                 if(res){
                     System.out.println("Add author successfully");
@@ -383,8 +388,8 @@ public class AuthorGUI extends JFrame {
                 String name = manageNameInput.getText();
                 String address = manageAddressInput.getText();
                 String phone = managePhoneInput.getText();
-                AuthorPojo author = new AuthorPojo(id, name, address, phone);
-                AuthorBU authorBU = new AuthorBU();
+                AuthorPOJO author = new AuthorPOJO(id, name, address, phone);
+                AuthorBUS authorBU = new AuthorBUS();
                 boolean res =  authorBU.updateAuthor(author);
                 DefaultTableModel model = (DefaultTableModel) listAuthorTable.getModel();
                 model.setRowCount(0);
@@ -411,8 +416,8 @@ public class AuthorGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
 
-                AuthorPojo author = getAuthorSelected();
-                AuthorBU authorBU = new AuthorBU();
+                AuthorPOJO author = getAuthorSelected();
+                AuthorBUS authorBU = new AuthorBUS();
                 boolean res = authorBU.enableAuthor(author);
                 showAuthor(); 
                 if(res){
@@ -434,8 +439,8 @@ public class AuthorGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                AuthorPojo author = getAuthorSelected();
-                AuthorBU authorBU = new AuthorBU();
+                AuthorPOJO author = getAuthorSelected();
+                AuthorBUS authorBU = new AuthorBUS();
                 boolean res = authorBU.disableAuthor(author);
                 showAuthor();
                 if(res){

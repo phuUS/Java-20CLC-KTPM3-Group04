@@ -1,4 +1,4 @@
-package src.dataaccess;
+package DAO;
 
 
 import java.sql.Connection;
@@ -8,14 +8,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import src.pojo.AuthorPojo;
+import POJO.AuthorPOJO;
 
-public class AuthorDA {
-	public ArrayList<AuthorPojo> getAllAuthor (){
-		ArrayList<AuthorPojo> result = null ;
+public class AuthorDAO {
+	public ArrayList<AuthorPOJO> getAllAuthor (){
+		ArrayList<AuthorPOJO> result = null ;
 		try {
-			result = new ArrayList<AuthorPojo>();
-			Connection conn = MyConnection.create();
+			result = new ArrayList<AuthorPOJO>();
+			Connection conn = Database.createConnection();
 			Statement statement = conn.createStatement();
 			String query = "SELECT * FROM author";
 			ResultSet rs = statement.executeQuery(query);
@@ -26,7 +26,7 @@ public class AuthorDA {
 				String phone = rs.getString("phone");
         Boolean disable = rs.getBoolean("is_disable");
 				
-				AuthorPojo author = new AuthorPojo(id,name,address,phone,disable);
+				AuthorPOJO author = new AuthorPOJO(id,name,address,phone,disable);
 				result.add(author);
 			}
 			rs.close();
@@ -39,12 +39,12 @@ public class AuthorDA {
 		return result;
 	}
 
-  public boolean addAuthor(AuthorPojo author){
+  public boolean addAuthor(AuthorPOJO author){
     boolean ans = true;
     Connection conn = null;
     
     try {
-      conn = MyConnection.create();
+      conn = Database.createConnection();
       String query = "INSERT INTO author(id, name, address, phone) VALUES (?,?,?,?)";
       PreparedStatement prst = conn.prepareStatement(query);
       prst.setString(1, author.getId());
@@ -74,11 +74,11 @@ public class AuthorDA {
     return ans;
   }
 
-  public boolean updateAuthor(AuthorPojo author){
+  public boolean updateAuthor(AuthorPOJO author){
     boolean res = true;
     Connection conn = null;
     try {
-      conn = MyConnection.create();
+      conn = Database.createConnection();
       String query = "UPDATE author SET author.name = ?, author.address = ?, author.phone = ? WHERE author.id = ?";
       PreparedStatement prst = conn.prepareStatement(query);
       prst.setString(1, author.getName());
@@ -108,12 +108,12 @@ public class AuthorDA {
     return res;
   }
 
-  public ArrayList<AuthorPojo> getAuthorBySearch(String id, String name){
+  public ArrayList<AuthorPOJO> getAuthorBySearch(String id, String name){
     Connection conn = null;
-    ArrayList<AuthorPojo> listAuthor = null;
+    ArrayList<AuthorPOJO> listAuthor = null;
     try {
-      listAuthor = new ArrayList<AuthorPojo>();
-      conn = MyConnection.create();
+      listAuthor = new ArrayList<AuthorPOJO>();
+      conn = Database.createConnection();
       String query;
       if(!id.equals("") && name.equals("")){
         query = "SELECT * FROM author WHERE author.id = ?";
@@ -140,7 +140,7 @@ public class AuthorDA {
         String address = res.getString("address");
         String phone = res.getString("phone");
         Boolean disable = res.getBoolean("is_disable");
-        AuthorPojo author = new AuthorPojo(_id, _name, address, phone, disable);
+        AuthorPOJO author = new AuthorPOJO(_id, _name, address, phone, disable);
         listAuthor.add(author);
       }
 
@@ -163,12 +163,12 @@ public class AuthorDA {
     return listAuthor;
   }
 
-  public boolean enableAuthor(AuthorPojo author){
+  public boolean enableAuthor(AuthorPOJO author){
     boolean ans = true;
     Connection conn = null;
 
     try {
-      conn = MyConnection.create();
+      conn = Database.createConnection();
       String query = "UPDATE author SET author.name = ?, author.address = ?, author.phone = ?, author.is_disable = false WHERE author.id = ?";
       PreparedStatement prst = conn.prepareStatement(query);
       prst.setString(1, author.getName());
@@ -197,12 +197,12 @@ public class AuthorDA {
     return ans;
   }
 
-  public boolean disableAuthor(AuthorPojo author){
+  public boolean disableAuthor(AuthorPOJO author){
     boolean ans = true;
     Connection conn = null;
 
     try {
-      conn = MyConnection.create();
+      conn = Database.createConnection();
       String query = "UPDATE author SET author.name = ?, author.address = ?, author.phone = ?, author.is_disable = true WHERE author.id = ?";
       PreparedStatement prst = conn.prepareStatement(query);
       prst.setString(1, author.getName());

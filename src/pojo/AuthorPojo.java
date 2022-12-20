@@ -1,5 +1,5 @@
-package src.pojo;
-public class AuthorPojo {
+package POJO;
+public class AuthorPOJO {
 	private String id;
 	private String name;
 	private String address;
@@ -8,21 +8,21 @@ public class AuthorPojo {
 	
 	
 	
-	public AuthorPojo() {
+	public AuthorPOJO() {
 		
 	}
 
 
 
 
-  public AuthorPojo(String id, String name, String address, String phone) {
+  public AuthorPOJO(String id, String name, String address, String phone) {
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.phone = phone;
 	}
 
-  public AuthorPojo(String id, String name, String address, String phone, boolean disable) {
+  public AuthorPOJO(String id, String name, String address, String phone, boolean disable) {
 		this.id = id;
 		this.name = name;
 		this.address = address;
