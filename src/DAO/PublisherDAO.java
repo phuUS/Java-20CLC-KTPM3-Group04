@@ -1,4 +1,4 @@
-package dataaccess;
+package DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,16 +7,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import pojo.PublisherPojo;
+import POJO.PublisherPOJO;
 
 
 
-public class PublisherDA {
-	public ArrayList<PublisherPojo> getAllPublisher (){
-		ArrayList<PublisherPojo> result = null ;
+public class PublisherDAO {
+	public ArrayList<PublisherPOJO> getAllPublisher (){
+		ArrayList<PublisherPOJO> result = null ;
 		try {
-			result = new ArrayList<PublisherPojo>();
-			Connection conn = MyConnection.create();
+			result = new ArrayList<PublisherPOJO>();
+			Connection conn = Database.createConnection();
 			Statement statement = conn.createStatement();
 			String query = "SELECT * FROM publisher";
 			ResultSet rs = statement.executeQuery(query);
@@ -27,7 +27,7 @@ public class PublisherDA {
 				String phone = rs.getString("phone");
         Boolean disable = rs.getBoolean("is_disable");
 				
-				PublisherPojo publisher = new PublisherPojo(id,name,address,phone,disable);
+				PublisherPOJO publisher = new PublisherPOJO(id,name,address,phone,disable);
 				result.add(publisher);
 			}
 			rs.close();
@@ -40,12 +40,12 @@ public class PublisherDA {
 		return result;
 	}
 
-  public boolean addPublisher(PublisherPojo publisher){
+  public boolean addPublisher(PublisherPOJO publisher){
     boolean ans = true;
     Connection conn = null;
     
     try {
-      conn = MyConnection.create();
+      conn = Database.createConnection();
       String query = "INSERT INTO publisher(id, name, address, phone) VALUES (?,?,?,?)";
       PreparedStatement prst = conn.prepareStatement(query);
       prst.setString(1, publisher.getId());
@@ -75,11 +75,11 @@ public class PublisherDA {
     return ans;
   }
 
-  public boolean updatePublisher(PublisherPojo publisher){
+  public boolean updatePublisher(PublisherPOJO publisher){
     boolean res = true;
     Connection conn = null;
     try {
-      conn = MyConnection.create();
+      conn = Database.createConnection();
       String query = "UPDATE publisher SET publisher.name = ?, publisher.address = ?, publisher.phone = ? WHERE publisher.id = ?";
       PreparedStatement prst = conn.prepareStatement(query);
       prst.setString(1, publisher.getName());
@@ -108,12 +108,12 @@ public class PublisherDA {
     return res;
   }
 
-  public ArrayList<PublisherPojo> getPublisherBySearch(String id, String name){
+  public ArrayList<PublisherPOJO> getPublisherBySearch(String id, String name){
     Connection conn = null;
-    ArrayList<PublisherPojo> listPublisher = null;
+    ArrayList<PublisherPOJO> listPublisher = null;
     try {
-      listPublisher = new ArrayList<PublisherPojo>();
-      conn = MyConnection.create();
+      listPublisher = new ArrayList<PublisherPOJO>();
+      conn = Database.createConnection();
       String query;
       if(!id.equals("") && name.equals("")){
         query = "SELECT * FROM publisher WHERE publisher.id = ?";
@@ -140,7 +140,7 @@ public class PublisherDA {
         String address = res.getString("address");
         String phone = res.getString("phone");
         Boolean disable = res.getBoolean("is_disable");
-        PublisherPojo publisher = new PublisherPojo(_id, _name, address, phone, disable);
+        PublisherPOJO publisher = new PublisherPOJO(_id, _name, address, phone, disable);
         listPublisher.add(publisher);
       }
 
@@ -163,12 +163,12 @@ public class PublisherDA {
     return listPublisher;
   }
 
-  public boolean enablePublisher(PublisherPojo publisher){
+  public boolean enablePublisher(PublisherPOJO publisher){
     boolean ans = true;
     Connection conn = null;
 
     try {
-      conn = MyConnection.create();
+      conn = Database.createConnection();
       String query = "UPDATE publisher SET publisher.name = ?, publisher.address = ?, publisher.phone = ?, publisher.is_disable = false WHERE publisher.id = ?";
       PreparedStatement prst = conn.prepareStatement(query);
       prst.setString(1, publisher.getName());
@@ -197,12 +197,12 @@ public class PublisherDA {
     return ans;
   }
 
-  public boolean disablePublisher(PublisherPojo publisher){
+  public boolean disablePublisher(PublisherPOJO publisher){
     boolean ans = true;
     Connection conn = null;
 
     try {
-      conn = MyConnection.create();
+      conn = Database.createConnection();
       String query = "UPDATE publisher SET publisher.name = ?, publisher.address = ?, publisher.phone = ?, publisher.is_disable = true WHERE publisher.id = ?";
       PreparedStatement prst = conn.prepareStatement(query);
       prst.setString(1, publisher.getName());
@@ -229,8 +229,6 @@ public class PublisherDA {
       }
     }
     return ans;
-
   }
-
 }
 

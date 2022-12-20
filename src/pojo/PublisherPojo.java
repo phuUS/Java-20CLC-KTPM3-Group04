@@ -1,6 +1,6 @@
-package pojo;
+package POJO;
 
-public class PublisherPojo {
+public class PublisherPOJO {
   private String id;
   private String name;
   private String address;
@@ -9,11 +9,11 @@ public class PublisherPojo {
 
   
 
-  public PublisherPojo() {
+  public PublisherPOJO() {
   }
 
   
-  public PublisherPojo(String id, String name, String address, String phone) {
+  public PublisherPOJO(String id, String name, String address, String phone) {
     this.id = id;
     this.name = name;
     this.address = address;
@@ -22,7 +22,7 @@ public class PublisherPojo {
 
   
 
-  public PublisherPojo(String id, String name, String address, String phone, boolean disable) {
+  public PublisherPOJO(String id, String name, String address, String phone, boolean disable) {
     this.id = id;
     this.name = name;
     this.address = address;
