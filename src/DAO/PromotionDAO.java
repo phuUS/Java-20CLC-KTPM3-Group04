@@ -1,32 +1,37 @@
 package DAO;
 
 import POJO.BookPOJO;
+import POJO.PromotionPOJO;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class BookDAO {
-    public static ArrayList<BookPOJO> getAll(){
-        ArrayList<BookPOJO> result = null;
+public class PromotionDAO {
+    public static ArrayList<PromotionPOJO> getAll(){
+        ArrayList<PromotionPOJO> result = null;
         Connection connection = Database.createConnection();
         try {
             result = new ArrayList<>();
             Statement statement;
             statement = connection.createStatement();
-            String query = "SELECT * FROM book";
+            String query = "SELECT * FROM promotion";
             ResultSet rs = statement.executeQuery(query);
             while(rs.next()){
                 String id = rs.getString("id");
                 String name = rs.getString("name");
-                String id_publisher = rs.getString("id_publisher");
-                int price = rs.getInt("price");
-                int stock = rs.getInt("stock");
-                int totalPurchase = rs.getInt("total_purchase");
+                String description = rs.getString("description");
+                Date startDate = rs.getDate("start_date");
+                Date endDate = rs.getDate("end_date");
+                Double percent = rs.getDouble("percent");
+                String applyOption = rs.getString("apply_option");
+                Integer limitOrders = rs.getInt("limit_orders");
                 Boolean enabled = rs.getBoolean("enabled");
-                BookPOJO book = new BookPOJO(id, name, id_publisher, price, stock, totalPurchase, enabled);
-                result.add(book);
+                PromotionPOJO promotion = new PromotionPOJO(id, name, description,
+                        startDate, endDate, percent, applyOption, limitOrders, enabled);
+                result.add(promotion);
             }
             rs.close();
             statement.close();
@@ -45,29 +50,32 @@ public class BookDAO {
         return result;
     }
 
-    public static BookPOJO getOne(String bookId){
-        BookPOJO result = null;
+    public static PromotionPOJO getOne(String promotionId){
+        PromotionPOJO result = null;
         Connection connection = Database.createConnection();
         try {
-            String sql = "SELECT * FROM book WHERE id=?";
+            String sql = "SELECT * FROM promotion WHERE id=?";
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, bookId);
+            statement.setString(1, promotionId);
 
             ResultSet rs = statement.executeQuery();
             if(rs.next()){
                 String id = rs.getString("id");
                 String name = rs.getString("name");
-                String id_publisher = rs.getString("id_publisher");
-                int price = rs.getInt("price");
-                int stock = rs.getInt("stock");
-                int totalPurchase = rs.getInt("total_purchase");
+                String description = rs.getString("description");
+                Date startDate = rs.getDate("start_date");
+                Date endDate = rs.getDate("end_date");
+                Double percent = rs.getDouble("percent");
+                String applyOption = rs.getString("apply_option");
+                Integer limitOrders = rs.getInt("limit_orders");
                 Boolean enabled = rs.getBoolean("enabled");
-                result = new BookPOJO(id, name, id_publisher, price, stock, totalPurchase, enabled);
+                result = new PromotionPOJO(id, name, description,
+                        startDate, endDate, percent, applyOption, limitOrders, enabled);
             }
             rs.close();
             statement.close();
         } catch (SQLException ex) {
-            Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PromotionPOJO.class.getName()).log(Level.SEVERE, null, ex);
         }
         finally{
             if(connection != null){
@@ -81,23 +89,25 @@ public class BookDAO {
         return result;
     }
 
-    public static Boolean updateOne(String oldBookId, BookPOJO modifiedBook){
+    public static Boolean updateOne(String oldPromotionId, PromotionPOJO modifiedPromotion){
         boolean result = false;
         Connection connection = Database.createConnection();
         try {
-            String sql = "UPDATE book SET id=?, name=?, id_publisher=?, price=?, stock=?," +
-                    " total_purchase=?, enabled=? WHERE id=?";
+            String sql = "UPDATE promotion SET id=?, name=?, description=?, start_date=?, end_date=?," +
+                    " percent=?, apply_option=?, limit_orders=?, enabled=? WHERE id=?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
             int i = 1;
-            statement.setString(i++, modifiedBook.getId());
-            statement.setString(i++, modifiedBook.getName());
-            statement.setString(i++, modifiedBook.getIdPublisher());
-            statement.setString(i++, modifiedBook.getPrice().toString());
-            statement.setString(i++, modifiedBook.getStock().toString());
-            statement.setString(i++, modifiedBook.getTotalPurchase().toString());
-            statement.setInt(i++, modifiedBook.isEnabled() ? 1 : 0);
-            statement.setString(i, oldBookId);
+            statement.setString(i++, modifiedPromotion.getId());
+            statement.setString(i++, modifiedPromotion.getName());
+            statement.setString(i++, modifiedPromotion.getDescription());
+            statement.setDate(i++, new java.sql.Date(modifiedPromotion.getStartDate().getTime()));
+            statement.setDate(i++, new java.sql.Date(modifiedPromotion.getEndDate().getTime()));
+            statement.setDouble(i++, modifiedPromotion.getPercent());
+            statement.setString(i++, modifiedPromotion.getApplyOption());
+            statement.setInt(i++, modifiedPromotion.getLimitOrders());
+            statement.setInt(i++, modifiedPromotion.isEnabled() ? 1 : 0);
+            statement.setString(i, oldPromotionId);
 
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated > 0) {
@@ -105,7 +115,7 @@ public class BookDAO {
             }
             statement.close();
         } catch (SQLException ex) {
-            Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PromotionPOJO.class.getName()).log(Level.SEVERE, null, ex);
         }
         finally{
             if(connection != null){
@@ -119,22 +129,24 @@ public class BookDAO {
         return result;
     }
 
-    public static Boolean insertOne(BookPOJO book){
+    public static Boolean insertOne(PromotionPOJO promotion){
         boolean result = false;
         Connection connection = Database.createConnection();
         try {
-            String sql = "INSERT INTO book (id, name, id_publisher, price, stock," +
-                    "total_purchase, enabled) VALUES (?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO promotion (id, name, description, start_date, end_date," +
+                    " percent, apply_option, limit_orders, enabled) VALUES (?,?,?,?,?,?,?,?,?)";
 
             PreparedStatement statement = connection.prepareStatement(sql);
             int i = 1;
-            statement.setString(i++, book.getId());
-            statement.setString(i++, book.getName());
-            statement.setString(i++, book.getIdPublisher());
-            statement.setString(i++, book.getPrice().toString());
-            statement.setString(i++, book.getStock().toString());
-            statement.setString(i++, book.getTotalPurchase().toString());
-            statement.setInt(i, book.isEnabled() ? 1 : 0);
+            statement.setString(i++, promotion.getId());
+            statement.setString(i++, promotion.getName());
+            statement.setString(i++, promotion.getDescription());
+            statement.setDate(i++, new java.sql.Date(promotion.getStartDate().getTime()));
+            statement.setDate(i++, new java.sql.Date(promotion.getEndDate().getTime()));
+            statement.setDouble(i++, promotion.getPercent());
+            statement.setString(i++, promotion.getApplyOption());
+            statement.setInt(i++, promotion.getLimitOrders());
+            statement.setInt(i, promotion.isEnabled() ? 1 : 0);
 
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated > 0) {
@@ -142,7 +154,7 @@ public class BookDAO {
             }
             statement.close();
         } catch (SQLException ex) {
-            Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PromotionPOJO.class.getName()).log(Level.SEVERE, null, ex);
         }
         finally{
             if(connection != null){
@@ -156,15 +168,16 @@ public class BookDAO {
         return result;
     }
 
-    public static Boolean enable(String bookId){
+
+    public static Boolean enable(String promotionId){
         boolean result = false;
         Connection connection = Database.createConnection();
         try {
-            String sql = "UPDATE book SET enabled=? WHERE id=?";
+            String sql = "UPDATE promotion SET enabled=? WHERE id=?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, "1");
-            statement.setString(2, bookId);
+            statement.setString(2, promotionId);
 
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated > 0) {
@@ -172,7 +185,7 @@ public class BookDAO {
             }
             statement.close();
         } catch (SQLException ex) {
-            Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PromotionPOJO.class.getName()).log(Level.SEVERE, null, ex);
         }
         finally{
             if(connection != null){
@@ -186,15 +199,15 @@ public class BookDAO {
         return result;
     }
 
-    public static Boolean disable(String bookId){
+    public static Boolean disable(String promotionId){
         boolean result = false;
         Connection connection = Database.createConnection();
         try {
-            String sql = "UPDATE book SET enabled=? WHERE id=?";
+            String sql = "UPDATE promotion SET enabled=? WHERE id=?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, "0");
-            statement.setString(2, bookId);
+            statement.setString(2, promotionId);
 
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated > 0) {
@@ -202,7 +215,7 @@ public class BookDAO {
             }
             statement.close();
         } catch (SQLException ex) {
-            Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PromotionPOJO.class.getName()).log(Level.SEVERE, null, ex);
         }
         finally{
             if(connection != null){

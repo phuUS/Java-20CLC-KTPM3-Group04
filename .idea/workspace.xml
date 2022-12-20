@@ -1,18 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="4e409101-b9b5-47be-8c5b-e6ac23aff927" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Java-20CLC-KTPM3-Group04.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mysql-connector-j-8.0.31.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jdatepicker-1.3.4.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/BUS/PromotionBUS.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/BUS/PublisherBUS.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/DAO/PromotionDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/DAO/PublisherDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/GUI/PromotionManagement.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/POJO/PromotionPOJO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/POJO/PublisherPOJO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java-20CLC-KTPM3-Group04.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Java-20CLC-KTPM3-Group04.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/BUS/BookBUS.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/BUS/BookBUS.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/BookDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/BookDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/POJO/BookPOJO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/POJO/BookPOJO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BUS/BookBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/BookBUS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO/BookDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/BookDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/Database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/BookManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/BookManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/POJO/BookPOJO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/POJO/BookPOJO.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -33,12 +58,18 @@
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "E:/OneDrive/Documents/GitHub/Java-20CLC-KTPM3-Group04/mysql-connector-j-8.0.31.jar",
+    "last_opened_file_path": "E:/OneDrive/Documents/GitHub/Java-20CLC-KTPM3-Group04/jdatepicker-1.3.4.jar",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\OneDrive\Documents\GitHub\Java-20CLC-KTPM3-Group04" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
