@@ -1,3 +1,7 @@
 {
-  "java.dependency.packagePresentation": "hierarchical"
+  "java.dependency.packagePresentation": "hierarchical",
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar",
+    "d:\\Tu Hoc Java\\JDBC_Driver_mySQL\\jar_files\\mysql-connector-java-8.0.30.jar"
+  ]
 }

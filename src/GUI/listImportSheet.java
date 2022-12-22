@@ -1,11 +1,15 @@
-package src.view;
+package GUI;
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
+import BUS.ImportSheetBUS;
+import POJO.BookInImportSheetPOJO;
+import POJO.ImportSheetPOJO;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -19,6 +23,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JScrollBar;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class listImportSheet extends JFrame {
@@ -41,6 +49,56 @@ public class listImportSheet extends JFrame {
 				}
 			}
 		});
+	}
+
+	public void showListImportSheet(){
+		DefaultTableModel model = (DefaultTableModel) listImportSheetTable.getModel();
+		model.setRowCount(0);
+		ArrayList<ImportSheetPOJO> listImportSheet = new ArrayList<>();
+		ImportSheetBUS importSheetBus = new ImportSheetBUS();
+		listImportSheet = importSheetBus.getAllImportSheet();
+		for (ImportSheetPOJO importSheetPOJO : listImportSheet) {
+			String id = importSheetPOJO.getId();
+			String create_at = importSheetPOJO.getCreate_at().toString();
+			String id_employee = importSheetPOJO.getId_employee();
+			String name = importSheetPOJO.getName();
+			String total = importSheetPOJO.getTotal_cost()+"";
+
+			String[] row = {id, create_at, id_employee, name, total};
+			model.addRow(row);
+		}
+	}
+
+	public String getIDImportSheetSelected(){
+		DefaultTableModel model = (DefaultTableModel) listImportSheetTable.getModel();
+		int i_row = listImportSheetTable.getSelectedRow();
+		String id = (String) model.getValueAt(i_row, 0);
+		
+
+		return id;
+	}
+
+	public void showImportSheetSelected(){
+		String idImportSheet = getIDImportSheetSelected();
+		ImportSheetBUS importSheetBUS = new ImportSheetBUS();
+		ArrayList<BookInImportSheetPOJO> listBookInIPS = importSheetBUS.getBookInImportSheet(idImportSheet);
+
+		DefaultTableModel model = (DefaultTableModel) listImportBookTable.getModel();
+		model.setRowCount(0);
+		for (BookInImportSheetPOJO bookInImportSheetPOJO : listBookInIPS) {
+			String idBook = bookInImportSheetPOJO.getId_book();
+			String nameBook = bookInImportSheetPOJO.getName();
+			String id_publisher = bookInImportSheetPOJO.getId_publisher();
+			String quantity = bookInImportSheetPOJO.getQuantity()+"";
+			String import_price = bookInImportSheetPOJO.getImport_price()+"";
+			String[] row = {idBook, nameBook,id_publisher, quantity, import_price};
+			model.addRow(row);
+		}
+	}
+
+	public void closeFrame(){
+		this.setVisible(false);
+		this.dispose();
 	}
 
 	/**
@@ -91,6 +149,8 @@ public class listImportSheet extends JFrame {
 		JButton viewListIPSBtn = new JButton("View List Imported Sheet");
 		viewListIPSBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				showListImportSheet();
+
 			}
 		});
 		viewListIPSBtn.setBounds(10, 60, 153, 41);
@@ -127,16 +187,23 @@ public class listImportSheet extends JFrame {
 		
 		JScrollBar listImportBookScrollBar = new JScrollBar();
 		listImportBookPane.setRowHeaderView(listImportBookScrollBar);
+		String[] columnNames = {"ID", "Name","ID_Publisher","Quantity","Price Per One"};
 		
-		String data[][] = {{"SACH01","Nhà giả kim","NXB01","3","50000"},
-							{"SACH02","Đắc Nhân Tâm","NXB02","5","50000"},
-							{"SACH03","Lỗ Đen","NXB04","10","20000"}};
-		String[] columnNames = {"ID", "Name", "ID_Publisher","Quantity","Price Per One"};
-		
-		listImportBookTable = new JTable(data, columnNames);
+		listImportBookTable = new JTable();
+
+		listImportBookTable.setModel(new DefaultTableModel(new Object[][] {},columnNames));
 		listImportBookPane.setViewportView(listImportBookTable);
 		
 		JButton cancelBtn = new JButton("Cancel");
+		cancelBtn.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				closeFrame();
+			}
+			
+		});
 		cancelBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		cancelBtn.setBounds(603, 568, 128, 34);
 		mainContentPane.add(cancelBtn);
@@ -145,9 +212,16 @@ public class listImportSheet extends JFrame {
 		listImportSheetPane.setBounds(10, 52, 731, 225);
 		mainContentPane.add(listImportSheetPane);
 		
-		String[][] data_listImportSheet = {{"IPS01","2022-11-11","USER01","Nguyễn Hữu Khải","345932"},{"IPS02","2022-10-11","USER03","Nguyễn Hữu Lộc","495132"},{"IPS03","2021-11-10","USER02","Nguyễn Khánh Toàn","146932"}};
 		String[] columnNamesIPS = {"ID Import Sheet","Create At", "ID Employee","Name", "Total Cost"};
-		listImportSheetTable = new JTable(data_listImportSheet,columnNamesIPS);
+		listImportSheetTable = new JTable();
+		listImportSheetTable.setModel(new DefaultTableModel(new Object[][] {},columnNamesIPS));
+		listImportSheetTable.addMouseListener(new java.awt.event.MouseAdapter(){
+			public void mouseClicked(java.awt.event.MouseEvent evt){
+					showImportSheetSelected();
+			}
+
+			
+		});
 		listImportSheetPane.setViewportView(listImportSheetTable);
 		
 		JScrollBar listImportSheetScrollBar = new JScrollBar();
