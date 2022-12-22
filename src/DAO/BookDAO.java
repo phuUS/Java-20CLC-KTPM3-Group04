@@ -24,8 +24,9 @@ public class BookDAO {
                 int price = rs.getInt("price");
                 int stock = rs.getInt("stock");
                 int totalPurchase = rs.getInt("total_purchase");
+                Date releaseDate = rs.getDate("release_date");
                 Boolean enabled = rs.getBoolean("enabled");
-                BookPOJO book = new BookPOJO(id, name, id_publisher, price, stock, totalPurchase, enabled);
+                BookPOJO book = new BookPOJO(id, name, id_publisher, price, stock, totalPurchase, releaseDate, enabled);
                 result.add(book);
             }
             rs.close();
@@ -61,8 +62,9 @@ public class BookDAO {
                 int price = rs.getInt("price");
                 int stock = rs.getInt("stock");
                 int totalPurchase = rs.getInt("total_purchase");
+                Date releaseDate = rs.getDate("release_date");
                 Boolean enabled = rs.getBoolean("enabled");
-                result = new BookPOJO(id, name, id_publisher, price, stock, totalPurchase, enabled);
+                result = new BookPOJO(id, name, id_publisher, price, stock, totalPurchase, releaseDate, enabled);
             }
             rs.close();
             statement.close();
@@ -86,7 +88,7 @@ public class BookDAO {
         Connection connection = Database.createConnection();
         try {
             String sql = "UPDATE book SET id=?, name=?, id_publisher=?, price=?, stock=?," +
-                    " total_purchase=?, enabled=? WHERE id=?";
+                    " total_purchase=?, release_date=?, enabled=? WHERE id=?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
             int i = 1;
@@ -96,6 +98,7 @@ public class BookDAO {
             statement.setString(i++, modifiedBook.getPrice().toString());
             statement.setString(i++, modifiedBook.getStock().toString());
             statement.setString(i++, modifiedBook.getTotalPurchase().toString());
+            statement.setDate(i++, new java.sql.Date(modifiedBook.getReleaseDate().getTime()));
             statement.setInt(i++, modifiedBook.isEnabled() ? 1 : 0);
             statement.setString(i, oldBookId);
 
@@ -124,7 +127,7 @@ public class BookDAO {
         Connection connection = Database.createConnection();
         try {
             String sql = "INSERT INTO book (id, name, id_publisher, price, stock," +
-                    "total_purchase, enabled) VALUES (?,?,?,?,?,?,?)";
+                    "total_purchase, release_date, enabled) VALUES (?,?,?,?,?,?,?,?)";
 
             PreparedStatement statement = connection.prepareStatement(sql);
             int i = 1;
@@ -134,6 +137,7 @@ public class BookDAO {
             statement.setString(i++, book.getPrice().toString());
             statement.setString(i++, book.getStock().toString());
             statement.setString(i++, book.getTotalPurchase().toString());
+            statement.setDate(i++, new java.sql.Date(book.getReleaseDate().getTime()));
             statement.setInt(i, book.isEnabled() ? 1 : 0);
 
             int rowsUpdated = statement.executeUpdate();

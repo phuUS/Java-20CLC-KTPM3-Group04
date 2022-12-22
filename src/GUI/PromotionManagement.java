@@ -8,6 +8,8 @@ import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
@@ -15,6 +17,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -149,7 +153,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
         }
         else if (e.getSource() == addPromotionButton){
             addPromotionFormPanel = new AddPromotionFormPanel();
-            contentLabel.setText("Add A New Book");
+            contentLabel.setText("Add A New Promotion");
             contentPane.add(contentLabel);
             contentPane.add(addPromotionFormPanel);
         }
@@ -329,6 +333,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
 
             idLabel = new JLabel("ID:");
             idField = new JTextField(promotion.getId());
+            idField.setEditable(false);
 
             nameLabel = new JLabel("Name:");
             nameField = new JTextField(promotion.getName());
@@ -342,19 +347,23 @@ public class PromotionManagement extends JFrame implements ActionListener {
             p.put("text.year", "Year");
             startDateLabel = new JLabel("Start Date: ");
             startDateModel = new UtilDateModel();
-            Calendar startDate = Calendar.getInstance();
-            startDate.setTime(promotion.getStartDate());
-            startDateModel.setDate(startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH));
-            startDateModel.setSelected(true);
+            if (promotion.getStartDate() != null){
+                Calendar startDateCalendar = Calendar.getInstance();
+                startDateCalendar.setTime(promotion.getStartDate());
+                startDateModel.setDate(startDateCalendar.get(Calendar.YEAR), startDateCalendar.get(Calendar.MONTH), startDateCalendar.get(Calendar.DAY_OF_MONTH));
+                startDateModel.setSelected(true);
+            }
             startDatePanel = new JDatePanelImpl(startDateModel, p);
             startDateField = new JDatePickerImpl(startDatePanel, new DateLabelFormatter());
 
             endDateLabel = new JLabel("End Date: ");
             endDateModel = new UtilDateModel();
-            Calendar endDate = Calendar.getInstance();
-            endDate.setTime(promotion.getEndDate());
-            endDateModel.setDate(endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH));
-            endDateModel.setSelected(true);
+            if (promotion.getEndDate() != null){
+                Calendar endDateCalendar = Calendar.getInstance();
+                endDateCalendar.setTime(promotion.getEndDate());
+                endDateModel.setDate(endDateCalendar.get(Calendar.YEAR), endDateCalendar.get(Calendar.MONTH), endDateCalendar.get(Calendar.DAY_OF_MONTH));
+                endDateModel.setSelected(true);
+            }
             endDatePanel = new JDatePanelImpl(endDateModel, p);
             endDateField = new JDatePickerImpl(endDatePanel, new DateLabelFormatter());
 
@@ -510,6 +519,12 @@ public class PromotionManagement extends JFrame implements ActionListener {
                 this.dispose();
             }
             else if (e.getSource() == saveButton){
+                Date startDate = (Date) startDateField.getModel().getValue();
+                Date endDate = (Date) endDateField.getModel().getValue();
+                if ((startDate != null && endDate != null) && startDate.compareTo(endDate) > 0){
+                    JOptionPane.showMessageDialog(this, "Start date cannot be after end date!");
+                    return;
+                }
                 PromotionPOJO modifiedPromotion = new PromotionPOJO(
                         idField.getText(),
                         nameField.getText(),
@@ -758,6 +773,12 @@ public class PromotionManagement extends JFrame implements ActionListener {
                 statusField.setSelectedIndex(0);
 
             } else if (e.getSource() == addButton) {
+                Date startDate = (Date) startDateField.getModel().getValue();
+                Date endDate = (Date) endDateField.getModel().getValue();
+                if ((startDate != null && endDate != null) && startDate.compareTo(endDate) > 0){
+                    JOptionPane.showMessageDialog(this, "Start date cannot be after end date!");
+                    return;
+                }
                 try {
                     PromotionPOJO promotion = new PromotionPOJO(
                             idField.getText(),

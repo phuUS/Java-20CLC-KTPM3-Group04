@@ -3,6 +3,9 @@ package GUI;
 import BUS.BookBUS;
 import BUS.PublisherBUS;
 import POJO.BookPOJO;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -13,9 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
 public class BookManagement extends JFrame implements ActionListener {
     JPanel menuPane;
@@ -118,7 +119,7 @@ public class BookManagement extends JFrame implements ActionListener {
     }
 
     public JTable getAllBooksTable() {
-        String[] col ={"ID","NAME","ID PUBLISHER", "PRICE", "STOCK", "TOTAL PURCHASE" , "STATUS", "ACTION", "EDIT"};
+        String[] col ={"ID","NAME","ID PUBLISHER", "PRICE", "STOCK", "TOTAL PURCHASE", "RELEASE DATE", "STATUS", "ACTION", "EDIT"};
         ArrayList<BookPOJO> allBooks = BookBUS.getAll();
 
         JTable table = new JTable();
@@ -131,10 +132,11 @@ public class BookManagement extends JFrame implements ActionListener {
             Integer price = book.getPrice();
             Integer stock = book.getStock();
             Integer totalPurchase = book.getTotalPurchase();
+            Date releaseDate = book.getReleaseDate();
             String enabled = book.isEnabled() ? "Enabled" : "Disabled";
             String action = book.isEnabled() ? "Disable" : "Enable";
 
-            Object[] data = {id, name, idPublisher, price, stock, totalPurchase, enabled, action, "Edit"};
+            Object[] data = {id, name, idPublisher, price, stock, totalPurchase, releaseDate, enabled, action, "Edit"};
             tableModel.addRow(data);
         }
         table.setModel(tableModel);
@@ -288,6 +290,11 @@ public class BookManagement extends JFrame implements ActionListener {
         JLabel totalPurchaseLabel;
         JTextField totalPurchaseField;
 
+        JLabel releaseDateLabel;
+        UtilDateModel releaseDateModel;
+        JDatePanelImpl releaseDatePanel;
+        JDatePickerImpl releaseDateField;
+
         JLabel statusLabel;
         JComboBox<String> statusField;
 
@@ -314,6 +321,7 @@ public class BookManagement extends JFrame implements ActionListener {
 
             idLabel = new JLabel("ID:");
             idField = new JTextField(book.getId());
+            idField.setEditable(false);
 
             nameLabel = new JLabel("Name:");
             nameField = new JTextField(book.getName());
@@ -349,6 +357,21 @@ public class BookManagement extends JFrame implements ActionListener {
                     totalPurchaseField.setEditable(key >= '0' && key <= '9' || key == '\b');
                 }
             });
+
+            Properties p = new Properties();
+            p.put("text.today", "Today");
+            p.put("text.month", "Month");
+            p.put("text.year", "Year");
+            releaseDateLabel = new JLabel("Release Date: ");
+            releaseDateModel = new UtilDateModel();
+            if (book.getReleaseDate() != null){
+                Calendar releaseDate = Calendar.getInstance();
+                releaseDate.setTime(book.getReleaseDate());
+                releaseDateModel.setDate(releaseDate.get(Calendar.YEAR), releaseDate.get(Calendar.MONTH), releaseDate.get(Calendar.DAY_OF_MONTH));
+                releaseDateModel.setSelected(true);
+            }
+            releaseDatePanel = new JDatePanelImpl(releaseDateModel, p);
+            releaseDateField = new JDatePickerImpl(releaseDatePanel, new PromotionManagement.DateLabelFormatter());
 
             statusLabel = new JLabel("Status:");
             String[] statuses = {"Enabled", "Disabled"};
@@ -401,6 +424,10 @@ public class BookManagement extends JFrame implements ActionListener {
             add(totalPurchaseLabel, gbc);
 
             gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(releaseDateLabel, gbc);
+
+            gbc.gridx = 0;
             gbc.gridy = i;
             add(statusLabel, gbc);
 
@@ -433,6 +460,10 @@ public class BookManagement extends JFrame implements ActionListener {
 
             gbc.gridx = 1;
             gbc.gridy = i++;
+            add(releaseDateField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
             add(statusField, gbc);
 
             //add buttons
@@ -460,6 +491,7 @@ public class BookManagement extends JFrame implements ActionListener {
                         Integer.parseInt(priceField.getText()),
                         Integer.parseInt(stockField.getText()),
                         Integer.parseInt(totalPurchaseField.getText()),
+                        (Date) releaseDateField.getModel().getValue(),
                         statusField.getSelectedItem() == "Enabled");
 
                 Boolean result = BookBUS.updateOne(book.getId(),modifiedBook);
@@ -494,6 +526,11 @@ public class BookManagement extends JFrame implements ActionListener {
 
         JLabel totalPurchaseLabel;
         JTextField totalPurchaseField;
+
+        JLabel releaseDateLabel;
+        UtilDateModel releaseDateModel;
+        JDatePanelImpl releaseDatePanel;
+        JDatePickerImpl releaseDateField;
 
         JLabel statusLabel;
         JComboBox<String> statusField;
@@ -552,6 +589,15 @@ public class BookManagement extends JFrame implements ActionListener {
             String[] statuses = {"Enabled", "Disabled"};
             statusField = new JComboBox<>(statuses);
 
+            Properties p = new Properties();
+            p.put("text.today", "Today");
+            p.put("text.month", "Month");
+            p.put("text.year", "Year");
+            releaseDateLabel = new JLabel("Release Date: ");
+            releaseDateModel = new UtilDateModel();
+            releaseDatePanel = new JDatePanelImpl(releaseDateModel, p);
+            releaseDateField = new JDatePickerImpl(releaseDatePanel, new PromotionManagement.DateLabelFormatter());
+
             clearButton = new JButton("Clear");
             clearButton.addActionListener(this);
 
@@ -596,6 +642,10 @@ public class BookManagement extends JFrame implements ActionListener {
             add(totalPurchaseLabel, gbc);
 
             gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(releaseDateLabel, gbc);
+
+            gbc.gridx = 0;
             gbc.gridy = i;
             add(statusLabel, gbc);
 
@@ -625,6 +675,10 @@ public class BookManagement extends JFrame implements ActionListener {
             gbc.gridx = 1;
             gbc.gridy = i++;
             add(totalPurchaseField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(releaseDateField, gbc);
 
             gbc.gridx = 1;
             gbc.gridy = i++;
@@ -661,6 +715,7 @@ public class BookManagement extends JFrame implements ActionListener {
                             Integer.parseInt(priceField.getText()),
                             Integer.parseInt(stockField.getText()),
                             Integer.parseInt(totalPurchaseField.getText()),
+                            (Date) releaseDateField.getModel().getValue(),
                             statusField.getSelectedItem() == "Enabled");
                     Boolean result = BookBUS.insertOne(book);
                     if (result){
