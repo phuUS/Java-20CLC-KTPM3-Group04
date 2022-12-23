@@ -1,19 +1,18 @@
 package DAO;
 
-import POJO.UserPOJO;
+import POJO.AccountPOJO;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class UserDAO {
-    public static ArrayList<UserPOJO> getAll(){
-        ArrayList<UserPOJO> result = null;
+public class AccountDAO {
+    public static ArrayList<AccountPOJO> getAll(){
+        ArrayList<AccountPOJO> result = null;
         Connection connection = Database.createConnection();
         try {
             result = new ArrayList<>();
@@ -25,13 +24,13 @@ public class UserDAO {
                 String id = rs.getString("id");
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-                UserPOJO user = new UserPOJO(id, username, password);
-                result.add(user);
+                AccountPOJO account = new AccountPOJO(id, username, password);
+                result.add(account);
             }
             rs.close();
             statement.close();
         } catch (SQLException ex) {
-            Logger.getLogger(UserPOJO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AccountPOJO.class.getName()).log(Level.SEVERE, null, ex);
         }
         finally{
             if(connection != null){

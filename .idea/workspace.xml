@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4e409101-b9b5-47be-8c5b-e6ac23aff927" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/BUS/UserBUS.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DAO/UserDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/GUI/UserManagement.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/POJO/UserPOJO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="4e409101-b9b5-47be-8c5b-e6ac23aff927" name="Changes" comment="apply layout for user_management_screen">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/GUI/AccountManagement.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/GUI/SpringUtilities.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/GUI/TableFilterDemo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/BUS/BookBUS.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/BUS/BookBUS.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/BookDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/BookDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/Database.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/Database.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/BUS/UserBUS.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/UserDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/UserManagement.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/POJO/BookPOJO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/POJO/BookPOJO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/POJO/UserPOJO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BUS/UserBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/AccountBUS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO/UserDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/AccountDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/UserManagement.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/POJO/UserPOJO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/POJO/AccountPOJO.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,18 +44,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/OneDrive/Documents/GitHub/Java-20CLC-KTPM3-Group04/mysql-connector-j-8.0.31.jar&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "E:/OneDrive/Documents/GitHub/Java-20CLC-KTPM3-Group04/mysql-connector-j-8.0.31.jar",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
-}</component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RunManager" selected="Application.AccountManagement">
+    <configuration name="AccountManagement" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="GUI.AccountManagement" />
+      <module name="Java-20CLC-KTPM3-Group04" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="GUI.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GUI.TableFilterDemo" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="GUI.TableFilterDemo" />
+      <module name="Java-20CLC-KTPM3-Group04" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="GUI.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="Java-20CLC-KTPM3-Group04" />
@@ -61,9 +90,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="TableFilterDemo" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="TableFilterDemo" />
+      <module name="Java-20CLC-KTPM3-Group04" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.AccountManagement" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.GUI.TableFilterDemo" />
+        <item itemvalue="Application.TableFilterDemo" />
       </list>
     </recent_temporary>
   </component>
@@ -76,6 +115,14 @@
       <option name="presentableId" value="Default" />
       <updated>1671031794891</updated>
     </task>
+    <task id="LOCAL-00001" summary="apply layout for user_management_screen">
+      <created>1671479685811</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1671479685811</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -91,5 +138,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="apply layout for user_management_screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="apply layout for user_management_screen" />
   </component>
 </project>
