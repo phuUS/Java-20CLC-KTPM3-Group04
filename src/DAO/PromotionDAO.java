@@ -29,8 +29,208 @@ public class PromotionDAO {
                 String applyOption = rs.getString("apply_option");
                 Integer limitOrders = rs.getInt("limit_orders");
                 Boolean enabled = rs.getBoolean("enabled");
+
+                ArrayList<BookPOJO> listBook = new ArrayList<>();
+                String query1 = "SELECT * " +
+                        "FROM promotion_book as pb, book as b" +
+                        " WHERE pb.id_promotion=? and pb.id_book = b.id";
+                PreparedStatement statement1 = connection.prepareStatement(query1);
+                statement1.setString(1, id);
+                ResultSet rs1 = statement1.executeQuery();
+                while(rs1.next()){
+                    String id_book = rs1.getString("id_book");
+                    String name_book = rs1.getString("name");
+                    String id_publisher = rs1.getString("id_publisher");
+                    int price = rs1.getInt("price");
+                    int stock = rs1.getInt("stock");
+                    int totalPurchase = rs1.getInt("total_purchase");
+                    java.sql.Date releaseDate = rs1.getDate("release_date");
+                    Boolean enabled_book = rs1.getBoolean("enabled");
+                    BookPOJO book = new BookPOJO(id_book, name_book, id_publisher, price, stock, totalPurchase, releaseDate, enabled_book);
+                    listBook.add(book);
+                }
+
+
                 PromotionPOJO promotion = new PromotionPOJO(id, name, description,
-                        startDate, endDate, percent, applyOption, limitOrders, enabled);
+                        startDate, endDate, percent, applyOption, limitOrders, enabled, listBook);
+                result.add(promotion);
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
+    public static ArrayList<PromotionPOJO> getPastPromotions(){
+        ArrayList<PromotionPOJO> result = null;
+        Connection connection = Database.createConnection();
+        try {
+            result = new ArrayList<>();
+            Statement statement;
+            statement = connection.createStatement();
+            String query = "SELECT * FROM promotion WHERE end_date < curdate()";
+            ResultSet rs = statement.executeQuery(query);
+            while(rs.next()){
+                String id = rs.getString("id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                Date startDate = rs.getDate("start_date");
+                Date endDate = rs.getDate("end_date");
+                Double percent = rs.getDouble("percent");
+                String applyOption = rs.getString("apply_option");
+                Integer limitOrders = rs.getInt("limit_orders");
+                Boolean enabled = rs.getBoolean("enabled");
+
+                ArrayList<BookPOJO> listBook = new ArrayList<>();
+                String query1 = "SELECT * " +
+                        "FROM promotion_book as pb, book as b" +
+                        " WHERE pb.id_promotion=? and pb.id_book = b.id";
+                PreparedStatement statement1 = connection.prepareStatement(query1);
+                statement1.setString(1, id);
+                ResultSet rs1 = statement1.executeQuery();
+                while(rs1.next()){
+                    String id_book = rs1.getString("id_book");
+                    String name_book = rs1.getString("name");
+                    String id_publisher = rs1.getString("id_publisher");
+                    int price = rs1.getInt("price");
+                    int stock = rs1.getInt("stock");
+                    int totalPurchase = rs1.getInt("total_purchase");
+                    java.sql.Date releaseDate = rs1.getDate("release_date");
+                    Boolean enabled_book = rs1.getBoolean("enabled");
+                    BookPOJO book = new BookPOJO(id_book, name_book, id_publisher, price, stock, totalPurchase, releaseDate, enabled_book);
+                    listBook.add(book);
+                }
+                PromotionPOJO promotion = new PromotionPOJO(id, name, description,
+                        startDate, endDate, percent, applyOption, limitOrders, enabled, listBook);
+                result.add(promotion);
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
+    public static ArrayList<PromotionPOJO> getCurrentPromotions(){
+        ArrayList<PromotionPOJO> result = null;
+        Connection connection = Database.createConnection();
+        try {
+            result = new ArrayList<>();
+            Statement statement;
+            statement = connection.createStatement();
+            String query = "SELECT * FROM promotion where curdate() between start_date and end_date";
+            ResultSet rs = statement.executeQuery(query);
+            while(rs.next()){
+                String id = rs.getString("id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                Date startDate = rs.getDate("start_date");
+                Date endDate = rs.getDate("end_date");
+                Double percent = rs.getDouble("percent");
+                String applyOption = rs.getString("apply_option");
+                Integer limitOrders = rs.getInt("limit_orders");
+                Boolean enabled = rs.getBoolean("enabled");
+                ArrayList<BookPOJO> listBook = new ArrayList<>();
+                String query1 = "SELECT * " +
+                        "FROM promotion_book as pb, book as b" +
+                        " WHERE pb.id_promotion=? and pb.id_book = b.id";
+                PreparedStatement statement1 = connection.prepareStatement(query1);
+                statement1.setString(1, id);
+                ResultSet rs1 = statement1.executeQuery();
+                while(rs1.next()){
+                    String id_book = rs1.getString("id_book");
+                    String name_book = rs1.getString("name");
+                    String id_publisher = rs1.getString("id_publisher");
+                    int price = rs1.getInt("price");
+                    int stock = rs1.getInt("stock");
+                    int totalPurchase = rs1.getInt("total_purchase");
+                    java.sql.Date releaseDate = rs1.getDate("release_date");
+                    Boolean enabled_book = rs1.getBoolean("enabled");
+                    BookPOJO book = new BookPOJO(id_book, name_book, id_publisher, price, stock, totalPurchase, releaseDate, enabled_book);
+                    listBook.add(book);
+                }
+                PromotionPOJO promotion = new PromotionPOJO(id, name, description,
+                        startDate, endDate, percent, applyOption, limitOrders, enabled, listBook);
+                result.add(promotion);
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
+    public static ArrayList<PromotionPOJO> getUpcomingPromotions(){
+        ArrayList<PromotionPOJO> result = null;
+        Connection connection = Database.createConnection();
+        try {
+            result = new ArrayList<>();
+            Statement statement;
+            statement = connection.createStatement();
+            String query = "SELECT * FROM promotion where start_date > curdate()";
+            ResultSet rs = statement.executeQuery(query);
+            while(rs.next()){
+                String id = rs.getString("id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                Date startDate = rs.getDate("start_date");
+                Date endDate = rs.getDate("end_date");
+                Double percent = rs.getDouble("percent");
+                String applyOption = rs.getString("apply_option");
+                Integer limitOrders = rs.getInt("limit_orders");
+                Boolean enabled = rs.getBoolean("enabled");
+                ArrayList<BookPOJO> listBook = new ArrayList<>();
+                String query1 = "SELECT * " +
+                        "FROM promotion_book as pb, book as b" +
+                        " WHERE pb.id_promotion=? and pb.id_book = b.id";
+                PreparedStatement statement1 = connection.prepareStatement(query1);
+                statement1.setString(1, id);
+                ResultSet rs1 = statement1.executeQuery();
+                while(rs1.next()){
+                    String id_book = rs1.getString("id_book");
+                    String name_book = rs1.getString("name");
+                    String id_publisher = rs1.getString("id_publisher");
+                    int price = rs1.getInt("price");
+                    int stock = rs1.getInt("stock");
+                    int totalPurchase = rs1.getInt("total_purchase");
+                    java.sql.Date releaseDate = rs1.getDate("release_date");
+                    Boolean enabled_book = rs1.getBoolean("enabled");
+                    BookPOJO book = new BookPOJO(id_book, name_book, id_publisher, price, stock, totalPurchase, releaseDate, enabled_book);
+                    listBook.add(book);
+                }
+                PromotionPOJO promotion = new PromotionPOJO(id, name, description,
+                        startDate, endDate, percent, applyOption, limitOrders, enabled, listBook);
                 result.add(promotion);
             }
             rs.close();
@@ -69,8 +269,28 @@ public class PromotionDAO {
                 String applyOption = rs.getString("apply_option");
                 Integer limitOrders = rs.getInt("limit_orders");
                 Boolean enabled = rs.getBoolean("enabled");
+                ArrayList<BookPOJO> listBook = new ArrayList<>();
+                String query1 = "SELECT * " +
+                        "FROM promotion_book as pb, book as b" +
+                        " WHERE pb.id_promotion=? and pb.id_book = b.id";
+                PreparedStatement statement1 = connection.prepareStatement(query1);
+                statement1.setString(1, id);
+                ResultSet rs1 = statement1.executeQuery();
+                while(rs1.next()){
+                    String id_book = rs1.getString("id_book");
+                    String name_book = rs1.getString("name");
+                    String id_publisher = rs1.getString("id_publisher");
+                    int price = rs1.getInt("price");
+                    int stock = rs1.getInt("stock");
+                    int totalPurchase = rs1.getInt("total_purchase");
+                    java.sql.Date releaseDate = rs1.getDate("release_date");
+                    Boolean enabled_book = rs1.getBoolean("enabled");
+                    BookPOJO book = new BookPOJO(id_book, name_book, id_publisher, price, stock, totalPurchase, releaseDate, enabled_book);
+                    listBook.add(book);
+                }
+
                 result = new PromotionPOJO(id, name, description,
-                        startDate, endDate, percent, applyOption, limitOrders, enabled);
+                        startDate, endDate, percent, applyOption, limitOrders, enabled, listBook);
             }
             rs.close();
             statement.close();
@@ -154,6 +374,76 @@ public class PromotionDAO {
             }
             statement.close();
         } catch (SQLException ex) {
+            Logger.getLogger(PromotionPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
+    public static Boolean insertAppliedBooks(String promotionId, ArrayList<String> listBookId){
+        boolean result = true;
+        Connection connection = Database.createConnection();
+        try {
+            String sql = "INSERT INTO promotion_book (id_promotion, id_book) VALUES (?,?)";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            for (String bookId : listBookId){
+                int i = 1;
+                statement.setString(i++, promotionId);
+                statement.setString(i++, bookId);
+
+                int rowsUpdated = statement.executeUpdate();
+                if (rowsUpdated <= 0) {
+                    result = false;
+                    break;
+                }
+            }
+            statement.close();
+        } catch (SQLException ex) {
+            result = false;
+            Logger.getLogger(PromotionPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
+    public static Boolean deleteNotAppliedBooks(String promotionId, ArrayList<String> listBookId){
+        boolean result = true;
+        Connection connection = Database.createConnection();
+        try {
+            String sql = "DELETE FROM promotion_book where id_promotion=? and id_book=?";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            for (String bookId : listBookId){
+                int i = 1;
+                statement.setString(i++, promotionId);
+                statement.setString(i++, bookId);
+
+                int rowsUpdated = statement.executeUpdate();
+                if (rowsUpdated <= 0) {
+                    result = false;
+                    break;
+                }
+            }
+            statement.close();
+        } catch (SQLException ex) {
+            result = false;
             Logger.getLogger(PromotionPOJO.class.getName()).log(Level.SEVERE, null, ex);
         }
         finally{

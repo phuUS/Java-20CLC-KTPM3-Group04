@@ -10,6 +10,18 @@ public class BookBUS {
         return BookDAO.getAll();
     }
 
+    public static ArrayList<BookPOJO> getNewBooks(){
+        return BookDAO.getNewBooks();
+    }
+
+    public static ArrayList<BookPOJO> getHotBooks(){
+        return BookDAO.getHotBooks();
+    }
+
+    public static ArrayList<BookPOJO> getOutOfStockBooks(){
+        return BookDAO.getOutOfStockBooks();
+    }
+
     public static BookPOJO getOne(String bookId){
         return BookDAO.getOne(bookId);
     }

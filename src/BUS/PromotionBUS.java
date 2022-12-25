@@ -10,6 +10,19 @@ public class PromotionBUS {
         return PromotionDAO.getAll();
     }
 
+    public static ArrayList<PromotionPOJO> getPastPromotions(){
+        return PromotionDAO.getPastPromotions();
+    }
+
+    public static ArrayList<PromotionPOJO> getCurrentPromotions(){
+        return PromotionDAO.getCurrentPromotions();
+    }
+
+    public static ArrayList<PromotionPOJO> getUpcomingPromotions(){
+        return PromotionDAO.getUpcomingPromotions();
+    }
+
+
     public static PromotionPOJO getOne(String promotionId){
         return PromotionDAO.getOne(promotionId);
     }
@@ -20,6 +33,14 @@ public class PromotionBUS {
 
     public static Boolean insertOne(PromotionPOJO promotion){
         return PromotionDAO.insertOne(promotion);
+    }
+
+    public static Boolean insertAppliedBooks(String promotionId, ArrayList<String> listBookId){
+        return PromotionDAO.insertAppliedBooks(promotionId, listBookId);
+    }
+
+    public static Boolean deleteNotAppliedBooks(String promotionId, ArrayList<String> listBookId){
+        return PromotionDAO.deleteNotAppliedBooks(promotionId, listBookId);
     }
 
     public static Boolean enable(String promotionId){

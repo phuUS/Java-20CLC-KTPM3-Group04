@@ -1,5 +1,7 @@
 package POJO;
 
+import java.awt.print.Book;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class PromotionPOJO {
@@ -12,9 +14,11 @@ public class PromotionPOJO {
     String applyOption;
     Integer limitOrders;
     Boolean enabled;
+    ArrayList<BookPOJO> listBook;
 
-
-    public PromotionPOJO(String id, String name, String description, Date startDate, Date endDate, Double percent, String applyOption, Integer limitOrders, Boolean enabled) {
+    public PromotionPOJO(String id, String name, String description, Date startDate,
+                         Date endDate, Double percent, String applyOption,
+                         Integer limitOrders, Boolean enabled) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -24,6 +28,21 @@ public class PromotionPOJO {
         this.applyOption = applyOption;
         this.limitOrders = limitOrders;
         this.enabled = enabled;
+    }
+
+    public PromotionPOJO(String id, String name, String description, Date startDate,
+                         Date endDate, Double percent, String applyOption,
+                         Integer limitOrders, Boolean enabled, ArrayList<BookPOJO> listBook) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.percent = percent;
+        this.applyOption = applyOption;
+        this.limitOrders = limitOrders;
+        this.enabled = enabled;
+        this.listBook = listBook;
     }
 
     public String getId() {
@@ -96,5 +115,13 @@ public class PromotionPOJO {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public ArrayList<BookPOJO> getListBook() {
+        return listBook;
+    }
+
+    public void setListBook(ArrayList<BookPOJO> listBook) {
+        this.listBook = listBook;
     }
 }

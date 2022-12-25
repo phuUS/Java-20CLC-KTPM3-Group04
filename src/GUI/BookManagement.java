@@ -25,11 +25,13 @@ public class BookManagement extends JFrame implements ActionListener {
 
     final int SIDEBAR_PANE_WIDTH = 170;
     JPanel sidebarPane;
+    JButton selectedButton;
     JButton allBooksButton;
     JButton newBooksButton;
     JButton hotBooksButton;
-    JButton addBookButton;
     JButton outOfStockBooksButton;
+    JButton addBookButton;
+
 
 
     JPanel contentPane;
@@ -118,14 +120,30 @@ public class BookManagement extends JFrame implements ActionListener {
         add(contentPane, BorderLayout.CENTER);
     }
 
-    public JTable getAllBooksTable() {
+    // class methods
+
+    // New books are books that have release date within 1 month back
+    // Hot books are books that have total purchase >= 100
+    public JTable getBookTable() {
         String[] col ={"ID","NAME","ID PUBLISHER", "PRICE", "STOCK", "TOTAL PURCHASE", "RELEASE DATE", "STATUS", "ACTION", "EDIT"};
-        ArrayList<BookPOJO> allBooks = BookBUS.getAll();
+        ArrayList<BookPOJO> bookList = null;
+        if (selectedButton == allBooksButton){
+            bookList = BookBUS.getAll();
+        }
+        else if (selectedButton == newBooksButton){
+            bookList = BookBUS.getNewBooks();
+        }
+        else if (selectedButton == hotBooksButton){
+            bookList = BookBUS.getHotBooks();
+        }
+        else if (selectedButton == outOfStockBooksButton){
+            bookList = BookBUS.getOutOfStockBooks();
+        }
 
         JTable table = new JTable();
         DefaultTableModel tableModel = new DefaultTableModel(col, 0);
 
-        for (BookPOJO book : allBooks) {
+        for (BookPOJO book : bookList) {
             String id = book.getId();
             String name = book.getName();
             String idPublisher = book.getIdPublisher();
@@ -148,11 +166,10 @@ public class BookManagement extends JFrame implements ActionListener {
         return table;
     }
 
-    // class methods
-    public void refreshAllBooksTable(){
-        contentLabel.setText("All Books List");
+    public void refreshBookTable(){
+        contentLabel.setText(selectedButton.getText() + " List");
         contentPane.add(contentLabel);
-        bookTable = getAllBooksTable();
+        bookTable = getBookTable();
         bookTableScroll.setViewportView(bookTable);
         contentPane.add(bookTableScroll);
         revalidate();
@@ -162,11 +179,12 @@ public class BookManagement extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         contentPane.removeAll();
-
-        if (e.getSource() == allBooksButton){
-            refreshAllBooksTable();
+        selectedButton = (JButton)e.getSource();
+        if (selectedButton == allBooksButton || selectedButton == newBooksButton
+                || selectedButton == hotBooksButton || selectedButton == outOfStockBooksButton){
+            refreshBookTable();
         }
-        else if (e.getSource() == addBookButton){
+        else if (selectedButton == addBookButton){
             addBookFormPanel = new AddBookFormPanel();
             contentLabel.setText("Add A New Book");
             contentPane.add(contentLabel);
@@ -240,15 +258,15 @@ public class BookManagement extends JFrame implements ActionListener {
                 String bookId = bookTable.getValueAt(row, 0).toString();
                 if (Objects.equals(type, "Enable")) {
                     BookBUS.enable(bookId);
-                    refreshAllBooksTable();
+                    refreshBookTable();
                 } else if (Objects.equals(type, "Disable")){
                     BookBUS.disable(bookId);
-                    refreshAllBooksTable();
+                    refreshBookTable();
                 } else if (Objects.equals(type, "Edit")){
                     new EditBookDialog(BookManagement.this, "Edit Book", true, bookId);
-                    refreshAllBooksTable();
+                    refreshBookTable();
                 } else {
-                    System.out.println("ERROR: " + bookTable.getValueAt(row, 0) + " - " + type);
+                    System.out.println("Unknown action: " + bookTable.getValueAt(row, 0) + " - " + type);
                 }
             }
             isPushed = false;
@@ -484,23 +502,28 @@ public class BookManagement extends JFrame implements ActionListener {
                 this.dispose();
             }
             else if (e.getSource() == saveButton){
-                BookPOJO modifiedBook = new BookPOJO(
-                        idField.getText(),
-                        nameField.getText(),
-                        Objects.requireNonNull(publisherIdField.getSelectedItem()).toString(),
-                        Integer.parseInt(priceField.getText()),
-                        Integer.parseInt(stockField.getText()),
-                        Integer.parseInt(totalPurchaseField.getText()),
-                        (Date) releaseDateField.getModel().getValue(),
-                        statusField.getSelectedItem() == "Enabled");
+                try {
+                    BookPOJO modifiedBook = new BookPOJO(
+                            idField.getText(),
+                            nameField.getText(),
+                            Objects.requireNonNull(publisherIdField.getSelectedItem()).toString(),
+                            Integer.parseInt(priceField.getText()),
+                            Integer.parseInt(stockField.getText()),
+                            Integer.parseInt(totalPurchaseField.getText()),
+                            (Date) releaseDateField.getModel().getValue(),
+                            statusField.getSelectedItem() == "Enabled");
 
-                Boolean result = BookBUS.updateOne(book.getId(),modifiedBook);
-                if (result){
-                    JOptionPane.showMessageDialog(this, "Update success!", "Success", JOptionPane.PLAIN_MESSAGE);
-                    this.dispose();
+                    Boolean result = BookBUS.updateOne(book.getId(), modifiedBook);
+                    if (result) {
+                        JOptionPane.showMessageDialog(this, "Update success!", "Success", JOptionPane.PLAIN_MESSAGE);
+                        this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Something went wrong...", "Error", JOptionPane.WARNING_MESSAGE);
+                    }
                 }
-                else{
-                    JOptionPane.showMessageDialog(this, "Something went wrong...", "Error", JOptionPane.WARNING_MESSAGE);
+                catch (Exception ex){
+                    JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
+                    System.out.println(Arrays.toString(ex.getStackTrace()));
                 }
             }
         }

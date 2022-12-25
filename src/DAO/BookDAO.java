@@ -46,6 +46,120 @@ public class BookDAO {
         return result;
     }
 
+    public static ArrayList<BookPOJO> getNewBooks(){
+        ArrayList<BookPOJO> result = null;
+        Connection connection = Database.createConnection();
+        try {
+            result = new ArrayList<>();
+            Statement statement;
+            statement = connection.createStatement();
+            String query = "SELECT * FROM book WHERE release_date >= (DATE_SUB(CURDATE(), INTERVAL 1 MONTH))";
+            ResultSet rs = statement.executeQuery(query);
+            while(rs.next()){
+                String id = rs.getString("id");
+                String name = rs.getString("name");
+                String id_publisher = rs.getString("id_publisher");
+                int price = rs.getInt("price");
+                int stock = rs.getInt("stock");
+                int totalPurchase = rs.getInt("total_purchase");
+                Date releaseDate = rs.getDate("release_date");
+                Boolean enabled = rs.getBoolean("enabled");
+                BookPOJO book = new BookPOJO(id, name, id_publisher, price, stock, totalPurchase, releaseDate, enabled);
+                result.add(book);
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
+    public static ArrayList<BookPOJO> getHotBooks(){
+        ArrayList<BookPOJO> result = null;
+        Connection connection = Database.createConnection();
+        try {
+            result = new ArrayList<>();
+            Statement statement;
+            statement = connection.createStatement();
+            String query = "SELECT * FROM book WHERE total_purchase > 100";
+            ResultSet rs = statement.executeQuery(query);
+            while(rs.next()){
+                String id = rs.getString("id");
+                String name = rs.getString("name");
+                String id_publisher = rs.getString("id_publisher");
+                int price = rs.getInt("price");
+                int stock = rs.getInt("stock");
+                int totalPurchase = rs.getInt("total_purchase");
+                Date releaseDate = rs.getDate("release_date");
+                Boolean enabled = rs.getBoolean("enabled");
+                BookPOJO book = new BookPOJO(id, name, id_publisher, price, stock, totalPurchase, releaseDate, enabled);
+                result.add(book);
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
+    public static ArrayList<BookPOJO> getOutOfStockBooks(){
+        ArrayList<BookPOJO> result = null;
+        Connection connection = Database.createConnection();
+        try {
+            result = new ArrayList<>();
+            Statement statement;
+            statement = connection.createStatement();
+            String query = "SELECT * FROM book WHERE stock <= 0";
+            ResultSet rs = statement.executeQuery(query);
+            while(rs.next()){
+                String id = rs.getString("id");
+                String name = rs.getString("name");
+                String id_publisher = rs.getString("id_publisher");
+                int price = rs.getInt("price");
+                int stock = rs.getInt("stock");
+                int totalPurchase = rs.getInt("total_purchase");
+                Date releaseDate = rs.getDate("release_date");
+                Boolean enabled = rs.getBoolean("enabled");
+                BookPOJO book = new BookPOJO(id, name, id_publisher, price, stock, totalPurchase, releaseDate, enabled);
+                result.add(book);
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
     public static BookPOJO getOne(String bookId){
         BookPOJO result = null;
         Connection connection = Database.createConnection();
