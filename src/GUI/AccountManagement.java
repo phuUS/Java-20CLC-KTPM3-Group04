@@ -1,7 +1,9 @@
 package GUI;
 
 import BUS.AccountBUS;
+import BUS.UserBUS;
 import POJO.AccountPOJO;
+import POJO.UserPOJO;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -21,93 +23,31 @@ public class AccountManagement extends JPanel implements ActionListener {
     JPanel menuPane;
     JButton backButton;
 
-    final int SIDEBARPANE_WIDTH = 150;
+    final int SIDEBARPANE_WIDTH = 180;
     JPanel sidebarPane;
     JButton allAccountsButton;
+    JButton allUserButton;
 
     JPanel contentPane;
     JLabel contentLabel;
-    JTable accountTable;
-    JScrollPane accountTableScroll;
+    JScrollPane scrollPane;
+    JPanel form;
 
     private boolean DEBUG = false;
     private JTable table;
     private JTextField filterText;
     private JTextField statusText;
-    private TableRowSorter<AccountManagement.MyTableModel> sorter;
+
+    TableRowSorter<AccountManagement.AllAccounts> sorter1;
+    AccountManagement.AllAccounts model1;
+
+    TableRowSorter<AccountManagement.AllUsers> sorter2;
+    AccountManagement.AllUsers model2;
+
 
     public AccountManagement() {
         super();
         setLayout(new BorderLayout(0,0));
-
-
-        //Create a table with a sorter.
-        AccountManagement.MyTableModel model = new AccountManagement.MyTableModel();
-        sorter = new TableRowSorter<AccountManagement.MyTableModel>(model);
-        table = new JTable(model);
-        table.setRowSorter(sorter);
-
-
-        //For the purposes of this example, better to have a single
-        //selection.
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        //When selection changes, provide account with row numbers for
-        //both view and model.
-        table.getSelectionModel().addListSelectionListener(
-                new ListSelectionListener() {
-                    public void valueChanged(ListSelectionEvent event) {
-                        int viewRow = table.getSelectedRow();
-                        if (viewRow < 0) {
-                            //Selection got filtered away.
-                            statusText.setText("");
-                        } else {
-                            int modelRow =
-                                    table.convertRowIndexToModel(viewRow);
-                            statusText.setText(
-                                    String.format("Selected Row in view: %d. " +
-                                                    "Selected Row in model: %d.",
-                                            viewRow, modelRow));
-                        }
-                    }
-                }
-        );
-
-
-        //Create the scroll pane and add the table to it.
-        JScrollPane scrollPane = new JScrollPane(table);
-
-        //Add the scroll pane to this panel.
-//        add(scrollPane);
-
-        //Create a separate form for filterText and statusText
-        JPanel form = new JPanel(new SpringLayout());
-        JLabel l1 = new JLabel("Filter Text:", SwingConstants.TRAILING);
-        form.add(l1);
-        filterText = new JTextField();
-        //Whenever filterText changes, invoke newFilter.
-        filterText.getDocument().addDocumentListener(
-                new DocumentListener() {
-                    public void changedUpdate(DocumentEvent e) {
-                        newFilter();
-                    }
-                    public void insertUpdate(DocumentEvent e) {
-                        newFilter();
-                    }
-                    public void removeUpdate(DocumentEvent e) {
-                        newFilter();
-                    }
-                });
-        l1.setLabelFor(filterText);
-        form.add(filterText);
-        JLabel l2 = new JLabel("Status:", SwingConstants.TRAILING);
-        form.add(l2);
-        statusText = new JTextField();
-        l2.setLabelFor(statusText);
-        form.add(statusText);
-        SpringUtilities.makeCompactGrid(form, 2, 2, 6, 6, 6, 6);
-//        add(form);
-
 
         menuPane = new JPanel();
         menuPane.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -128,82 +68,251 @@ public class AccountManagement extends JPanel implements ActionListener {
         allAccountsButton.setFocusable(false);
         allAccountsButton.addActionListener(this);
 
+        allUserButton = new JButton("All users information");
+        allUserButton.setMaximumSize(new Dimension(SIDEBARPANE_WIDTH, 30));
+        allUserButton.setFocusable(false);
+        allUserButton.addActionListener(this);
+
         sidebarPane.add(allAccountsButton);
+        sidebarPane.add(allUserButton);
 
-//        contentPane = new JPanel();
-//        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-//
-//        contentLabel = new JLabel();
-//        contentLabel.setText("All of accounts list");
-//
-//        accountTable = null;
-//        accountTableScroll = new JScrollPane(accountTable);
+        contentPane = new JPanel();
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
-        contentPane.add(scrollPane);
-        contentPane.add(form);
+        contentLabel = new JLabel();
+        contentLabel.setText("WELCOME TO THE ADMIN PAGE!");
+        contentPane.add(contentLabel);
+
 
         add(menuPane, BorderLayout.NORTH);
         add(sidebarPane, BorderLayout.WEST);
         add(contentPane, BorderLayout.CENTER);
-
-//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        this.setVisible(true);
-    }
-
-    public JTable getAllAccountsTable() {
-        String col[]={"ID","accountNAME","PASSWORD"};
-        ArrayList<AccountPOJO> allAccounts = AccountBUS.getAll();
-
-        JTable result = new JTable();
-        DefaultTableModel tableModel = new DefaultTableModel(col, 0);
-
-        for (int i = 0; i < allAccounts.size(); i++){
-            String id = allAccounts.get(i).getId();
-            String username = allAccounts.get(i).getUsername();
-            String password = allAccounts.get(i).getPassword();
-            Object[] data = {id, username, password};
-            tableModel.addRow(data);
-        }
-        result.setModel(tableModel);
-        return result;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         if (e.getSource() == allAccountsButton){
-            if (accountTable != null) {
-                contentPane.remove(accountTable);
+            if(contentPane != null){
+                contentPane.removeAll();
             }
-            accountTable = getAllAccountsTable();
-            accountTableScroll.setViewportView(accountTable);
-            contentPane.add(accountTableScroll);
-            contentLabel.setText("Here are all the accounts");
-            revalidate();
+            this.getTableAllAccountsButton();
+
+        } else if (e.getSource() == allUserButton){
+            if(contentPane != null){
+                contentPane.removeAll();
+            }
+            this.getTableAllUsersButton();
         }
     }
 
-    private void newFilter() {
-        RowFilter<AccountManagement.MyTableModel, Object> rf = null;
+    public void getTableAllAccountsButton(){
+        model1 = new AccountManagement.AllAccounts();
+        sorter1 = new TableRowSorter<AccountManagement.AllAccounts>(model1);
+        table = new JTable(model1);
+        table.setRowSorter(sorter1);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.getSelectionModel().addListSelectionListener(
+                new ListSelectionListener() {
+                    public void valueChanged(ListSelectionEvent event) {
+                        int viewRow = table.getSelectedRow();
+                        if (viewRow < 0) {
+                            statusText.setText("");
+                        } else {
+                            int modelRow =
+                                    table.convertRowIndexToModel(viewRow);
+                            statusText.setText(
+                                    String.format("Selected Row in view: %d. " +
+                                                    "Selected Row in model: %d.",
+                                            viewRow, modelRow));
+                        }
+                    }
+                }
+        );
+        scrollPane = new JScrollPane(table);
+        form = new JPanel(new SpringLayout());
+        JLabel l1 = new JLabel("Filter Text:", SwingConstants.TRAILING);
+        form.add(l1);
+        filterText = new JTextField();
+        filterText.getDocument().addDocumentListener(
+                new DocumentListener() {
+                    public void changedUpdate(DocumentEvent e) {
+                        newFilter1();
+                    }
+                    public void insertUpdate(DocumentEvent e) {
+                        newFilter1();
+                    }
+                    public void removeUpdate(DocumentEvent e) {
+                        newFilter1();
+                    }
+                });
+        l1.setLabelFor(filterText);
+        form.add(filterText);
+        JLabel l2 = new JLabel("Status:", SwingConstants.TRAILING);
+        form.add(l2);
+        statusText = new JTextField();
+        l2.setLabelFor(statusText);
+        form.add(statusText);
+        SpringUtilities.makeCompactGrid(form, 2, 2, 6, 6, 6, 6);
+
+        contentPane.add(scrollPane);
+        contentPane.add(form);
+        revalidate();
+    }
+
+    public void getTableAllUsersButton(){
+        model2 = new AccountManagement.AllUsers();
+        sorter2 = new TableRowSorter<AccountManagement.AllUsers>(model2);
+        table = new JTable(model2);
+        table.setRowSorter(sorter2);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.getSelectionModel().addListSelectionListener(
+                new ListSelectionListener() {
+                    public void valueChanged(ListSelectionEvent event) {
+                        int viewRow = table.getSelectedRow();
+                        if (viewRow < 0) {
+                            statusText.setText("");
+                        } else {
+                            int modelRow =
+                                    table.convertRowIndexToModel(viewRow);
+                            statusText.setText(
+                                    String.format("Selected Row in view: %d. " +
+                                                    "Selected Row in model: %d.",
+                                            viewRow, modelRow));
+                        }
+                    }
+                }
+        );
+        scrollPane = new JScrollPane(table);
+        form = new JPanel(new SpringLayout());
+        JLabel l1 = new JLabel("Filter Text:", SwingConstants.TRAILING);
+        form.add(l1);
+        filterText = new JTextField();
+        filterText.getDocument().addDocumentListener(
+                new DocumentListener() {
+                    public void changedUpdate(DocumentEvent e) {
+                        newFilter2();
+                    }
+                    public void insertUpdate(DocumentEvent e) {
+                        newFilter2();
+                    }
+                    public void removeUpdate(DocumentEvent e) {
+                        newFilter2();
+                    }
+                });
+        l1.setLabelFor(filterText);
+        form.add(filterText);
+        JLabel l2 = new JLabel("Status:", SwingConstants.TRAILING);
+        form.add(l2);
+        statusText = new JTextField();
+        l2.setLabelFor(statusText);
+        form.add(statusText);
+        SpringUtilities.makeCompactGrid(form, 2, 2, 6, 6, 6, 6);
+
+        contentPane.add(scrollPane);
+        contentPane.add(form);
+        revalidate();
+    }
+
+    private void newFilter1() {
+        RowFilter<AccountManagement.AllAccounts, Object> rf = null;
         //If current expression doesn't parse, don't update.
         try {
             rf = RowFilter.regexFilter(filterText.getText());
         } catch (java.util.regex.PatternSyntaxException e) {
             return;
         }
-        sorter.setRowFilter(rf);
+        sorter1.setRowFilter(rf);
     }
 
+    private void newFilter2() {
+        RowFilter<AccountManagement.AllUsers, Object> rf = null;
+        //If current expression doesn't parse, don't update.
+        try {
+            rf = RowFilter.regexFilter(filterText.getText());
+        } catch (java.util.regex.PatternSyntaxException e) {
+            return;
+        }
+        sorter2.setRowFilter(rf);
+    }
+
+    class AllUsers extends AbstractTableModel {
+        private String[] columnNames = {"USER ID",
+                "NAME",
+                "ID ACCOUNT",
+                "ADDRESS",
+                "ROLE"};
+
+        private ArrayList<UserPOJO> data;
+
+        public AllUsers(){
+            data = new ArrayList<>();
+            data = UserBUS.getAll();
+        }
+
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        public int getRowCount() {
+            return data.size();
+        }
+
+        public String getColumnName(int col) {
+            return columnNames[col];
+        }
+
+        public Object getValueAt(int row, int col) {
+            UserPOJO p = data.get(row);
+            if(col == 0){
+                return p.getId();
+            }
+            if(col == 1){
+                return p.getName();
+            }
+            if(col == 2){
+                return p.getIdAccount();
+            }
+            if(col == 3){
+                return p.getAddress();
+            }
+
+                return p.getRole();
 
 
+        }
 
-    class MyTableModel extends AbstractTableModel {
+        public Class getColumnClass(int c) {
+            return getValueAt(0, c).getClass();
+        }
+
+        public boolean isCellEditable(int row, int col) {
+            if (col < 2) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        public void setValueAt(Object value, int row, int col) {
+            if (DEBUG) {
+                System.out.println("Setting value at " + row + "," + col
+                        + " to " + value
+                        + " (an instance of "
+                        + value.getClass() + ")");
+            }
+
+        }
+    }
+
+    class AllAccounts extends AbstractTableModel {
         private String[] columnNames = {"ID",
                 "USERNAME",
                 "PASSWORD"};
 
         private ArrayList<AccountPOJO> data;
 
-        public MyTableModel(){
+        public AllAccounts(){
             data = new ArrayList<>();
             data = AccountBUS.getAll();
         }
@@ -233,23 +342,11 @@ public class AccountManagement extends JPanel implements ActionListener {
             }
         }
 
-        /*
-         * JTable uses this method to determine the default renderer/
-         * editor for each cell.  If we didn't implement this method,
-         * then the last column would contain text ("true"/"false"),
-         * rather than a check box.
-         */
         public Class getColumnClass(int c) {
             return getValueAt(0, c).getClass();
         }
 
-        /*
-         * Don't need to implement this method unless your table's
-         * editable.
-         */
         public boolean isCellEditable(int row, int col) {
-            //Note that the data/cell address is constant,
-            //no matter where the cell appears onscreen.
             if (col < 2) {
                 return false;
             } else {
@@ -257,10 +354,6 @@ public class AccountManagement extends JPanel implements ActionListener {
             }
         }
 
-        /*
-         * Don't need to implement this method unless your table's
-         * data can change.
-         */
         public void setValueAt(Object value, int row, int col) {
             if (DEBUG) {
                 System.out.println("Setting value at " + row + "," + col
@@ -270,19 +363,8 @@ public class AccountManagement extends JPanel implements ActionListener {
             }
 
         }
-
-        private void printDebugData() {
-            int numRows = getRowCount();
-            int numCols = getColumnCount();
-            System.out.println("--------------------------");
-        }
     }
 
-    /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event-dispatching thread.
-     */
     private static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("Admin - Book Management");
