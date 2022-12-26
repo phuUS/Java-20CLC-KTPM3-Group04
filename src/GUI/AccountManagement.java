@@ -264,6 +264,7 @@ public class AccountManagement extends JPanel implements ActionListener {
 
         public Object getValueAt(int row, int col) {
             UserPOJO p = data.get(row);
+
             if(col == 0){
                 return p.getId();
             }
@@ -308,7 +309,8 @@ public class AccountManagement extends JPanel implements ActionListener {
     class AllAccounts extends AbstractTableModel {
         private String[] columnNames = {"ID",
                 "USERNAME",
-                "PASSWORD"};
+                "PASSWORD",
+                "IS ACTIVE"};
 
         private ArrayList<AccountPOJO> data;
 
@@ -331,15 +333,20 @@ public class AccountManagement extends JPanel implements ActionListener {
 
         public Object getValueAt(int row, int col) {
             AccountPOJO p = data.get(row);
+
             if(col == 0){
                 return p.getId();
             }
-            else if(col == 1){
+            if(col == 1){
                 return p.getUsername();
             }
-            else {
+
+            if(col == 2){
                 return p.getPassword();
             }
+            return p.getIsActive();
+
+
         }
 
         public Class getColumnClass(int c) {
@@ -368,7 +375,7 @@ public class AccountManagement extends JPanel implements ActionListener {
     private static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("Admin - Book Management");
-        frame.setSize(1000, 700);
+        frame.setPreferredSize(new Dimension(900, 600));
         frame.setLayout(new BorderLayout(0,0));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

@@ -24,7 +24,8 @@ public class AccountDAO {
                 String id = rs.getString("id");
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-                AccountPOJO account = new AccountPOJO(id, username, password);
+                boolean isActive = rs.getBoolean("is_active");
+                AccountPOJO account = new AccountPOJO(id, username, password, isActive);
                 result.add(account);
             }
             rs.close();

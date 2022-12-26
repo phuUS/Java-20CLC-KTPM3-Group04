@@ -4,11 +4,13 @@ public class AccountPOJO {
     String id;
     String username;
     String password;
+    boolean isActive;
 
-    public AccountPOJO(String id, String username, String password) {
+    public AccountPOJO(String id, String username, String password, boolean isActive) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.isActive = isActive;
     }
 
     public String getId() {
@@ -33,5 +35,13 @@ public class AccountPOJO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 }
