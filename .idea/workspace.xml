@@ -2,16 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4e409101-b9b5-47be-8c5b-e6ac23aff927" name="Changes" comment="update code">
+      <change afterPath="$PROJECT_DIR$/src/GUI/LoginForm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/images/cover.jpeg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/AccountDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/AccountDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/Database.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/Database.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$4.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$5.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$AllAccounts.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$AllAccounts.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$AllUsers.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$AllUsers.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/POJO/AccountPOJO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/POJO/AccountPOJO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/AccountDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/AccountDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/Database.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/AccountManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/AccountManagement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/POJO/AccountPOJO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/POJO/AccountPOJO.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,9 +55,28 @@
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.AccountManagement">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/images" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.GUI.LoginForm">
     <configuration name="AccountManagement" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="GUI.AccountManagement" />
+      <module name="Java-20CLC-KTPM3-Group04" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="GUI.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GUI.LoginForm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="GUI.LoginForm" />
       <module name="Java-20CLC-KTPM3-Group04" />
       <extension name="coverage">
         <pattern>
@@ -78,6 +101,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="LoginForm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="LoginForm" />
+      <module name="Java-20CLC-KTPM3-Group04" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="Java-20CLC-KTPM3-Group04" />
@@ -85,19 +115,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TableFilterDemo" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="TableFilterDemo" />
-      <module name="Java-20CLC-KTPM3-Group04" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.GUI.LoginForm" />
+        <item itemvalue="Application.LoginForm" />
         <item itemvalue="Application.AccountManagement" />
         <item itemvalue="Application.GUI.TableFilterDemo" />
         <item itemvalue="Application.Main" />
-        <item itemvalue="Application.TableFilterDemo" />
       </list>
     </recent_temporary>
   </component>

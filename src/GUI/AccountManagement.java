@@ -28,10 +28,14 @@ public class AccountManagement extends JPanel implements ActionListener {
     JButton allAccountsButton;
     JButton allUserButton;
 
+    JButton addNewAccount;
+
     JPanel contentPane;
     JLabel contentLabel;
     JScrollPane scrollPane;
     JPanel form;
+
+    JPanel menu;
 
     private boolean DEBUG = false;
     private JTable table;
@@ -73,8 +77,14 @@ public class AccountManagement extends JPanel implements ActionListener {
         allUserButton.setFocusable(false);
         allUserButton.addActionListener(this);
 
+        addNewAccount = new JButton("Add a new account");
+        addNewAccount.setMaximumSize(new Dimension(SIDEBARPANE_WIDTH, 30));
+        addNewAccount.setFocusable(false);
+        addNewAccount.addActionListener(this);
+
         sidebarPane.add(allAccountsButton);
         sidebarPane.add(allUserButton);
+        sidebarPane.add(addNewAccount);
 
         contentPane = new JPanel();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
@@ -131,6 +141,15 @@ public class AccountManagement extends JPanel implements ActionListener {
         );
         scrollPane = new JScrollPane(table);
         form = new JPanel(new SpringLayout());
+        menu = new JPanel(new SpringLayout());
+        JButton disableButton = new JButton("Disable");
+        menu.add(disableButton);
+        JButton enableButton = new JButton("Enable");
+        menu.add(enableButton);
+        JButton resetPassButton = new JButton("Reset password");
+        menu.add(resetPassButton);
+        menu.setBackground(Color.red);
+        SpringUtilities.makeCompactGrid(menu, 1, 3, 6, 6, 6, 6);
         JLabel l1 = new JLabel("Filter Text:", SwingConstants.TRAILING);
         form.add(l1);
         filterText = new JTextField();
@@ -156,6 +175,7 @@ public class AccountManagement extends JPanel implements ActionListener {
         SpringUtilities.makeCompactGrid(form, 2, 2, 6, 6, 6, 6);
 
         contentPane.add(scrollPane);
+        contentPane.add(menu);
         contentPane.add(form);
         revalidate();
     }
