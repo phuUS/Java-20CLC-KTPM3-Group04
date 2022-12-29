@@ -1,12 +1,21 @@
 package GUI;
+import BUS.AccountBUS;
+import BUS.UserBUS;
+import POJO.AccountPOJO;
+import POJO.UserPOJO;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Optional;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,11 +25,15 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class LoginForm extends JFrame{
+public class LoginForm extends JFrame implements ActionListener {
+    JButton loginButton;
+    JPasswordField pass;
+    JTextField user;
+    JLabel message;
 
     public LoginForm() {
 //        setUndecorated(true);
-        setSize(900, 690);
+        setSize(900, 600);
 //        setLocationRelativeTo(null);
         userInterface();
     }
@@ -32,7 +45,7 @@ public class LoginForm extends JFrame{
         left_pan.setBackground(Color.DARK_GRAY);
 
         JLabel cover = new JLabel(new ImageIcon(getClass().getResource("../images/cover.jpeg")));
-        cover.setText("Authentication User");
+
         cover.setHorizontalTextPosition(JLabel.CENTER);
         cover.setVerticalTextPosition(JLabel.BOTTOM);
         cover.setForeground(Color.white);
@@ -56,7 +69,7 @@ public class LoginForm extends JFrame{
         _user.setFont(new Font("Segoe UI", 0, 14));
         _user.setPreferredSize(new Dimension(200, 20));
         pan.add(_user);
-        JTextField user = new JTextField();
+        user = new JTextField();
         user.setPreferredSize(new Dimension(200, 30));
         pan.add(user);
 
@@ -64,7 +77,7 @@ public class LoginForm extends JFrame{
         _pass.setFont(new Font("Segoe UI", 0, 14));
         _pass.setPreferredSize(new Dimension(200, 20));
         pan.add(_pass);
-        JPasswordField pass = new JPasswordField();
+        pass = new JPasswordField();
         pass.setPreferredSize(new Dimension(200, 30));
         pan.add(pass);
 
@@ -73,20 +86,89 @@ public class LoginForm extends JFrame{
         right_pan.add(right_comp);
 
         JPanel pan_btn = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        pan_btn.setPreferredSize(new Dimension(this.getWidth(), 70));
+        pan_btn.setPreferredSize(new Dimension(this.getWidth(), 170));
 
-        JButton login = new JButton("Login");
-        login.setPreferredSize(new Dimension(120, 30));
-        login.setFont(new Font("Segoe UI", 0, 17));
-        login.setContentAreaFilled(false);
-        login.setForeground(Color.blue);
-        login.setBorder(BorderFactory.createLineBorder(Color.blue, 1, true));
-        pan_btn.add(login);
+
+        message = new JLabel("Pls login to access our system!");
+//        message.setPreferredSize(new Dimension(200, 30));
+        message.setFont(new Font("Segoe UI", 0, 14));
+        message.setForeground(Color.blue);
+        pan.add(message);
+
+
+        loginButton = new JButton("Login");
+        loginButton.setPreferredSize(new Dimension(120, 30));
+        loginButton.setFont(new Font("Segoe UI", 0, 17));
+        loginButton.setContentAreaFilled(false);
+        loginButton.setForeground(Color.blue);
+        loginButton.setBorder(BorderFactory.createLineBorder(Color.blue, 1, true));
+        loginButton.addActionListener(this);
+        pan_btn.add(loginButton);
         right_pan.add(pan_btn, "South");
 
         main_pan.add(right_pan);
 
         getContentPane().add(main_pan);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if (e.getSource() == loginButton){
+            String userValue = user.getText();        //get user entered username from the textField1
+            String passValue = String.valueOf(pass.getPassword());        //get user entered password from the textField2
+            System.out.println(userValue);
+            System.out.println(passValue);
+            int role = validateAccount(userValue, passValue);
+            System.out.println(role);
+            if(role == -2){
+                message.setForeground(Color.red);
+                message.setText("Username and password are required!");
+                return;
+            }
+            if(role == -1){
+                message.setForeground(Color.red);
+                message.setText("Username or password went wrong!");
+
+                return;
+            }
+            if(role == 1 || role == 0){
+                message.setForeground(Color.blue);
+                message.setText("Login successfully!");
+
+                return;
+            }
+        }
+    }
+
+    public int validateAccount(String username, String password){
+        if(username.isEmpty() || password.isEmpty()){
+            return -2;
+        }
+        ArrayList<AccountPOJO> accountList;
+        accountList = new ArrayList<>();
+        accountList = AccountBUS.getAll();
+        ArrayList<UserPOJO> userList;
+        userList = new ArrayList<>();
+        userList = UserBUS.getAll();
+//        return data.stream().filter(o->o.getUsername().equals(username)).findFirst().isPresent();
+        for(AccountPOJO a : accountList) {
+            if(a.getIsActive()){
+                if(a != null && a.getUsername().equals(username) && a.getPassword().equals(password)) {
+//                    Optional<UserPOJO> userTemp = userList.stream().filter(u->u.getIdAccount() == a.getId()).findAny();
+                    UserPOJO userTemp = userList.stream().filter(u -> a.getId().equals(u.getIdAccount())).findFirst().orElse(null);
+                    System.out.println(userTemp);
+                    if(userTemp != null){
+                        if(userTemp.getRole() == 1){
+                            return 1; // admin
+                        } else{
+                            return 0; // user
+                        }
+                    }
+                }
+            }
+        }
+        return -1;
     }
 
     public static void main(String[] args) {
