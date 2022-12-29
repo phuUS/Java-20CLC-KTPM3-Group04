@@ -12,16 +12,16 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 public class AccountManagement extends JPanel implements ActionListener {
     JPanel menuPane;
-    JButton backButton;
+    JButton logoutButton;
 
     final int SIDEBARPANE_WIDTH = 180;
     JPanel sidebarPane;
@@ -36,6 +36,7 @@ public class AccountManagement extends JPanel implements ActionListener {
     JPanel form;
 
     JPanel menu;
+    static JFrame frame;
 
     private boolean DEBUG = false;
     private JTable table;
@@ -57,9 +58,10 @@ public class AccountManagement extends JPanel implements ActionListener {
         menuPane.setLayout(new FlowLayout(FlowLayout.LEFT));
         menuPane.setBackground(Color.GRAY);
 
-        backButton = new JButton("Back");
-        backButton.setFocusable(false);
-        menuPane.add(backButton);
+        logoutButton = new JButton("Back");
+        logoutButton.setFocusable(false);
+        logoutButton.addActionListener(this);
+        menuPane.add(logoutButton);
 
         sidebarPane = new JPanel();
         sidebarPane.setLayout(new BoxLayout(sidebarPane, BoxLayout.Y_AXIS));
@@ -113,6 +115,12 @@ public class AccountManagement extends JPanel implements ActionListener {
                 contentPane.removeAll();
             }
             this.getTableAllUsersButton();
+        }
+        else if(e.getSource() == logoutButton){
+            LoginForm loginForm = new LoginForm();
+            setVisible(false);
+            frame.setVisible(false);
+            loginForm.setVisible(true);
         }
     }
 
@@ -392,9 +400,9 @@ public class AccountManagement extends JPanel implements ActionListener {
         }
     }
 
-    private static void createAndShowGUI() {
+    public void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("Admin - Book Management");
+        frame = new JFrame("Admin - Book Management");
         frame.setPreferredSize(new Dimension(900, 600));
         frame.setLayout(new BorderLayout(0,0));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -409,13 +417,13 @@ public class AccountManagement extends JPanel implements ActionListener {
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        //Schedule a job for the event-dispatching thread:
+//        //creating and showing this application's GUI.
+//        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                createAndShowGUI();
+//            }
+//        });
+//    }
 }

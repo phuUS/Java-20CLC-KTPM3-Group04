@@ -117,10 +117,7 @@ public class LoginForm extends JFrame implements ActionListener {
         if (e.getSource() == loginButton){
             String userValue = user.getText();        //get user entered username from the textField1
             String passValue = String.valueOf(pass.getPassword());        //get user entered password from the textField2
-            System.out.println(userValue);
-            System.out.println(passValue);
             int role = validateAccount(userValue, passValue);
-            System.out.println(role);
             if(role == -2){
                 message.setForeground(Color.red);
                 message.setText("Username and password are required!");
@@ -129,13 +126,19 @@ public class LoginForm extends JFrame implements ActionListener {
             if(role == -1){
                 message.setForeground(Color.red);
                 message.setText("Username or password went wrong!");
-
                 return;
             }
-            if(role == 1 || role == 0){
+            if(role == 0){
                 message.setForeground(Color.blue);
-                message.setText("Login successfully!");
-
+                message.setText("Login as user successfully!");
+                return;
+            }
+            if(role == 1){
+                message.setForeground(Color.blue);
+                message.setText("Login as admin successfully!");
+                AccountManagement accountManagement = new AccountManagement();
+                accountManagement.createAndShowGUI();
+                setVisible(false);
                 return;
             }
         }
@@ -143,7 +146,7 @@ public class LoginForm extends JFrame implements ActionListener {
 
     public int validateAccount(String username, String password){
         if(username.isEmpty() || password.isEmpty()){
-            return -2;
+            return -2; // missing input
         }
         ArrayList<AccountPOJO> accountList;
         accountList = new ArrayList<>();
@@ -151,13 +154,10 @@ public class LoginForm extends JFrame implements ActionListener {
         ArrayList<UserPOJO> userList;
         userList = new ArrayList<>();
         userList = UserBUS.getAll();
-//        return data.stream().filter(o->o.getUsername().equals(username)).findFirst().isPresent();
         for(AccountPOJO a : accountList) {
             if(a.getIsActive()){
                 if(a != null && a.getUsername().equals(username) && a.getPassword().equals(password)) {
-//                    Optional<UserPOJO> userTemp = userList.stream().filter(u->u.getIdAccount() == a.getId()).findAny();
                     UserPOJO userTemp = userList.stream().filter(u -> a.getId().equals(u.getIdAccount())).findFirst().orElse(null);
-                    System.out.println(userTemp);
                     if(userTemp != null){
                         if(userTemp.getRole() == 1){
                             return 1; // admin
@@ -168,7 +168,7 @@ public class LoginForm extends JFrame implements ActionListener {
                 }
             }
         }
-        return -1;
+        return -1; // failed
     }
 
     public static void main(String[] args) {
