@@ -3,6 +3,7 @@ package GUI;
 import BUS.BookBUS;
 import BUS.PublisherBUS;
 import POJO.BookPOJO;
+import POJO.PublisherPOJO;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -125,7 +126,6 @@ public class BookManagement extends JFrame implements ActionListener {
     // New books are books that have release date within 1 month back
     // Hot books are books that have total purchase >= 100
     public JTable getBookTable() {
-        String[] col ={"ID","NAME","ID PUBLISHER", "PRICE", "STOCK", "TOTAL PURCHASE", "RELEASE DATE", "STATUS", "ACTION", "EDIT"};
         ArrayList<BookPOJO> bookList = null;
         if (selectedButton == allBooksButton){
             bookList = BookBUS.getAll();
@@ -141,21 +141,24 @@ public class BookManagement extends JFrame implements ActionListener {
         }
 
         JTable table = new JTable();
+        String[] col = {"ID", "NAME", "ID PUBLISHER", "PRICE", "STOCK", "TOTAL PURCHASE", "RELEASE DATE", "STATUS", "ACTION", "EDIT"};
         DefaultTableModel tableModel = new DefaultTableModel(col, 0);
 
-        for (BookPOJO book : bookList) {
-            String id = book.getId();
-            String name = book.getName();
-            String idPublisher = book.getIdPublisher();
-            Integer price = book.getPrice();
-            Integer stock = book.getStock();
-            Integer totalPurchase = book.getTotalPurchase();
-            Date releaseDate = book.getReleaseDate();
-            String enabled = book.isEnabled() ? "Enabled" : "Disabled";
-            String action = book.isEnabled() ? "Disable" : "Enable";
+        if (bookList != null) {
+            for (BookPOJO book : bookList) {
+                String id = book.getId();
+                String name = book.getName();
+                String idPublisher = book.getIdPublisher();
+                Integer price = book.getPrice();
+                Integer stock = book.getStock();
+                Integer totalPurchase = book.getTotalPurchase();
+                Date releaseDate = book.getReleaseDate();
+                String enabled = book.isEnabled() ? "Enabled" : "Disabled";
+                String action = book.isEnabled() ? "Disable" : "Enable";
 
-            Object[] data = {id, name, idPublisher, price, stock, totalPurchase, releaseDate, enabled, action, "Edit"};
-            tableModel.addRow(data);
+                Object[] data = {id, name, idPublisher, price, stock, totalPurchase, releaseDate, enabled, action, "Edit"};
+                tableModel.addRow(data);
+            }
         }
         table.setModel(tableModel);
         table.setAutoCreateRowSorter(true);
@@ -344,10 +347,18 @@ public class BookManagement extends JFrame implements ActionListener {
             nameLabel = new JLabel("Name:");
             nameField = new JTextField(book.getName());
 
-            publisherIdLabel = new JLabel("Publisher ID:");
-            String[] publishers = PublisherBUS.getAllId().toArray(new String[0]);
-            publisherIdField = new JComboBox<>(publishers);
-            publisherIdField.setSelectedItem(book.getIdPublisher());
+            publisherIdLabel = new JLabel("Publisher:");
+            ArrayList<PublisherPOJO> publishers = PublisherBUS.getAll();
+            ArrayList<String> publisherModel = new ArrayList<>();
+            String selectedItem = "";
+            for (PublisherPOJO publisher : publishers){
+                if (publisher.getId().equals(book.getIdPublisher())){
+                    selectedItem = publisher.getId() + " - " + publisher.getName();
+                }
+                publisherModel.add(publisher.getId() + " - " + publisher.getName());
+            }
+            publisherIdField = new JComboBox<>(publisherModel.toArray(new String[0]));
+            publisherIdField.setSelectedItem(selectedItem);
 
             priceLabel = new JLabel("Price:");
             priceField = new JTextField(book.getPrice().toString());
@@ -506,7 +517,7 @@ public class BookManagement extends JFrame implements ActionListener {
                     BookPOJO modifiedBook = new BookPOJO(
                             idField.getText(),
                             nameField.getText(),
-                            Objects.requireNonNull(publisherIdField.getSelectedItem()).toString(),
+                            Objects.requireNonNull(publisherIdField.getSelectedItem()).toString().split("-")[0].trim(),
                             Integer.parseInt(priceField.getText()),
                             Integer.parseInt(stockField.getText()),
                             Integer.parseInt(totalPurchaseField.getText()),
@@ -577,9 +588,13 @@ public class BookManagement extends JFrame implements ActionListener {
             nameLabel = new JLabel("Name:");
             nameField = new JTextField();
 
-            publisherIdLabel = new JLabel("Publisher ID:");
-            String[] publishers = PublisherBUS.getAllId().toArray(new String[0]);
-            publisherIdField = new JComboBox<>(publishers);
+            publisherIdLabel = new JLabel("Publisher:");
+            ArrayList<PublisherPOJO> publishers = PublisherBUS.getAll();
+            ArrayList<String> publisherModel = new ArrayList<>();
+            for (PublisherPOJO publisher : publishers){
+                publisherModel.add(publisher.getId() + " - " + publisher.getName());
+            }
+            publisherIdField = new JComboBox<>(publisherModel.toArray(new String[0]));
 
             priceLabel = new JLabel("Price:");
             priceField = new JTextField();
@@ -734,7 +749,7 @@ public class BookManagement extends JFrame implements ActionListener {
                     BookPOJO book = new BookPOJO(
                             idField.getText(),
                             nameField.getText(),
-                            Objects.requireNonNull(publisherIdField.getSelectedItem()).toString(),
+                            Objects.requireNonNull(publisherIdField.getSelectedItem()).toString().split("-")[0].trim(),
                             Integer.parseInt(priceField.getText()),
                             Integer.parseInt(stockField.getText()),
                             Integer.parseInt(totalPurchaseField.getText()),

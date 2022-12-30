@@ -14,7 +14,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.print.Book;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1007,7 +1006,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
                     }
                     JOptionPane.showMessageDialog(this, "Add new promotion success!", "Success", JOptionPane.PLAIN_MESSAGE);
                 } catch (Exception ex){
-                    JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
+                    JOptionPane.showMessageDialog(this, "Invalid information, please check again!");
                     System.out.println(Arrays.toString(ex.getStackTrace()));
                 }
             }
@@ -1065,7 +1064,6 @@ public class PromotionManagement extends JFrame implements ActionListener {
     }
 
     // Represents items in the list that can be selected
-
     class CheckboxListItem {
         private String label;
         private boolean isSelected = false;
@@ -1088,7 +1086,6 @@ public class PromotionManagement extends JFrame implements ActionListener {
     }
 
 // Handles rendering cells in the list using a checkbox
-
     class CheckboxListRenderer extends JCheckBox implements
             ListCellRenderer<CheckboxListItem> {
         @Override

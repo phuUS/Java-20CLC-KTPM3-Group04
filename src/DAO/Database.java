@@ -14,9 +14,9 @@ public class Database {
             Driver myDriver = new com.mysql.cj.jdbc.Driver();
             DriverManager.registerDriver(myDriver);
 
-            String DB_URL = "jdbc:mysql://java-project.czomp6y0wfdy.ap-southeast-1.rds.amazonaws.com:3306/book-store-management-db";
+            String DB_URL = "jdbc:mysql://java-project.cmu2hrobsfiu.ap-southeast-1.rds.amazonaws.com:3306/book-store-management-db";
             String USER = "group04";
-            String PASS = "Nguyenhuukhai2805";
+            String PASS = "123456789";
 
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
         } catch (SQLException ex) {
