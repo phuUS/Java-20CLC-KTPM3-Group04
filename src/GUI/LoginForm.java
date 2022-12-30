@@ -10,10 +10,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Optional;
 import javax.swing.BorderFactory;
@@ -90,7 +87,6 @@ public class LoginForm extends JFrame implements ActionListener {
 
 
         message = new JLabel("Pls login to access our system!");
-//        message.setPreferredSize(new Dimension(200, 30));
         message.setFont(new Font("Segoe UI", 0, 14));
         message.setForeground(Color.blue);
         pan.add(message);
@@ -113,50 +109,60 @@ public class LoginForm extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-        if (e.getSource() == loginButton){
-            String userValue = user.getText();        //get user entered username from the textField1
-            String passValue = String.valueOf(pass.getPassword());        //get user entered password from the textField2
-            int role = validateAccount(userValue, passValue);
-            if(role == -2){
-                message.setForeground(Color.red);
-                message.setText("Username and password are required!");
-                return;
-            }
-            if(role == -1){
-                message.setForeground(Color.red);
-                message.setText("Username or password went wrong!");
-                return;
-            }
-            if(role == 0){
-                message.setForeground(Color.blue);
-                message.setText("Login as user successfully!");
-                return;
-            }
-            if(role == 1){
-                message.setForeground(Color.blue);
-                message.setText("Login as admin successfully!");
-                AccountManagement accountManagement = new AccountManagement();
-                accountManagement.createAndShowGUI();
-                setVisible(false);
-                return;
-            }
+        if (e.getSource() == loginButton ){
+            this.doLogin();
         }
     }
 
+    private void doLogin(){
+        String userValue = user.getText();        //get user entered username from the textField1
+        String passValue = String.valueOf(pass.getPassword());        //get user entered password from the textField2
+        int role = validateAccount(userValue, passValue);
+        if(role == -3){
+            message.setForeground(Color.red);
+            message.setText("Your account is not activated!\nContact to admin");
+            return;
+        }
+        if(role == -2){
+            message.setForeground(Color.red);
+            message.setText("Username and password are required!");
+            return;
+        }
+        if(role == -1){
+            message.setForeground(Color.red);
+            message.setText("Username or password went wrong!");
+            return;
+        }
+        if(role == 0){
+            message.setForeground(Color.blue);
+            message.setText("Login as user successfully!");
+
+            return;
+        }
+        if(role == 1){
+            message.setForeground(Color.blue);
+            message.setText("Login as admin successfully!");
+            AccountManagement accountManagement = new AccountManagement();
+            accountManagement.setUsername(userValue);
+            accountManagement.createAndShowGUI();
+            setVisible(false);
+            return;
+        }
+    }
     public int validateAccount(String username, String password){
         if(username.isEmpty() || password.isEmpty()){
             return -2; // missing input
         }
-        ArrayList<AccountPOJO> accountList;
-        accountList = new ArrayList<>();
+        ArrayList<AccountPOJO> accountList = new ArrayList<>();
         accountList = AccountBUS.getAll();
-        ArrayList<UserPOJO> userList;
-        userList = new ArrayList<>();
+        ArrayList<UserPOJO> userList = new ArrayList<>();
         userList = UserBUS.getAll();
         for(AccountPOJO a : accountList) {
-            if(a.getIsActive()){
+
                 if(a != null && a.getUsername().equals(username) && a.getPassword().equals(password)) {
+                    if(!a.getIsActive()){
+                        return -3; // is not active
+                    }
                     UserPOJO userTemp = userList.stream().filter(u -> a.getId().equals(u.getIdAccount())).findFirst().orElse(null);
                     if(userTemp != null){
                         if(userTemp.getRole() == 1){
@@ -166,7 +172,7 @@ public class LoginForm extends JFrame implements ActionListener {
                         }
                     }
                 }
-            }
+
         }
         return -1; // failed
     }

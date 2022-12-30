@@ -18,24 +18,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AccountManagement extends JPanel implements ActionListener {
-    JPanel menuPane;
-    JButton logoutButton;
+    private JPanel menuPane;
+    private JButton logoutButton;
 
-    final int SIDEBARPANE_WIDTH = 180;
-    JPanel sidebarPane;
-    JButton allAccountsButton;
-    JButton allUserButton;
+    private JButton editInfoButton;
 
-    JButton addNewAccount;
+    private final int SIDEBARPANE_WIDTH = 180;
+    private JPanel sidebarPane;
+    private JButton allAccountsButton;
+    private JButton allUserButton;
 
-    JPanel contentPane;
-    JLabel contentLabel;
-    JScrollPane scrollPane;
-    JPanel form;
+    private JButton addNewAccount;
 
-    JPanel menu;
+    private JPanel contentPane;
+    private JLabel contentLabel;
+    private JScrollPane scrollPane;
+    private JPanel form;
+
+    private JPanel menu;
     static JFrame frame;
 
     private boolean DEBUG = false;
@@ -43,12 +46,21 @@ public class AccountManagement extends JPanel implements ActionListener {
     private JTextField filterText;
     private JTextField statusText;
 
-    TableRowSorter<AccountManagement.AllAccounts> sorter1;
-    AccountManagement.AllAccounts model1;
+    private TableRowSorter<AccountManagement.AllAccounts> sorter1;
+    private AccountManagement.AllAccounts model1;
 
-    TableRowSorter<AccountManagement.AllUsers> sorter2;
-    AccountManagement.AllUsers model2;
+    private TableRowSorter<AccountManagement.AllUsers> sorter2;
+    private AccountManagement.AllUsers model2;
 
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public AccountManagement() {
         super();
@@ -58,10 +70,15 @@ public class AccountManagement extends JPanel implements ActionListener {
         menuPane.setLayout(new FlowLayout(FlowLayout.LEFT));
         menuPane.setBackground(Color.GRAY);
 
-        logoutButton = new JButton("Back");
+        logoutButton = new JButton("Logout");
         logoutButton.setFocusable(false);
         logoutButton.addActionListener(this);
         menuPane.add(logoutButton);
+
+        editInfoButton = new JButton("Information");
+        editInfoButton.setFocusable(false);
+        editInfoButton.addActionListener(this);
+        menuPane.add(editInfoButton);
 
         sidebarPane = new JPanel();
         sidebarPane.setLayout(new BoxLayout(sidebarPane, BoxLayout.Y_AXIS));
@@ -121,10 +138,30 @@ public class AccountManagement extends JPanel implements ActionListener {
             setVisible(false);
             frame.setVisible(false);
             loginForm.setVisible(true);
+        } else if(e.getSource() == editInfoButton){
+            if(contentPane != null){
+                contentPane.removeAll();
+            }
+            this.getInfoEditScreen();
         }
     }
 
-    public void getTableAllAccountsButton(){
+
+    private void getInfoEditScreen(){
+        ArrayList<AccountPOJO> accountList = AccountBUS.getAll();
+        ArrayList<UserPOJO> userList = UserBUS.getAll();
+        UserPOJO userTemp = null;
+        for(AccountPOJO a : accountList) {
+            if(a != null && a.getUsername().equals(username)) {
+                userTemp = userList.stream().filter(u -> a.getId().equals(u.getIdAccount())).findFirst().orElse(null);
+            }
+        }
+        JLabel label = new JLabel("Admin Information");
+        contentPane.add(label);
+    }
+
+
+    private void getTableAllAccountsButton(){
         model1 = new AccountManagement.AllAccounts();
         sorter1 = new TableRowSorter<AccountManagement.AllAccounts>(model1);
         table = new JTable(model1);
@@ -188,7 +225,7 @@ public class AccountManagement extends JPanel implements ActionListener {
         revalidate();
     }
 
-    public void getTableAllUsersButton(){
+    private void getTableAllUsersButton(){
         model2 = new AccountManagement.AllUsers();
         sorter2 = new TableRowSorter<AccountManagement.AllUsers>(model2);
         table = new JTable(model2);
