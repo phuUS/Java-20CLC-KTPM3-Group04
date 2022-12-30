@@ -22,7 +22,7 @@ public class CategoryDAO {
         List<CategoryPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             Statement statement;
             statement = connection.createStatement();
             String query = "SELECT * FROM category WHERE isEnabled=1";
@@ -49,7 +49,7 @@ public class CategoryDAO {
         List<CategoryPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             Statement statement;
             statement = connection.createStatement();
             String query = "SELECT * FROM category WHERE isEnabled=0";
@@ -76,7 +76,7 @@ public class CategoryDAO {
         List<CategoryPOJO> ans = null;
         try {
               ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             Statement statement;
             statement = connection.createStatement();
             
@@ -118,7 +118,7 @@ public class CategoryDAO {
         List<CategoryPOJO> ans = null;
         try {
               ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             Statement statement;
             statement = connection.createStatement();
             
@@ -159,7 +159,7 @@ public class CategoryDAO {
     public CategoryPOJO getCategory(String keyWords){
         CategoryPOJO ans = null;
         try {
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             
             //Prepared statement
             String query = "SELECT * FROM category where id=? or name=?";
@@ -190,17 +190,18 @@ public class CategoryDAO {
     
     public boolean addNewCategory(String dataCategory[]) {
             try {
-                Connection connection = MyConnection.create();
+                Connection connection = Database.createConnection();
 
                 //Prepared statement
-                String query = "INSERT INTO category " + "VALUES(?, ?, ?)";
+                String query = "INSERT INTO category " + "VALUES(?, ?, ?, ?)";
                 PreparedStatement pstmt = null;
                 pstmt = connection.prepareStatement(query);
                 //Set parameters
                 pstmt.setString(1, dataCategory[0]);
                 pstmt.setString(2, dataCategory[1]);
                 pstmt.setString(3, dataCategory[2]);
-
+                pstmt.setBoolean(4, true);
+                System.out.println(dataCategory[1]);
                 pstmt.executeUpdate();
 
                 pstmt.close();
@@ -214,7 +215,7 @@ public class CategoryDAO {
     public String getMaxIDCategory() {
         String maxID = null;
         try {
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             Statement statement;
             statement = connection.createStatement();
             String query = "SELECT max(id) from category";
@@ -234,7 +235,7 @@ public class CategoryDAO {
     
     public boolean updateCategory(String idCategory, String nameCategory, String descriptionCategory) {
         try {
-                Connection connection = MyConnection.create();
+                Connection connection = Database.createConnection();
 
                 //Prepared statement
                 String query = "UPDATE category " + "SET name=?, description=? "
@@ -258,7 +259,7 @@ public class CategoryDAO {
     
     public boolean deleteCategory(String idCategory) {
         try {
-                Connection connection = MyConnection.create();
+                Connection connection =Database.createConnection();
 
                 //Prepared statement
                 String query = "Delete from category WHERE id=?";
@@ -279,7 +280,7 @@ public class CategoryDAO {
     
     public boolean enabledCategory(String idCategory) {
         try {
-                Connection connection = MyConnection.create();
+                Connection connection = Database.createConnection();
 
                 //Prepared statement
                 String query = "UPDATE category " + "SET isEnabled=true " + "WHERE id=?";
@@ -301,7 +302,7 @@ public class CategoryDAO {
     
     public boolean disabledCategory(String idCategory) {
         try {
-                Connection connection = MyConnection.create();
+                Connection connection = Database.createConnection();
 
                 //Prepared statement
                 String query = "UPDATE category " + "SET isEnabled=false "
