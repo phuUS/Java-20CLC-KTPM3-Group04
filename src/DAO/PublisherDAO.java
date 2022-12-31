@@ -46,7 +46,7 @@ public class PublisherDAO {
     
     try {
       conn = Database.createConnection();
-      String query = "INSERT INTO publisher(id, name, address, phone) VALUES (?,?,?,?)";
+      String query = "INSERT INTO publisher(id, name, address, phone, is_disable) VALUES (?,?,?,?,0)";
       PreparedStatement prst = conn.prepareStatement(query);
       prst.setString(1, publisher.getId());
       prst.setString(2, publisher.getName());
