@@ -174,6 +174,11 @@ public class importSheet extends JFrame {
 		return listImportBook;
 	}
 
+	public void CloseFrame(){
+		this.setVisible(false);
+		this.dispose();
+	}
+
 // --------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Create the frame.
@@ -189,28 +194,40 @@ public class importSheet extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(10, 10, 101, 22);
-		contentPane.add(menuBar);
+		// JMenuBar menuBar = new JMenuBar();
+		// menuBar.setBounds(10, 10, 101, 22);
+		// contentPane.add(menuBar);
 		
-		JMenu jmenuFile = new JMenu("File");
-		menuBar.add(jmenuFile);
+		// JMenu jmenuFile = new JMenu("File");
+		// menuBar.add(jmenuFile);
 		
-		JMenuItem jmenuItemNew = new JMenuItem("New");
-		jmenuFile.add(jmenuItemNew);
+		// JMenuItem jmenuItemNew = new JMenuItem("New");
+		// jmenuFile.add(jmenuItemNew);
 		
-		JMenuItem jmenuItemOpen = new JMenuItem("Open");
-		jmenuFile.add(jmenuItemOpen);
+		// JMenuItem jmenuItemOpen = new JMenuItem("Open");
+		// jmenuFile.add(jmenuItemOpen);
 		
-		JSeparator fileMenuSeperator = new JSeparator();
-		jmenuFile.add(fileMenuSeperator);
+		// JSeparator fileMenuSeperator = new JSeparator();
+		// jmenuFile.add(fileMenuSeperator);
 		
-		JMenuItem jmenuItemExit = new JMenuItem("Exit");
-		jmenuFile.add(jmenuItemExit);
+		// JMenuItem jmenuItemExit = new JMenuItem("Exit");
+		// jmenuFile.add(jmenuItemExit);
 		
-		JMenu jmenuAbout = new JMenu("About");
-		menuBar.add(jmenuAbout);
-		
+		// JMenu jmenuAbout = new JMenu("About");
+		// menuBar.add(jmenuAbout);
+		JButton backBtn = new JButton("Back");
+		backBtn.setBounds(10, 10, 101, 22);
+		backBtn.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				CloseFrame();
+			}
+			
+		});
+		contentPane.add(backBtn);
+
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setBounds(10, 30, 926, 2);
 		contentPane.add(separator_1);
@@ -220,8 +237,19 @@ public class importSheet extends JFrame {
 		contentPane.add(sidebarPane);
 		sidebarPane.setLayout(null);
 		
-		JButton importBookBtn = new JButton("Import Book");
+		JButton importBookBtn = new JButton("List Imported Sheet");
+
+		importBookBtn.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				listImportSheet.main(null);
+			}
+			
+		});
 		importBookBtn.setBounds(10, 60, 153, 41);
+
 		sidebarPane.add(importBookBtn);
 		
 		JSeparator separator_2 = new JSeparator();
@@ -403,6 +431,15 @@ public class importSheet extends JFrame {
 		JButton cancelBtn = new JButton("Cancel");
 		cancelBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		cancelBtn.setBounds(500, 577, 85, 25);
+		cancelBtn.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				CloseFrame();
+			}
+			
+		});
 		mainContentPane.add(cancelBtn);
 		
 		JButton saveBtn = new JButton("Save");
