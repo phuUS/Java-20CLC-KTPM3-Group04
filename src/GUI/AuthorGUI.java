@@ -151,27 +151,43 @@ public class AuthorGUI extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JMenuBar menuBar = new JMenuBar();
-        menuBar.setBounds(10, 10, 101, 22);
-        contentPane.add(menuBar);
+        // JMenuBar menuBar = new JMenuBar();
+        // menuBar.setBounds(10, 10, 101, 22);
+        // contentPane.add(menuBar);
 
-        JMenu jmenuFile = new JMenu("File");
-        menuBar.add(jmenuFile);
+        // JMenu jmenuFile = new JMenu("File");
+        // menuBar.add(jmenuFile);
 
-        JMenuItem jmenuItemNew = new JMenuItem("New");
-        jmenuFile.add(jmenuItemNew);
+        // JMenuItem jmenuItemNew = new JMenuItem("New");
+        // jmenuFile.add(jmenuItemNew);
 
-        JMenuItem jmenuItemOpen = new JMenuItem("Open");
-        jmenuFile.add(jmenuItemOpen);
+        // JMenuItem jmenuItemOpen = new JMenuItem("Open");
+        // jmenuFile.add(jmenuItemOpen);
 
-        JSeparator fileMenuSeperator = new JSeparator();
-        jmenuFile.add(fileMenuSeperator);
+        // JSeparator fileMenuSeperator = new JSeparator();
+        // jmenuFile.add(fileMenuSeperator);
 
-        JMenuItem jmenuItemExit = new JMenuItem("Exit");
-        jmenuFile.add(jmenuItemExit);
+        // JMenuItem jmenuItemExit = new JMenuItem("Exit");
+        // jmenuFile.add(jmenuItemExit);
 
-        JMenu jmenuAbout = new JMenu("About");
-        menuBar.add(jmenuAbout);
+        // JMenu jmenuAbout = new JMenu("About");
+        // menuBar.add(jmenuAbout);
+
+        JButton backButton = new JButton("Back");
+        backButton.setBounds(10, 10, 101, 22);
+
+        backButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                closeFrame();
+            }
+            
+        });
+
+        contentPane.add(backButton);
+
 
         JSeparator separator_1 = new JSeparator();
         separator_1.setBounds(10, 30, 926, 2);
