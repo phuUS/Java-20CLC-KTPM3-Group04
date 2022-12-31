@@ -45,7 +45,7 @@ public class AuthorDAO {
     
     try {
       conn = Database.createConnection();
-      String query = "INSERT INTO author(id, name, address, phone) VALUES (?,?,?,?)";
+      String query = "INSERT INTO author(id, name, address, phone, is_disable) VALUES (?,?,?,?,0)";
       PreparedStatement prst = conn.prepareStatement(query);
       prst.setString(1, author.getId());
       prst.setString(2, author.getName());
