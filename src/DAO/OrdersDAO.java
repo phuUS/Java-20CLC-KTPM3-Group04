@@ -23,7 +23,7 @@ public class OrdersDAO {
     public String getMaxIDCategory() {
         String maxID = null;
         try {
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             Statement statement;
             statement = connection.createStatement();
             String query = "SELECT max(id) from orders";
@@ -43,7 +43,7 @@ public class OrdersDAO {
     
     public boolean insertOrder(String id, String createAt, String createBy, String boughtBy, int sumCost) {
         try {
-                Connection connection = MyConnection.create();
+                Connection connection = Database.createConnection();
 
                 //Prepared statement
                 String query = "INSERT INTO orders " + "VALUES(?, ?, ?, ?, ?)";
@@ -67,7 +67,7 @@ public class OrdersDAO {
     
     public boolean isEmployee(String id) {
         try {
-                Connection connection = MyConnection.create();
+                Connection connection = Database.createConnection();
 
                 //Prepared statement
                 String query = "SELECT name FROM user WHERE id = ?";
@@ -93,7 +93,7 @@ public class OrdersDAO {
         List<OrdersPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             Statement statement;
             statement = connection.createStatement();
             String query = "SELECT * FROM orders";
@@ -123,7 +123,7 @@ public class OrdersDAO {
         List<OrdersPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             
             //Prepared statement
             String query = "SELECT * FROM orders where create_at >= ? and create_at <= ?";
@@ -159,7 +159,7 @@ public class OrdersDAO {
         List<OrdersPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             
             //Prepared statement
             String query = "SELECT * FROM orders where MONTH(create_at) = ? AND YEAR(create_at) = ?";

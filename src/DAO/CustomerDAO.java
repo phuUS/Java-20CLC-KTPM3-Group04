@@ -22,7 +22,7 @@ public class CustomerDAO {
         String maxID = null;
         
         try {
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             Statement statement;
             statement = connection.createStatement();
             String query = "SELECT max(id) from customer";
@@ -43,7 +43,7 @@ public class CustomerDAO {
     
     public boolean addNewCustomer(CustomerPOJO cus) {
             try {
-                Connection connection = MyConnection.create();
+                Connection connection = Database.createConnection();
 
                 //Prepared statement
                 String query = "INSERT INTO customer " + "VALUES(?, ?, ?, ?)";

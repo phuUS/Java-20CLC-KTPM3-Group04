@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class OrderDetailDAO {
     public boolean addOrderDetail(List<OrderDetailPOJO> orderDetailList) {
             try {
-                Connection connection = MyConnection.create();
+                Connection connection = Database.createConnection();
                 PreparedStatement pstmt = null;
 
                 //Prepared statement
