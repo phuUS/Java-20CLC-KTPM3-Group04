@@ -40,13 +40,41 @@ public class PublisherDAO {
 		return result;
 	}
 
+  public ArrayList<PublisherPOJO> getPublisherNotDisable (){
+		ArrayList<PublisherPOJO> result = null ;
+		try {
+			result = new ArrayList<PublisherPOJO>();
+			Connection conn = Database.createConnection();
+			Statement statement = conn.createStatement();
+			String query = "select * from publisher where publisher.is_disable = false";
+			ResultSet rs = statement.executeQuery(query);
+			while(rs.next()) {
+				String id = rs.getString("id");
+				String name = rs.getString("name");
+				String address = rs.getString("address");
+				String phone = rs.getString("phone");
+        Boolean disable = rs.getBoolean("is_disable");
+				
+				PublisherPOJO publisher = new PublisherPOJO(id,name,address,phone,disable);
+				result.add(publisher);
+			}
+			rs.close();
+			statement.close();
+      conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+
   public boolean addPublisher(PublisherPOJO publisher){
     boolean ans = true;
     Connection conn = null;
     
     try {
       conn = Database.createConnection();
-      String query = "INSERT INTO publisher(id, name, address, phone, is_disable) VALUES (?,?,?,?,0)";
+      String query = "INSERT INTO publisher(id, name, address, phone) VALUES (?,?,?,?)";
       PreparedStatement prst = conn.prepareStatement(query);
       prst.setString(1, publisher.getId());
       prst.setString(2, publisher.getName());
@@ -231,4 +259,3 @@ public class PublisherDAO {
     return ans;
   }
 }
-

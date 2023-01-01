@@ -14,6 +14,13 @@ public class PublisherBUS {
 		return result;
 	}
 
+  public ArrayList<PublisherPOJO> getPublisherNotDisable(){
+		ArrayList<PublisherPOJO> result = null;
+		PublisherDAO publisherDA = new PublisherDAO();
+		result = publisherDA.getPublisherNotDisable();
+		return result;
+	}
+
   public boolean addPublisher(PublisherPOJO publisher){
     PublisherDAO publisherDA = new PublisherDAO();
     boolean res = publisherDA.addPublisher(publisher);
@@ -44,4 +51,3 @@ public class PublisherBUS {
     return res;
   }
 }
-
