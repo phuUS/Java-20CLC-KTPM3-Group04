@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4e409101-b9b5-47be-8c5b-e6ac23aff927" name="Changes" comment="update logout">
+    <list default="true" id="4e409101-b9b5-47be-8c5b-e6ac23aff927" name="Changes" comment="update admin info page">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/Database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/AccountManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/AccountManagement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GUI/LoginForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/LoginForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/Database.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/Database.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$AllAccounts.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$AllAccounts.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$AllUsers.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$AllUsers.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +164,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672349104110</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="update admin info page">
+      <created>1672434790831</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1672434790831</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -180,6 +192,7 @@
     <MESSAGE value="add login screen" />
     <MESSAGE value="update login screen" />
     <MESSAGE value="update logout" />
-    <option name="LAST_COMMIT_MESSAGE" value="update logout" />
+    <MESSAGE value="update admin info page" />
+    <option name="LAST_COMMIT_MESSAGE" value="update admin info page" />
   </component>
 </project>
