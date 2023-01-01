@@ -25,7 +25,7 @@ public class PromotionStatisticsDAO {
         List<PromotionStatisticsPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             Statement statement;
             statement = connection.createStatement();
             String query =  "SELECT DISTINCT promotion.id, promotion.name, " + 
@@ -65,7 +65,7 @@ public class PromotionStatisticsDAO {
         List<PromotionTopsPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             
             //Prepared statement
             String query =  "SELECT DISTINCT promotion.id AS id_promotion, orders.id AS id_order, orders.sum_cost " + 
@@ -93,7 +93,7 @@ public class PromotionStatisticsDAO {
             pstmt.close();
             connection.close();
         } catch (SQLException ex) {
-            Logger.getLogger(CategoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StatisticsDAO.class.getName()).log(Level.SEVERE, null, ex);
             ans = null;
         }
         return ans;
@@ -103,7 +103,7 @@ public class PromotionStatisticsDAO {
         List<PromotionTopsPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             
             //Prepared statement
             String query =  "SELECT DISTINCT promotion.id AS id_promotion, book.id AS id_book, book.name, " +
@@ -136,7 +136,7 @@ public class PromotionStatisticsDAO {
             pstmt.close();
             connection.close();
         } catch (SQLException ex) {
-            Logger.getLogger(CategoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StatisticsDAO.class.getName()).log(Level.SEVERE, null, ex);
             ans = null;
         }
         return ans;
@@ -146,7 +146,7 @@ public class PromotionStatisticsDAO {
         List<PromotionTopsPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             
             //Prepared statement
             String query =  "SELECT DISTINCT promotion.id AS id_promotion, orders.bought_by AS id_customer, " +
@@ -179,7 +179,7 @@ public class PromotionStatisticsDAO {
             pstmt.close();
             connection.close();
         } catch (SQLException ex) {
-            Logger.getLogger(CategoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PromotionStatisticsDAO.class.getName()).log(Level.SEVERE, null, ex);
             ans = null;
         }
         return ans;

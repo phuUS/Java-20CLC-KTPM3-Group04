@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -24,7 +23,7 @@ public class StatisticsDAO {
         List<StatisticsPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
            
             String query =  "SELECT DISTINCT book.id, book.name," + 
                                             " (SELECT SUM(order_detail.quantity)" + 
@@ -71,7 +70,7 @@ public class StatisticsDAO {
         List<StatisticsPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
            
             String query =  "SELECT DISTINCT book.id, book.name," + 
                                             " (SELECT SUM(order_detail.quantity)" + 
@@ -118,7 +117,7 @@ public class StatisticsDAO {
         List<StatisticsPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             String query =  "SELECT DISTINCT category.id, category.name," + 
                                             " (SELECT SUM(order_detail.quantity)" + 
                                             " FROM order_detail, orders, book_category" + 
@@ -166,7 +165,7 @@ public class StatisticsDAO {
         List<StatisticsPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             String query =  "SELECT DISTINCT category.id, category.name," + 
                                             " (SELECT SUM(order_detail.quantity)" + 
                                             " FROM order_detail, orders, book_category" + 
@@ -214,7 +213,7 @@ public class StatisticsDAO {
         List<StatisticsPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             
             String query =  "SELECT DISTINCT customer.id, customer.name," + 
                                             " (SELECT COUNT(orders.id)" + 
@@ -261,7 +260,7 @@ public class StatisticsDAO {
         List<StatisticsPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             
             String query =  "SELECT DISTINCT customer.id, customer.name," + 
                                             " (SELECT COUNT(orders.id)" + 
@@ -309,7 +308,7 @@ public class StatisticsDAO {
         List<StatisticsPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             
             String query =  "SELECT DISTINCT user.id, user.name," + 
                                             " (SELECT COUNT(orders.id)" + 
@@ -356,7 +355,7 @@ public class StatisticsDAO {
         List<StatisticsPOJO> ans = null;
         try {
             ans = new ArrayList<>();
-            Connection connection = MyConnection.create();
+            Connection connection = Database.createConnection();
             
             String query =  "SELECT DISTINCT user.id, user.name," + 
                                             " (SELECT COUNT(orders.id)" + 
