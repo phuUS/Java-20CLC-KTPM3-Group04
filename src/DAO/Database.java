@@ -19,7 +19,6 @@ public class Database {
             String PASS = "123456789";
 
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
-            return connection;
         } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }

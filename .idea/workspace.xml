@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="9e9be398-25c1-4b9b-9134-c8660574923b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/view/publisher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/author.java" beforeDir="false" />
+    <list default="true" id="4e409101-b9b5-47be-8c5b-e6ac23aff927" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO/BookDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/BookDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/PromotionManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/PromotionManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

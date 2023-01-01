@@ -62,7 +62,7 @@ public class PublisherPOJO {
     this.disable = disable;
   }
 
-
+  
   @Override
   public String toString() {
     return id + " - " + name;

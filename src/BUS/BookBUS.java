@@ -33,4 +33,15 @@ public class BookBUS {
     public static ArrayList<BookPOJO> getBookNotDisable(){
         return BookDAO.getBookNotDisable();
     }
+    public static ArrayList<BookPOJO> getNewBooks(){
+        return BookDAO.getNewBooks();
+    }
+
+    public static ArrayList<BookPOJO> getHotBooks(){
+        return BookDAO.getHotBooks();
+    }
+
+    public static ArrayList<BookPOJO> getOutOfStockBooks(){
+        return BookDAO.getOutOfStockBooks();
+    }
 }

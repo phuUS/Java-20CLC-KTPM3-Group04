@@ -7,15 +7,54 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import POJO.PublisherPOJO;
+import POJO.PublisherPojo;
 
 
 
 public class PublisherDAO {
-	public ArrayList<PublisherPOJO> getAllPublisher (){
-		ArrayList<PublisherPOJO> result = null ;
+  public static ArrayList<PublisherPojo> getAll(){
+        ArrayList<PublisherPojo> result = null;
+        Connection connection = Database.createConnection();
+        try {
+            result = new ArrayList<>();
+            Statement statement;
+            
+              statement = connection.createStatement();
+            
+            String query = "SELECT * FROM publisher";
+            ResultSet rs = statement.executeQuery(query);
+            while(rs.next()){
+                String id = rs.getString("id");
+                String name = rs.getString("name");
+                String address = rs.getString("address");
+                String phone = rs.getString("phone");
+                Boolean is_disable = rs.getBoolean("is_disable");
+                PublisherPojo publisher = new PublisherPojo(id, name, address, phone, is_disable);
+                result.add(publisher);
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    
+}
+
+	public ArrayList<PublisherPojo> getAllPublisher (){
+		ArrayList<PublisherPojo> result = null ;
 		try {
-			result = new ArrayList<PublisherPOJO>();
+			result = new ArrayList<PublisherPojo>();
 			Connection conn = Database.createConnection();
 			Statement statement = conn.createStatement();
 			String query = "SELECT * FROM publisher";
@@ -27,7 +66,7 @@ public class PublisherDAO {
 				String phone = rs.getString("phone");
         Boolean disable = rs.getBoolean("is_disable");
 				
-				PublisherPOJO publisher = new PublisherPOJO(id,name,address,phone,disable);
+				PublisherPojo publisher = new PublisherPojo(id,name,address,phone,disable);
 				result.add(publisher);
 			}
 			rs.close();
@@ -40,10 +79,10 @@ public class PublisherDAO {
 		return result;
 	}
 
-  public ArrayList<PublisherPOJO> getPublisherNotDisable (){
-		ArrayList<PublisherPOJO> result = null ;
+  public ArrayList<PublisherPojo> getPublisherNotDisable (){
+		ArrayList<PublisherPojo> result = null ;
 		try {
-			result = new ArrayList<PublisherPOJO>();
+			result = new ArrayList<PublisherPojo>();
 			Connection conn = Database.createConnection();
 			Statement statement = conn.createStatement();
 			String query = "select * from publisher where publisher.is_disable = false";
@@ -55,7 +94,7 @@ public class PublisherDAO {
 				String phone = rs.getString("phone");
         Boolean disable = rs.getBoolean("is_disable");
 				
-				PublisherPOJO publisher = new PublisherPOJO(id,name,address,phone,disable);
+				PublisherPojo publisher = new PublisherPojo(id,name,address,phone,disable);
 				result.add(publisher);
 			}
 			rs.close();
@@ -68,7 +107,7 @@ public class PublisherDAO {
 		return result;
 	}
 
-  public boolean addPublisher(PublisherPOJO publisher){
+  public boolean addPublisher(PublisherPojo publisher){
     boolean ans = true;
     Connection conn = null;
     
@@ -103,7 +142,7 @@ public class PublisherDAO {
     return ans;
   }
 
-  public boolean updatePublisher(PublisherPOJO publisher){
+  public boolean updatePublisher(PublisherPojo publisher){
     boolean res = true;
     Connection conn = null;
     try {
@@ -136,11 +175,11 @@ public class PublisherDAO {
     return res;
   }
 
-  public ArrayList<PublisherPOJO> getPublisherBySearch(String id, String name){
+  public ArrayList<PublisherPojo> getPublisherBySearch(String id, String name){
     Connection conn = null;
-    ArrayList<PublisherPOJO> listPublisher = null;
+    ArrayList<PublisherPojo> listPublisher = null;
     try {
-      listPublisher = new ArrayList<PublisherPOJO>();
+      listPublisher = new ArrayList<PublisherPojo>();
       conn = Database.createConnection();
       String query;
       if(!id.equals("") && name.equals("")){
@@ -168,7 +207,7 @@ public class PublisherDAO {
         String address = res.getString("address");
         String phone = res.getString("phone");
         Boolean disable = res.getBoolean("is_disable");
-        PublisherPOJO publisher = new PublisherPOJO(_id, _name, address, phone, disable);
+        PublisherPojo publisher = new PublisherPojo(_id, _name, address, phone, disable);
         listPublisher.add(publisher);
       }
 
@@ -191,7 +230,7 @@ public class PublisherDAO {
     return listPublisher;
   }
 
-  public boolean enablePublisher(PublisherPOJO publisher){
+  public boolean enablePublisher(PublisherPojo publisher){
     boolean ans = true;
     Connection conn = null;
 
@@ -225,7 +264,7 @@ public class PublisherDAO {
     return ans;
   }
 
-  public boolean disablePublisher(PublisherPOJO publisher){
+  public boolean disablePublisher(PublisherPojo publisher){
     boolean ans = true;
     Connection conn = null;
 

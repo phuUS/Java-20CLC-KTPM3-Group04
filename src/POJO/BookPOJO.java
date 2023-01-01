@@ -1,5 +1,7 @@
 package POJO;
 
+import java.util.Date;
+
 public class BookPOJO {
     String id;
     String name;
@@ -7,7 +9,19 @@ public class BookPOJO {
     Integer price;
     Integer stock;
     Integer totalPurchase;
+    Date releaseDate;
     Boolean enabled;
+
+    public BookPOJO(String id, String name, String idPublisher, Integer price, Integer stock, Integer totalPurchase, Date releaseDate, Boolean enabled) {
+        this.id = id;
+        this.name = name;
+        this.idPublisher = idPublisher;
+        this.price = price;
+        this.stock = stock;
+        this.totalPurchase = totalPurchase;
+        this.releaseDate = releaseDate;
+        this.enabled = enabled;
+    }
 
     public BookPOJO(String id, String name, String idPublisher, Integer price, Integer stock, Integer totalPurchase, Boolean enabled) {
         this.id = id;
@@ -67,6 +81,14 @@ public class BookPOJO {
         this.totalPurchase = totalPurchase;
     }
 
+    public Date getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
     public Boolean isEnabled() {
         return enabled;
     }
@@ -79,6 +101,4 @@ public class BookPOJO {
     public String toString() {
       return id+" - " + name +" - "+ price;
     }
-
-    
 }
