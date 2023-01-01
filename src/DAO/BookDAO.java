@@ -318,6 +318,18 @@ public class BookDAO {
             if (rowsUpdated > 0) {
                 result = true;
             }
+
+            sql = "DELETE FROM promotion_book where id_book=?";
+
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, bookId);
+
+            int rowsDeleted = statement.executeUpdate();
+            if (rowsDeleted > 0){
+                System.out.println("Deleted " + rowsDeleted + " rows in promotion_book table with id_book=" + bookId);
+                result = true;
+            }
+
             statement.close();
         } catch (SQLException ex) {
             Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
