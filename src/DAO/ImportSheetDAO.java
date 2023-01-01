@@ -191,7 +191,7 @@ public class ImportSheetDAO {
     return ans;
   }
 
-  public boolean configBookTable(ArrayList<BookInImportSheetPOJO> listImportBook){
+  public boolean configBookTable(ArrayList<BookInImportSheetPOJO> listImportBook, Date create_at){
     boolean ans = true;
     Connection conn = null;
     conn = Database.createConnection();
@@ -214,7 +214,7 @@ public class ImportSheetDAO {
           e.printStackTrace();
         }
       }else{
-        query = "insert into book(id, name, id_publisher, price, stock) values(?,?,?,?,?)";
+        query = "insert into book(id, name, id_publisher, price, stock, total_purchase, enabled, release_date) values(?,?,?,?,?,0,1,?)";
         try {
           prst = conn.prepareStatement(query);
           prst.setString(1, bookInImportSheetPOJO.getId_book());
@@ -222,6 +222,7 @@ public class ImportSheetDAO {
           prst.setString(3, bookInImportSheetPOJO.getId_publisher());
           prst.setInt(4, bookInImportSheetPOJO.getImport_price());
           prst.setInt(5, bookInImportSheetPOJO.getQuantity());
+          prst.setDate(6, create_at);
           int row = prst.executeUpdate();
           if(row<1){
             ans = false;

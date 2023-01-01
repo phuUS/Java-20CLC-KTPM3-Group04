@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import POJO.UserPOJO;
 
 public class UserDAO {
-  public ArrayList<UserPOJO> getAllUser(){
+  public ArrayList<UserPOJO> getUserNotDisable(){
     ArrayList<UserPOJO> listUser = new ArrayList<>();
     Connection conn = null;
     try {
       conn = Database.createConnection();
-      String query = "SELECT * FROM user";
+      String query = "select user.id, user.name, user.id_account, user.address, user.role from user, account where user.id_account = account.id and account.is_active = 1";
       PreparedStatement prst = conn.prepareStatement(query);
       ResultSet res = prst.executeQuery();
       while(res.next()){

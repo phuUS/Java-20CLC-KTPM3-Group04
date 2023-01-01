@@ -76,17 +76,17 @@ public class importSheet extends JFrame {
 
 	public ArrayList<UserPOJO> getEmployees(){
 		UserBUS userBus = new UserBUS();
-		ArrayList<UserPOJO> listEmp = userBus.getAllUser();
+		ArrayList<UserPOJO> listEmp = userBus.getUserNotDisable();
 		return listEmp;
 	}
 
-	public ArrayList<BookPOJO> getBooks(){
+	public ArrayList<BookPOJO> getBookEnabled(){
 		BookBUS bookBus = new BookBUS();
-		ArrayList<BookPOJO> listBook = bookBus.getAll();
+		ArrayList<BookPOJO> listBook = bookBus.getBookNotDisable();
 		return listBook; 
 	}
 
-	public ArrayList<PublisherPOJO> getPublishers(){
+	public ArrayList<PublisherPOJO> getPublisherEnabled(){
 		PublisherBUS publisherBus = new PublisherBUS();
 		ArrayList<PublisherPOJO> listPublisher = publisherBus.getPublisherNotDisable();
 		return listPublisher; 
@@ -452,7 +452,7 @@ public class importSheet extends JFrame {
 				ArrayList<BookInImportSheetPOJO> listImportBook = getListImportBook();
 				ImportSheetBUS importSheetBus = new ImportSheetBUS();
 				boolean addIPSRes = importSheetBus.addImportSheet(ips);
-				boolean configTableBookRes = importSheetBus.configTableBook(listImportBook);
+				boolean configTableBookRes = importSheetBus.configTableBook(listImportBook, ips.getCreate_at());
 				System.out.println("config: "+ configTableBookRes);
 				boolean addListImportBookRes = importSheetBus.addListImportBook(listImportBook);
 				System.out.println("add list import book: "+ addListImportBookRes);
@@ -500,7 +500,7 @@ public class importSheet extends JFrame {
 		mainContentPane.add(bookInfoLabel);
 		
 		bookComboBox = new JComboBox();
-		ArrayList<BookPOJO> listBook = getBooks();
+		ArrayList<BookPOJO> listBook = getBookEnabled();
 		DefaultComboBoxModel modelBookCombobox = new DefaultComboBoxModel(listBook.toArray());
 		bookComboBox.setModel(modelBookCombobox);
 		bookComboBox.addActionListener(new ActionListener(){
@@ -576,7 +576,7 @@ public class importSheet extends JFrame {
 		
 		publisherCombobox = new JComboBox();
 
-		ArrayList<PublisherPOJO> listPublisher = getPublishers();
+		ArrayList<PublisherPOJO> listPublisher = getPublisherEnabled();
 		DefaultComboBoxModel modelPublisherCombobox = new DefaultComboBoxModel(listPublisher.toArray());
 		publisherCombobox.setModel(modelPublisherCombobox);
 		publisherCombobox.addActionListener(new ActionListener(){

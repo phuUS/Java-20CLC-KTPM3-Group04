@@ -1,5 +1,6 @@
 package BUS;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 import DAO.ImportSheetDAO;
@@ -28,8 +29,8 @@ public class ImportSheetBUS {
     return importSheetDao.addListImportBook(listImportBook);
   }
 
-  public boolean configTableBook(ArrayList<BookInImportSheetPOJO> listImportBook){
+  public boolean configTableBook(ArrayList<BookInImportSheetPOJO> listImportBook, Date create_at){
     ImportSheetDAO importSheetDao = new ImportSheetDAO();
-    return importSheetDao.configBookTable(listImportBook);
+    return importSheetDao.configBookTable(listImportBook, create_at);
   }
 }

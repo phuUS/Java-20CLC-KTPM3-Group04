@@ -29,4 +29,8 @@ public class BookBUS {
     public static Boolean disable(String bookId){
         return BookDAO.disable(bookId);
     }
+
+    public static ArrayList<BookPOJO> getBookNotDisable(){
+        return BookDAO.getBookNotDisable();
+    }
 }

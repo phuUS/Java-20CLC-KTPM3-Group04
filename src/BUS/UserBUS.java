@@ -6,9 +6,9 @@ import DAO.UserDAO;
 import POJO.UserPOJO;
 
 public class UserBUS {
-  public ArrayList<UserPOJO> getAllUser(){
+  public ArrayList<UserPOJO> getUserNotDisable(){
     UserDAO userDao = new UserDAO();
-    ArrayList<UserPOJO> res = userDao.getAllUser();
+    ArrayList<UserPOJO> res = userDao.getUserNotDisable();
     return res;
   }
 }
