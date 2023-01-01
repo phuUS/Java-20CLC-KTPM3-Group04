@@ -453,8 +453,10 @@ public class PromotionManagement extends JFrame implements ActionListener {
             listBookLabel = new JLabel("List Of Books Applied: ");
             ArrayList<CheckboxListItem> listBookItem = new ArrayList<>();
             for (BookPOJO book : allBooks){
-                String bookLabel = book.getId() + " - " + book.getName();
-                listBookItem.add(new CheckboxListItem(bookLabel));
+                if (book.isEnabled()) {
+                    String bookLabel = book.getId() + " - " + book.getName();
+                    listBookItem.add(new CheckboxListItem(bookLabel));
+                }
             }
             listBookField = new JList<>(listBookItem.toArray(new CheckboxListItem[0]));
             listBookField.setCellRenderer(new CheckboxListRenderer());
@@ -807,8 +809,10 @@ public class PromotionManagement extends JFrame implements ActionListener {
             listBookLabel = new JLabel("List Of Books Applied: ");
             ArrayList<CheckboxListItem> listBookItem = new ArrayList<>();
             for (BookPOJO book : allBooks){
-                String bookLabel = book.getId() + " - " + book.getName();
-                listBookItem.add(new CheckboxListItem(bookLabel));
+                if (book.isEnabled()) {
+                    String bookLabel = book.getId() + " - " + book.getName();
+                    listBookItem.add(new CheckboxListItem(bookLabel));
+                }
             }
             listBookField = new JList<>(listBookItem.toArray(new CheckboxListItem[0]));
             listBookField.setCellRenderer(new CheckboxListRenderer());
