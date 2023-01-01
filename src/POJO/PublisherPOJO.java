@@ -1,57 +1,70 @@
 package POJO;
 
 public class PublisherPOJO {
-    String id;
-    String name;
-    String address;
-    String phone;
-    Boolean disabled;
+  private String id;
+  private String name;
+  private String address;
+  private String phone;
+  private boolean disable;
 
-    public PublisherPOJO(String id, String name, String address, String phone, Boolean disabled) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.phone = phone;
-        this.disabled = disabled;
-    }
+  
 
-    public String getId() {
-        return id;
-    }
+  public PublisherPOJO() {
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  
+  public PublisherPOJO(String id, String name, String address, String phone) {
+    this.id = id;
+    this.name = name;
+    this.address = address;
+    this.phone = phone;
+  }
 
-    public String getName() {
-        return name;
-    }
+  
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public PublisherPOJO(String id, String name, String address, String phone, boolean disable) {
+    this.id = id;
+    this.name = name;
+    this.address = address;
+    this.phone = phone;
+    this.disable = disable;
+  }
 
-    public String getAddress() {
-        return address;
-    }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public String getId() {
+    return id;
+  }
+  public void setId(String id) {
+    this.id = id;
+  }
+  public String getName() {
+    return name;
+  }
+  public void setName(String name) {
+    this.name = name;
+  }
+  public String getAddress() {
+    return address;
+  }
+  public void setAddress(String address) {
+    this.address = address;
+  }
+  public String getPhone() {
+    return phone;
+  }
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+  public boolean isDisable() {
+    return disable;
+  }
+  public void setDisable(boolean disable) {
+    this.disable = disable;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Boolean isDisabled() {
-        return disabled;
-    }
-
-    public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
-    }
+  
+  @Override
+  public String toString() {
+    return id + " - " + name;
+  }
 }

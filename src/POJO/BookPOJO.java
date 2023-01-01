@@ -23,6 +23,16 @@ public class BookPOJO {
         this.enabled = enabled;
     }
 
+    public BookPOJO(String id, String name, String idPublisher, Integer price, Integer stock, Integer totalPurchase, Boolean enabled) {
+        this.id = id;
+        this.name = name;
+        this.idPublisher = idPublisher;
+        this.price = price;
+        this.stock = stock;
+        this.totalPurchase = totalPurchase;
+        this.enabled = enabled;
+    }
+
     public String getId() {
         return id;
     }
@@ -85,5 +95,10 @@ public class BookPOJO {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    @Override
+    public String toString() {
+      return id+" - " + name +" - "+ price;
     }
 }
