@@ -3,6 +3,11 @@ package POJO;
 public class UserPOJO {
   private boolean admin;
   private String id_account;
+  String id;
+    String name;
+    String idAccount;
+    String address;
+    int role;
 
     public boolean isAdmin() {
     return admin;
@@ -20,12 +25,20 @@ public class UserPOJO {
     this.id_account = id_account;
   }
 
-    String id;
-    String name;
-    String idAccount;
-    String address;
-    int role;
+    
 
+
+    
+
+    
+
+    public UserPOJO(String id, String name, String id_account, String address, boolean admin) {
+    this.admin = admin;
+    this.id_account = id_account;
+    this.id = id;
+    this.name = name;
+    this.address = address;
+  }
 
     public UserPOJO(String id, String name, String idAccount, String address, int role) {
         this.id = id;
