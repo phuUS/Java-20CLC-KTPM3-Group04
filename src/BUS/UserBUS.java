@@ -1,9 +1,9 @@
 package BUS;
 
-import java.util.ArrayList;
-
 import DAO.UserDAO;
 import POJO.UserPOJO;
+
+import java.util.ArrayList;
 
 public class UserBUS {
   public ArrayList<UserPOJO> getUserNotDisable(){
@@ -11,4 +11,8 @@ public class UserBUS {
     ArrayList<UserPOJO> res = userDao.getUserNotDisable();
     return res;
   }
+
+    public static ArrayList<UserPOJO> getAll(){
+        return UserDAO.getAll();
+    }
 }
