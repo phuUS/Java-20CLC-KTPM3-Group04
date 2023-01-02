@@ -22,6 +22,7 @@ public class UserControl extends JFrame {
 	private JPanel contentPane;
 	private final JPanel topPane = new JPanel();
 	BookManagement bookControlGUI;
+	PromotionManagement promotionControlGUI;
 	importSheet importSheetControlGUI;
 	AuthorGUI authorControlGUI;
 	ViewOrdersFrame orderControlGUI;
@@ -85,11 +86,28 @@ public class UserControl extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				bookControlGUI = new BookManagement();
+				hideUserControl();
 			}
 			
 		});
 		BookManageBtn.setBounds(10, 146, 132, 31);
 		contentPane.add(BookManageBtn);
+
+		JButton PromotionManageBtn = new JButton("Promotion Management");
+		PromotionManageBtn.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				promotionControlGUI = new PromotionManagement();
+				promotionControlGUI.setVisible(true);
+				hideUserControl();
+			}
+			
+		});
+
+		PromotionManageBtn.setBounds(10, 177, 132, 31);
+		contentPane.add(PromotionManageBtn);
 		
 		JButton importSheetBtn = new JButton("Import Sheet");
 		importSheetBtn.addActionListener(new ActionListener(){
@@ -99,6 +117,7 @@ public class UserControl extends JFrame {
 				// TODO Auto-generated method stub
 				importSheetControlGUI = new importSheet();
 				importSheetControlGUI.setVisible(true);
+				hideUserControl();
 			}
 			
 		});
@@ -127,6 +146,7 @@ public class UserControl extends JFrame {
 				// TODO Auto-generated method stub
 				orderControlGUI = new ViewOrdersFrame()	;
 				orderControlGUI.setVisible(true);
+				hideUserControl();
 			}
 			
 		});
@@ -141,6 +161,7 @@ public class UserControl extends JFrame {
 				// TODO Auto-generated method stub
 				bookCategoryControlGUI = new ViewBookCategoriesFrame();
 				bookCategoryControlGUI.setVisible(true);
+				hideUserControl();
 			}
 			
 		});
@@ -155,6 +176,7 @@ public class UserControl extends JFrame {
 				// TODO Auto-generated method stub
 				publisherControlGUI = new publisherGUI();
 				publisherControlGUI.setVisible(true);
+				hideUserControl();
 			}
 			
 		});
@@ -170,5 +192,9 @@ public class UserControl extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private void hideUserControl(){
+		this.setVisible(false);
 	}
 }

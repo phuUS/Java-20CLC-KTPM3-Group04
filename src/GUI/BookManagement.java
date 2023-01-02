@@ -48,7 +48,7 @@ public class BookManagement extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setResizable(true);
         setLayout(new BorderLayout(0,0));
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBackground(Color.BLUE);
         initComponent();
         this.setVisible(true);
@@ -61,6 +61,7 @@ public class BookManagement extends JFrame implements ActionListener {
 
         backButton = new JButton("Back");
         backButton.setFocusable(false);
+        backButton.addActionListener(this);
         menuPane.add(backButton);
 
 
@@ -192,6 +193,10 @@ public class BookManagement extends JFrame implements ActionListener {
             contentLabel.setText("Add A New Book");
             contentPane.add(contentLabel);
             contentPane.add(addBookFormPanel);
+        } else if(selectedButton == backButton){
+            UserControl userControl = new UserControl();
+            userControl.setVisible(true);
+            this.setVisible(false);
         }
         revalidate();
         repaint();

@@ -143,7 +143,7 @@ public class AuthorGUI extends JFrame {
     public AuthorGUI() {
         setResizable(false);
         setTitle("Bookstore Management - Employee");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 978, 704);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -182,6 +182,8 @@ public class AuthorGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
                 closeFrame();
+                UserControl userControl = new UserControl();
+            userControl.setVisible(true);
             }
             
         });

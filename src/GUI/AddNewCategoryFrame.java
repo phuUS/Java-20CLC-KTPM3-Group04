@@ -54,7 +54,7 @@ public class AddNewCategoryFrame extends javax.swing.JFrame {
         btnCancel = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Add new category");
         setBounds(new java.awt.Rectangle(200, 200, 200, 200));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));

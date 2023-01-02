@@ -60,6 +60,17 @@ public class PromotionManagement extends JFrame implements ActionListener {
         backButton = new JButton("Back");
         backButton.setFocusable(false);
         menuPane.add(backButton);
+        backButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                closeFrame();
+                UserControl userControl = new UserControl();
+            userControl.setVisible(true);
+            }
+            
+        });
 
 
         sidebarPane = new JPanel();
@@ -116,7 +127,10 @@ public class PromotionManagement extends JFrame implements ActionListener {
         add(sidebarPane, BorderLayout.WEST);
         add(contentPane, BorderLayout.CENTER);
     }
-
+public void closeFrame(){
+        this.setVisible(false);
+        this.dispose();
+    }
     public JTable getPromotionTable() {
         String[] col ={"ID", "NAME", "DESCRIPTION", "START DATE", "END DATE",
                 "PERCENT" , "APPLY FOR", "LIMIT", "STATUS", "ACTION", "EDIT", "BOOKS APPLIED"};
@@ -1031,7 +1045,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
             this.setLocationRelativeTo(null);
             this.setResizable(true);
             setLayout(new BorderLayout());
-            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             this.initComponent();
             this.setVisible(true);
         }
