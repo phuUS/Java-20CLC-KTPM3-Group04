@@ -39,6 +39,9 @@ public class PromotionManagement extends JFrame implements ActionListener {
     JScrollPane promotionTableScroll;
     PromotionManagement.AddPromotionFormPanel addPromotionFormPanel;
 
+    public static void main(String[] args) {
+        new PromotionManagement();
+    }
 
     public PromotionManagement() {
         setTitle("Employee - Promotion Management");
@@ -60,17 +63,6 @@ public class PromotionManagement extends JFrame implements ActionListener {
         backButton = new JButton("Back");
         backButton.setFocusable(false);
         menuPane.add(backButton);
-        backButton.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                closeFrame();
-                UserControl userControl = new UserControl();
-            userControl.setVisible(true);
-            }
-            
-        });
 
 
         sidebarPane = new JPanel();
@@ -127,10 +119,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
         add(sidebarPane, BorderLayout.WEST);
         add(contentPane, BorderLayout.CENTER);
     }
-public void closeFrame(){
-        this.setVisible(false);
-        this.dispose();
-    }
+
     public JTable getPromotionTable() {
         String[] col ={"ID", "NAME", "DESCRIPTION", "START DATE", "END DATE",
                 "PERCENT" , "APPLY FOR", "LIMIT", "STATUS", "ACTION", "EDIT", "BOOKS APPLIED"};
@@ -643,6 +632,13 @@ public void closeFrame(){
                             Integer.parseInt(limitOrdersField.getText()),
                             statusField.getSelectedItem() == "Enabled");
 
+                    Boolean result = PromotionBUS.updateOne(promotion.getId(), modifiedPromotion);
+                    if (!result) {
+                        JOptionPane.showMessageDialog(this, "Error when updating" +
+                                " promotion's information!", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
                     ArrayList<String> listInsertBookId = new ArrayList<>();
                     ArrayList<String> listDeleteBookId = new ArrayList<>();
                     ListModel<CheckboxListItem> listBookModel = listBookField.getModel();
@@ -674,25 +670,17 @@ public void closeFrame(){
                             }
                         }
                     }
-
-                    Boolean result = PromotionBUS.updateOne(promotion.getId(), modifiedPromotion);
-                    if (!result) {
-                        JOptionPane.showMessageDialog(this, "Error when updating" +
-                                " promotion's information!", "Error", JOptionPane.WARNING_MESSAGE);
-                        return;
-                    }
-
                     result = PromotionBUS.insertAppliedBooks(promotion.getId(), listInsertBookId);
                     if (!result) {
                         JOptionPane.showMessageDialog(this, "Error when inserting applied" +
-                                " books for this promotion!", "Error", JOptionPane.WARNING_MESSAGE);
+                                " books into this promotion!", "Error", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
 
                     result = PromotionBUS.deleteNotAppliedBooks(promotion.getId(), listDeleteBookId);
                     if (!result) {
                         JOptionPane.showMessageDialog(this, "Error when deleting not applied" +
-                                " books for this promotion!", "Error", JOptionPane.WARNING_MESSAGE);
+                                " books from this promotion!", "Error", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
 
@@ -999,6 +987,13 @@ public void closeFrame(){
                             Integer.parseInt(limitOrdersField.getText()),
                             statusField.getSelectedItem() == "Enabled");
 
+                    Boolean result = PromotionBUS.insertOne(promotion);
+                    if(!result){
+                        JOptionPane.showMessageDialog(this, "Error when adding new promotion!"
+                                , "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
                     ArrayList<String> listInsertBookId = new ArrayList<>();
                     ListModel<CheckboxListItem> listBookModel = listBookField.getModel();
                     for (int i = 0; i < listBookModel.getSize(); i++){
@@ -1008,18 +1003,10 @@ public void closeFrame(){
                             listInsertBookId.add(bookId);
                         }
                     }
-
-                    Boolean result = PromotionBUS.insertOne(promotion);
-                    if(!result){
-                        JOptionPane.showMessageDialog(this, "Error when adding promotion!"
-                                , "Error", JOptionPane.WARNING_MESSAGE);
-                        return;
-                    }
-
                     result = PromotionBUS.insertAppliedBooks(promotion.getId(), listInsertBookId);
                     if (!result){
                         JOptionPane.showMessageDialog(this, "Error inserting applied" +
-                                " books for this promotion!", "Error", JOptionPane.WARNING_MESSAGE);
+                                " books into this promotion!", "Error", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
                     JOptionPane.showMessageDialog(this, "Add new promotion success!", "Success", JOptionPane.PLAIN_MESSAGE);
@@ -1031,55 +1018,6 @@ public void closeFrame(){
         }
     }
 
-    static class ShowListOfBooksAppliedDialog extends JDialog {
-        PromotionPOJO promotion;
-
-        JLabel headLabel;
-        JTable bookTable;
-        JScrollPane bookTableScroll;
-        ShowListOfBooksAppliedDialog(JFrame parent, String title, boolean modal, String promotionId){
-            super(parent, title, modal);
-            this.promotion = PromotionBUS.getOne(promotionId);
-
-            this.setSize(700, 500);
-            this.setLocationRelativeTo(null);
-            this.setResizable(true);
-            setLayout(new BorderLayout());
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            this.initComponent();
-            this.setVisible(true);
-        }
-
-        public void initComponent(){
-            headLabel = new JLabel("List of books applied for promotion with id: " + promotion.getId());
-
-            String[] col ={"ID","NAME","ID PUBLISHER", "PRICE", "STOCK", "TOTAL PURCHASE", "RELEASE DATE", "STATUS"};
-            ArrayList<BookPOJO> bookList = promotion.getListBook();
-
-            bookTable = new JTable();
-            DefaultTableModel tableModel = new DefaultTableModel(col, 0);
-
-            for (BookPOJO book : bookList) {
-                String id = book.getId();
-                String name = book.getName();
-                String idPublisher = book.getIdPublisher();
-                Integer price = book.getPrice();
-                Integer stock = book.getStock();
-                Integer totalPurchase = book.getTotalPurchase();
-                Date releaseDate = book.getReleaseDate();
-                String enabled = book.isEnabled() ? "Enabled" : "Disabled";
-
-                Object[] data = {id, name, idPublisher, price, stock, totalPurchase, releaseDate, enabled};
-                tableModel.addRow(data);
-            }
-            bookTable.setModel(tableModel);
-            bookTable.setAutoCreateRowSorter(true);
-            bookTableScroll = new JScrollPane();
-            bookTableScroll.setViewportView(bookTable);
-            add(headLabel, BorderLayout.NORTH);
-            add(bookTableScroll, BorderLayout.CENTER);
-        }
-    }
 
     // Represents items in the list that can be selected
     class CheckboxListItem {
@@ -1119,4 +1057,55 @@ public void closeFrame(){
             return this;
         }
     }
+
+    static class ShowListOfBooksAppliedDialog extends JDialog {
+        PromotionPOJO promotion;
+
+        JLabel headLabel;
+        JTable bookTable;
+        JScrollPane bookTableScroll;
+        ShowListOfBooksAppliedDialog(JFrame parent, String title, boolean modal, String promotionId){
+            super(parent, title, modal);
+            this.promotion = PromotionBUS.getOne(promotionId);
+
+            this.setSize(700, 500);
+            this.setLocationRelativeTo(null);
+            this.setResizable(true);
+            setLayout(new BorderLayout());
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            this.initComponent();
+            this.setVisible(true);
+        }
+
+        public void initComponent(){
+            headLabel = new JLabel("List of books applied for promotion with id: " + promotion.getId());
+
+            String[] col ={"ID","NAME","ID PUBLISHER", "PRICE", "STOCK", "TOTAL PURCHASE", "RELEASE DATE", "STATUS"};
+            ArrayList<BookPOJO> bookList = promotion.getListBook();
+
+            bookTable = new JTable();
+            DefaultTableModel tableModel = new DefaultTableModel(col, 0);
+
+            for (BookPOJO book : bookList) {
+                String id = book.getId();
+                String name = book.getName();
+                String idPublisher = book.getIdPublisher();
+                Integer price = book.getPrice();
+                Integer stock = book.getStock();
+                Integer totalPurchase = book.getTotalPurchase();
+                Date releaseDate = book.getReleaseDate();
+                String enabled = book.isEnabled() ? "Enabled" : "Disabled";
+
+                Object[] data = {id, name, idPublisher, price, stock, totalPurchase, releaseDate, enabled};
+                tableModel.addRow(data);
+            }
+            bookTable.setModel(tableModel);
+            bookTable.setAutoCreateRowSorter(true);
+            bookTableScroll = new JScrollPane();
+            bookTableScroll.setViewportView(bookTable);
+            add(headLabel, BorderLayout.NORTH);
+            add(bookTableScroll, BorderLayout.CENTER);
+        }
+    }
+
 }

@@ -223,8 +223,6 @@ public class importSheet extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				CloseFrame();
-				UserControl userControl = new UserControl();
-            userControl.setVisible(true);
 			}
 			
 		});

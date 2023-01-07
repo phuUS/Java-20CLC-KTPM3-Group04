@@ -1,9 +1,7 @@
 package GUI;
 
-import BUS.BookBUS;
-import BUS.PublisherBUS;
-import POJO.BookPOJO;
-import POJO.PublisherPOJO;
+import BUS.*;
+import POJO.*;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -13,10 +11,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.*;
 
 public class BookManagement extends JFrame implements ActionListener {
@@ -41,10 +36,13 @@ public class BookManagement extends JFrame implements ActionListener {
     JScrollPane bookTableScroll;
     AddBookFormPanel addBookFormPanel;
 
+    public static void main(String[] args) {
+        new BookManagement();
+    }
 
     public BookManagement() {
         setTitle("Employee - Book Management");
-        setSize(1000, 700);
+        setSize(1000, 850);
         setLocationRelativeTo(null);
         setResizable(true);
         setLayout(new BorderLayout(0,0));
@@ -61,7 +59,6 @@ public class BookManagement extends JFrame implements ActionListener {
 
         backButton = new JButton("Back");
         backButton.setFocusable(false);
-        backButton.addActionListener(this);
         menuPane.add(backButton);
 
 
@@ -142,13 +139,15 @@ public class BookManagement extends JFrame implements ActionListener {
         }
 
         JTable table = new JTable();
-        String[] col = {"ID", "NAME", "ID PUBLISHER", "PRICE", "STOCK", "TOTAL PURCHASE", "RELEASE DATE", "STATUS", "ACTION", "EDIT"};
+        String[] col = {"ID", "NAME", "AUTHOR", "CATEGORY", "ID PUBLISHER", "PRICE", "STOCK", "TOTAL PURCHASE", "RELEASE DATE", "STATUS", "ACTION", "EDIT"};
         DefaultTableModel tableModel = new DefaultTableModel(col, 0);
 
         if (bookList != null) {
             for (BookPOJO book : bookList) {
                 String id = book.getId();
                 String name = book.getName();
+                String author = "Show Author";
+                String category = "Show Category";
                 String idPublisher = book.getIdPublisher();
                 Integer price = book.getPrice();
                 Integer stock = book.getStock();
@@ -157,12 +156,16 @@ public class BookManagement extends JFrame implements ActionListener {
                 String enabled = book.isEnabled() ? "Enabled" : "Disabled";
                 String action = book.isEnabled() ? "Disable" : "Enable";
 
-                Object[] data = {id, name, idPublisher, price, stock, totalPurchase, releaseDate, enabled, action, "Edit"};
+                Object[] data = {id, name, author, category, idPublisher, price, stock, totalPurchase, releaseDate, enabled, action, "Edit"};
                 tableModel.addRow(data);
             }
         }
         table.setModel(tableModel);
         table.setAutoCreateRowSorter(true);
+        table.getColumn("AUTHOR").setCellRenderer(new ButtonRenderer());
+        table.getColumn("AUTHOR").setCellEditor(new ButtonEditor(new JCheckBox()));
+        table.getColumn("CATEGORY").setCellRenderer(new ButtonRenderer());
+        table.getColumn("CATEGORY").setCellEditor(new ButtonEditor(new JCheckBox()));
         table.getColumn("ACTION").setCellRenderer(new ButtonRenderer());
         table.getColumn("ACTION").setCellEditor(new ButtonEditor(new JCheckBox()));
         table.getColumn("EDIT").setCellRenderer(new ButtonRenderer());
@@ -193,10 +196,6 @@ public class BookManagement extends JFrame implements ActionListener {
             contentLabel.setText("Add A New Book");
             contentPane.add(contentLabel);
             contentPane.add(addBookFormPanel);
-        } else if(selectedButton == backButton){
-            UserControl userControl = new UserControl();
-            userControl.setVisible(true);
-            this.setVisible(false);
         }
         revalidate();
         repaint();
@@ -264,7 +263,11 @@ public class BookManagement extends JFrame implements ActionListener {
         public Object getCellEditorValue() {
             if (isPushed) {
                 String bookId = bookTable.getValueAt(row, 0).toString();
-                if (Objects.equals(type, "Enable")) {
+                if (Objects.equals(type, "Show Author")){
+                    new ShowAuthorListDialog(BookManagement.this, "Author List", true, bookId);
+                } else if (Objects.equals(type, "Show Category")) {
+                    new ShowCategoryListDialog(BookManagement.this, "Category List", true, bookId);
+                } else if (Objects.equals(type, "Enable")) {
                     BookBUS.enable(bookId);
                     refreshBookTable();
                 } else if (Objects.equals(type, "Disable")){
@@ -293,7 +296,7 @@ public class BookManagement extends JFrame implements ActionListener {
         }
     }
 
-    public static class EditBookDialog extends JDialog implements ActionListener {
+    public class EditBookDialog extends JDialog implements ActionListener {
         BookPOJO book;
 
         JLabel headLabel;
@@ -303,6 +306,16 @@ public class BookManagement extends JFrame implements ActionListener {
 
         JLabel nameLabel;
         JTextField nameField;
+
+        ArrayList<AuthorPOJO> allAuthors;
+        JLabel listAuthorLabel;
+        JList<CheckboxListItem> listAuthorField;
+        JScrollPane listAuthorScroll;
+
+        ArrayList<CategoryPOJO> allCategories;
+        JLabel listCategoryLabel;
+        JList<CheckboxListItem> listCategoryField;
+        JScrollPane listCategoryScroll;
 
         JLabel publisherIdLabel;
         JComboBox<String> publisherIdField;
@@ -334,7 +347,7 @@ public class BookManagement extends JFrame implements ActionListener {
             super(parent, title, modal);
             this.book = BookBUS.getOne(bookId);
 
-            this.setSize(700, 500);
+            this.setSize(900, 850);
             this.setLocationRelativeTo(null);
             this.setResizable(true);
             setLayout(new GridBagLayout());
@@ -351,6 +364,88 @@ public class BookManagement extends JFrame implements ActionListener {
 
             nameLabel = new JLabel("Name:");
             nameField = new JTextField(book.getName());
+
+            allAuthors = new AuthorBUS().getAllAuthor();
+            listAuthorLabel = new JLabel("Author List: ");
+            ArrayList<CheckboxListItem> listAuthorItem = new ArrayList<>();
+            for (AuthorPOJO author : allAuthors){
+                if (!author.isDisable()) {
+                    String authorLabel = author.getId() + " - " + author.getName();
+                    listAuthorItem.add(new CheckboxListItem(authorLabel));
+                }
+            }
+            listAuthorField = new JList<>(listAuthorItem.toArray(new CheckboxListItem[0]));
+            listAuthorField.setCellRenderer(new CheckboxListRenderer());
+            listAuthorField.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            ArrayList<AuthorPOJO> listAuthor = AuthorBUS.getAuthorListOfBook(book.getId());
+            ListModel<CheckboxListItem> listAuthorModel = listAuthorField.getModel();
+
+            for (int i = 0; i < listAuthorModel.getSize(); i++){
+                CheckboxListItem item = listAuthorModel.getElementAt(i);
+                String authorId = item.toString().split("-")[0].trim();
+                for (AuthorPOJO author : listAuthor){
+                    if (authorId.equals(author.getId())){
+                        item.setSelected(true);
+                    }
+                }
+            }
+            listAuthorField.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent event) {
+                    // Get index of item clicked
+                    int index = listAuthorField.locationToIndex(event.getPoint());
+                    CheckboxListItem item = listAuthorField.getModel().getElementAt(index);
+
+                    // Toggle selected state
+                    item.setSelected(!item.isSelected());
+
+                    // Repaint cell
+                    listAuthorField.repaint(listAuthorField.getCellBounds(index, index));
+                }
+            });
+
+            listAuthorScroll = new JScrollPane();
+            listAuthorScroll.setViewportView(listAuthorField);
+
+            allCategories = CategoryBUS.getAll();
+            listCategoryLabel = new JLabel("Category List: ");
+            ArrayList<CheckboxListItem> listCategoryItem = new ArrayList<>();
+            for (CategoryPOJO category : allCategories){
+                if (category.isIsEnabled()) {
+                    String CategoryLabel = category.getId() + " - " + category.getName();
+                    listCategoryItem.add(new CheckboxListItem(CategoryLabel));
+                }
+            }
+            listCategoryField = new JList<>(listCategoryItem.toArray(new CheckboxListItem[0]));
+            listCategoryField.setCellRenderer(new CheckboxListRenderer());
+            listCategoryField.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            ArrayList<CategoryPOJO> listCategory = CategoryBUS.getCategoryListOfBook(book.getId());
+            ListModel<CheckboxListItem> listCategoryModel = listCategoryField.getModel();
+
+            for (int i = 0; i < listCategoryModel.getSize(); i++){
+                CheckboxListItem item = listCategoryModel.getElementAt(i);
+                String categoryId = item.toString().split("-")[0].trim();
+                for (CategoryPOJO category : listCategory){
+                    if (categoryId.equals(category.getId())){
+                        item.setSelected(true);
+                    }
+                }
+            }
+            listCategoryField.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent event) {
+                    // Get index of item clicked
+                    int index = listCategoryField.locationToIndex(event.getPoint());
+                    CheckboxListItem item = listCategoryField.getModel().getElementAt(index);
+
+                    // Toggle selected state
+                    item.setSelected(!item.isSelected());
+
+                    // Repaint cell
+                    listCategoryField.repaint(listCategoryField.getCellBounds(index, index));
+                }
+            });
+
+            listCategoryScroll = new JScrollPane();
+            listCategoryScroll.setViewportView(listCategoryField);
 
             publisherIdLabel = new JLabel("Publisher:");
             ArrayList<PublisherPOJO> publishers = PublisherBUS.getAll();
@@ -443,6 +538,14 @@ public class BookManagement extends JFrame implements ActionListener {
 
             gbc.gridx = 0;
             gbc.gridy = i++;
+            add(listAuthorLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(listCategoryLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
             add(publisherIdLabel, gbc);
 
             gbc.gridx = 0;
@@ -475,6 +578,14 @@ public class BookManagement extends JFrame implements ActionListener {
             gbc.gridx = 1;
             gbc.gridy = i++;
             add(nameField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(listAuthorScroll, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(listCategoryScroll, gbc);
 
             gbc.gridx = 1;
             gbc.gridy = i++;
@@ -530,12 +641,103 @@ public class BookManagement extends JFrame implements ActionListener {
                             statusField.getSelectedItem() == "Enabled");
 
                     Boolean result = BookBUS.updateOne(book.getId(), modifiedBook);
-                    if (result) {
-                        JOptionPane.showMessageDialog(this, "Update success!", "Success", JOptionPane.PLAIN_MESSAGE);
-                        this.dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Something went wrong...", "Error", JOptionPane.WARNING_MESSAGE);
+                    if (!result) {
+                        JOptionPane.showMessageDialog(this, "Error when updating" +
+                                " book's information!", "Error", JOptionPane.WARNING_MESSAGE);
                     }
+
+                    ArrayList<String> listInsertAuthorId = new ArrayList<>();
+                    ArrayList<String> listDeleteAuthorId = new ArrayList<>();
+                    ListModel<CheckboxListItem> listAuthorModel = listAuthorField.getModel();
+                    ArrayList<AuthorPOJO> listAuthor = AuthorBUS.getAuthorListOfBook(book.getId());
+                    for (int i = 0; i < listAuthorModel.getSize(); i++) {
+                        CheckboxListItem item = listAuthorModel.getElementAt(i);
+                        String authorId = item.toString().split("-")[0].trim();
+                        if (item.isSelected()) {
+                            boolean isInInsertList = true;
+                            for (AuthorPOJO author : listAuthor) {
+                                if (authorId.equals(author.getId())) {
+                                    isInInsertList = false;
+                                    break;
+                                }
+                            }
+                            if (isInInsertList) {
+                                listInsertAuthorId.add(authorId);
+                            }
+                        } else {
+                            boolean isInDeleteList = false;
+                            for (AuthorPOJO author : listAuthor) {
+                                if (authorId.equals(author.getId())) {
+                                    isInDeleteList = true;
+                                    break;
+                                }
+                            }
+                            if (isInDeleteList) {
+                                listDeleteAuthorId.add(authorId);
+                            }
+                        }
+                    }
+                    result = BookBUS.insertBookAuthors(book.getId(), listInsertAuthorId);
+                    if (!result) {
+                        JOptionPane.showMessageDialog(this, "Error when inserting chosen" +
+                                " authors into this book!", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
+                    result = BookBUS.deleteBookAuthors(book.getId(), listDeleteAuthorId);
+                    if (!result) {
+                        JOptionPane.showMessageDialog(this, "Error when deleting not chosen" +
+                                " authors from this book!", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
+                    ArrayList<String> listInsertCategoryId = new ArrayList<>();
+                    ArrayList<String> listDeleteCategoryId = new ArrayList<>();
+                    ListModel<CheckboxListItem> listCategoryModel = listCategoryField.getModel();
+                    ArrayList<CategoryPOJO> listCategory = CategoryBUS.getCategoryListOfBook(book.getId());
+                    for (int i = 0; i < listCategoryModel.getSize(); i++) {
+                        CheckboxListItem item = listCategoryModel.getElementAt(i);
+                        String categoryId = item.toString().split("-")[0].trim();
+                        if (item.isSelected()) {
+                            boolean isInInsertList = true;
+                            for (CategoryPOJO category : listCategory) {
+                                if (categoryId.equals(category.getId())) {
+                                    isInInsertList = false;
+                                    break;
+                                }
+                            }
+                            if (isInInsertList) {
+                                listInsertCategoryId.add(categoryId);
+                            }
+                        } else {
+                            boolean isInDeleteList = false;
+                            for (CategoryPOJO category : listCategory) {
+                                if (categoryId.equals(category.getId())) {
+                                    isInDeleteList = true;
+                                    break;
+                                }
+                            }
+                            if (isInDeleteList) {
+                                listDeleteCategoryId.add(categoryId);
+                            }
+                        }
+                    }
+                    result = BookBUS.insertBookCategories(book.getId(), listInsertCategoryId);
+                    if (!result) {
+                        JOptionPane.showMessageDialog(this, "Error when inserting chosen" +
+                                " categories into this book!", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
+                    result = BookBUS.deleteBookCategories(book.getId(), listDeleteCategoryId);
+                    if (!result) {
+                        JOptionPane.showMessageDialog(this, "Error when deleting not chosen" +
+                                " categories from this book!", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
+                    JOptionPane.showMessageDialog(this, "Update success!", "Success", JOptionPane.PLAIN_MESSAGE);
+                    this.dispose();
                 }
                 catch (Exception ex){
                     JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
@@ -545,7 +747,7 @@ public class BookManagement extends JFrame implements ActionListener {
         }
     }
 
-    static class AddBookFormPanel extends JPanel implements ActionListener{
+    class AddBookFormPanel extends JPanel implements ActionListener{
         JLabel headLabel;
 
         JLabel idLabel;
@@ -553,6 +755,16 @@ public class BookManagement extends JFrame implements ActionListener {
 
         JLabel nameLabel;
         JTextField nameField;
+
+        ArrayList<AuthorPOJO> allAuthors;
+        JLabel listAuthorLabel;
+        JList<CheckboxListItem> listAuthorField;
+        JScrollPane listAuthorScroll;
+
+        ArrayList<CategoryPOJO> allCategories;
+        JLabel listCategoryLabel;
+        JList<CheckboxListItem> listCategoryField;
+        JScrollPane listCategoryScroll;
 
         JLabel publisherIdLabel;
         JComboBox<String> publisherIdField;
@@ -592,6 +804,64 @@ public class BookManagement extends JFrame implements ActionListener {
 
             nameLabel = new JLabel("Name:");
             nameField = new JTextField();
+
+            allAuthors = new AuthorBUS().getAllAuthor();
+            listAuthorLabel = new JLabel("Author List: ");
+            ArrayList<CheckboxListItem> listAuthorItem = new ArrayList<>();
+            for (AuthorPOJO author : allAuthors){
+                if (!author.isDisable()) {
+                    String authorLabel = author.getId() + " - " + author.getName();
+                    listAuthorItem.add(new CheckboxListItem(authorLabel));
+                }
+            }
+            listAuthorField = new JList<>(listAuthorItem.toArray(new CheckboxListItem[0]));
+            listAuthorField.setCellRenderer(new CheckboxListRenderer());
+            listAuthorField.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            listAuthorField.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent event) {
+                    // Get index of item clicked
+                    int index = listAuthorField.locationToIndex(event.getPoint());
+                    CheckboxListItem item = listAuthorField.getModel().getElementAt(index);
+
+                    // Toggle selected state
+                    item.setSelected(!item.isSelected());
+
+                    // Repaint cell
+                    listAuthorField.repaint(listAuthorField.getCellBounds(index, index));
+                }
+            });
+
+            listAuthorScroll = new JScrollPane();
+            listAuthorScroll.setViewportView(listAuthorField);
+
+            allCategories = CategoryBUS.getAll();
+            listCategoryLabel = new JLabel("Category List: ");
+            ArrayList<CheckboxListItem> listCategoryItem = new ArrayList<>();
+            for (CategoryPOJO category : allCategories){
+                if (category.isIsEnabled()) {
+                    String CategoryLabel = category.getId() + " - " + category.getName();
+                    listCategoryItem.add(new CheckboxListItem(CategoryLabel));
+                }
+            }
+            listCategoryField = new JList<>(listCategoryItem.toArray(new CheckboxListItem[0]));
+            listCategoryField.setCellRenderer(new CheckboxListRenderer());
+            listCategoryField.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            listCategoryField.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent event) {
+                    // Get index of item clicked
+                    int index = listCategoryField.locationToIndex(event.getPoint());
+                    CheckboxListItem item = listCategoryField.getModel().getElementAt(index);
+
+                    // Toggle selected state
+                    item.setSelected(!item.isSelected());
+
+                    // Repaint cell
+                    listCategoryField.repaint(listCategoryField.getCellBounds(index, index));
+                }
+            });
+
+            listCategoryScroll = new JScrollPane();
+            listCategoryScroll.setViewportView(listCategoryField);
 
             publisherIdLabel = new JLabel("Publisher:");
             ArrayList<PublisherPOJO> publishers = PublisherBUS.getAll();
@@ -670,6 +940,14 @@ public class BookManagement extends JFrame implements ActionListener {
 
             gbc.gridx = 0;
             gbc.gridy = i++;
+            add(listAuthorLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(listCategoryLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
             add(publisherIdLabel, gbc);
 
             gbc.gridx = 0;
@@ -702,6 +980,14 @@ public class BookManagement extends JFrame implements ActionListener {
             gbc.gridx = 1;
             gbc.gridy = i++;
             add(nameField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(listAuthorScroll, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(listCategoryScroll, gbc);
 
             gbc.gridx = 1;
             gbc.gridy = i++;
@@ -743,11 +1029,21 @@ public class BookManagement extends JFrame implements ActionListener {
             if (e.getSource() == clearButton){
                 idField.setText("");
                 nameField.setText("");
+                ListModel<CheckboxListItem> listAuthorModel = listAuthorField.getModel();
+                for (int i = 0; i < listAuthorModel.getSize(); i++){
+                    listAuthorModel.getElementAt(i).setSelected(false);
+                }
+                ListModel<CheckboxListItem> listCategoryModel = listCategoryField.getModel();
+                for (int i = 0; i < listCategoryModel.getSize(); i++){
+                    listCategoryModel.getElementAt(i).setSelected(false);
+                }
                 publisherIdField.setSelectedIndex(0);
                 priceField.setText("");
                 stockField.setText("");
                 totalPurchaseField.setText("");
                 statusField.setSelectedIndex(0);
+                revalidate();
+                repaint();
             }
             else if (e.getSource() == addButton){
                 try {
@@ -761,13 +1057,45 @@ public class BookManagement extends JFrame implements ActionListener {
                             (Date) releaseDateField.getModel().getValue(),
                             statusField.getSelectedItem() == "Enabled");
                     Boolean result = BookBUS.insertOne(book);
-                    if (result){
-                        JOptionPane.showMessageDialog(this, "Add new book success!", "Success", JOptionPane.PLAIN_MESSAGE);
+                    if (!result){
+                        JOptionPane.showMessageDialog(this, "Error when adding new book!"
+                                , "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
                     }
-                    else{
-                        JOptionPane.showMessageDialog(this, "Something went wrong..., please review the " +
-                                "information", "Error", JOptionPane.WARNING_MESSAGE);
+
+                    ArrayList<String> listInsertAuthorId = new ArrayList<>();
+                    ListModel<CheckboxListItem> listAuthorModel = listAuthorField.getModel();
+                    for (int i = 0; i < listAuthorModel.getSize(); i++) {
+                        CheckboxListItem item = listAuthorModel.getElementAt(i);
+                        String authorId = item.toString().split("-")[0].trim();
+                        if (item.isSelected()) {
+                            listInsertAuthorId.add(authorId);
+                        }
                     }
+                    result = BookBUS.insertBookAuthors(book.getId(), listInsertAuthorId);
+                    if (!result) {
+                        JOptionPane.showMessageDialog(this, "Error when inserting chosen" +
+                                " authors into this book!", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
+                    ArrayList<String> listInsertCategoryId = new ArrayList<>();
+                    ListModel<CheckboxListItem> listCategoryModel = listCategoryField.getModel();
+                    for (int i = 0; i < listCategoryModel.getSize(); i++) {
+                        CheckboxListItem item = listCategoryModel.getElementAt(i);
+                        String categoryId = item.toString().split("-")[0].trim();
+                        if (item.isSelected()) {
+                            listInsertCategoryId.add(categoryId);
+                        }
+                    }
+                    result = BookBUS.insertBookCategories(book.getId(), listInsertCategoryId);
+                    if (!result) {
+                        JOptionPane.showMessageDialog(this, "Error when inserting chosen" +
+                                " categories into this book!", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
+                    JOptionPane.showMessageDialog(this, "Add new book success!", "Success", JOptionPane.PLAIN_MESSAGE);
                 } catch (Exception ex){
                     JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
                     System.out.println(Arrays.toString(ex.getStackTrace()));
@@ -776,5 +1104,136 @@ public class BookManagement extends JFrame implements ActionListener {
         }
 
     }
+
+    // Represents items in the list that can be selected
+    class CheckboxListItem {
+        private String label;
+        private boolean isSelected = false;
+
+        public CheckboxListItem(String label) {
+            this.label = label;
+        }
+
+        public boolean isSelected() {
+            return isSelected;
+        }
+
+        public void setSelected(boolean isSelected) {
+            this.isSelected = isSelected;
+        }
+
+        public String toString() {
+            return label;
+        }
+    }
+
+    // Handles rendering cells in the list using a checkbox
+    class CheckboxListRenderer extends JCheckBox implements
+            ListCellRenderer<CheckboxListItem> {
+        @Override
+        public Component getListCellRendererComponent(
+                JList<? extends CheckboxListItem> list, CheckboxListItem value,
+                int index, boolean isSelected, boolean cellHasFocus) {
+            setEnabled(list.isEnabled());
+            setSelected(value.isSelected());
+            setFont(list.getFont());
+            setBackground(list.getBackground());
+            setForeground(list.getForeground());
+            setText(value.toString());
+            return this;
+        }
+    }
+
+    static class ShowAuthorListDialog extends JDialog {
+        BookPOJO book;
+
+        JLabel headLabel;
+        JTable authorTable;
+        JScrollPane authorTableScroll;
+        ShowAuthorListDialog(JFrame parent, String title, boolean modal, String bookId){
+            super(parent, title, modal);
+            this.book = BookBUS.getOne(bookId);
+
+            this.setSize(700, 500);
+            this.setLocationRelativeTo(null);
+            this.setResizable(true);
+            setLayout(new BorderLayout());
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            this.initComponent();
+            this.setVisible(true);
+        }
+
+        public void initComponent(){
+            headLabel = new JLabel("Author list of book: " + book.getId() + " - " + book.getName());
+
+            String[] col ={"ID","NAME","ADDRESS", "PHONE NUMBER", "STATUS"};
+            authorTable = new JTable();
+            DefaultTableModel tableModel = new DefaultTableModel(col, 0);
+
+            ArrayList<AuthorPOJO> authorList = AuthorBUS.getAuthorListOfBook(book.getId());
+            for (AuthorPOJO author : authorList) {
+                String id = author.getId();
+                String name = author.getName();
+                String address = author.getAddress();
+                String phone = author.getPhone();
+                String enabled = author.isDisable() ? "Disabled" : "Enabled";
+
+                Object[] data = {id, name, address, phone, enabled};
+                tableModel.addRow(data);
+            }
+            authorTable.setModel(tableModel);
+            authorTable.setAutoCreateRowSorter(true);
+            authorTableScroll = new JScrollPane();
+            authorTableScroll.setViewportView(authorTable);
+            add(headLabel, BorderLayout.NORTH);
+            add(authorTableScroll, BorderLayout.CENTER);
+        }
+    }
+
+    static class ShowCategoryListDialog extends JDialog {
+        BookPOJO book;
+
+        JLabel headLabel;
+        JTable categoryTable;
+        JScrollPane categoryTableScroll;
+        ShowCategoryListDialog(JFrame parent, String title, boolean modal, String bookId){
+            super(parent, title, modal);
+            this.book = BookBUS.getOne(bookId);
+
+            this.setSize(700, 500);
+            this.setLocationRelativeTo(null);
+            this.setResizable(true);
+            setLayout(new BorderLayout());
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            this.initComponent();
+            this.setVisible(true);
+        }
+
+        public void initComponent(){
+            headLabel = new JLabel("Category list of book: " + book.getId() + " - " + book.getName());
+
+            String[] col ={"ID","NAME","DESCRIPTION", "STATUS"};
+            categoryTable = new JTable();
+            DefaultTableModel tableModel = new DefaultTableModel(col, 0);
+
+            ArrayList<CategoryPOJO> categoryList = CategoryBUS.getCategoryListOfBook(book.getId());
+            for (CategoryPOJO category : categoryList) {
+                String id = category.getId();
+                String name = category.getName();
+                String description = category.getDescription();
+                String enabled = category.isIsEnabled() ? "Enabled" : "Disabled";
+
+                Object[] data = {id, name, description, enabled};
+                tableModel.addRow(data);
+            }
+            categoryTable.setModel(tableModel);
+            categoryTable.setAutoCreateRowSorter(true);
+            categoryTableScroll = new JScrollPane();
+            categoryTableScroll.setViewportView(categoryTable);
+            add(headLabel, BorderLayout.NORTH);
+            add(categoryTableScroll, BorderLayout.CENTER);
+        }
+    }
+
 }
 

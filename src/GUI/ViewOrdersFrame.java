@@ -8,8 +8,6 @@ import BUS.OrdersBUS;
 import POJO.OrdersPOJO;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -287,19 +285,6 @@ public class ViewOrdersFrame extends javax.swing.JFrame {
 
         btnBack.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         btnBack.setText("Back");
-        btnBack.addActionListener(new ActionListener(){
-
-			
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                CloseFrame();
-				UserControl userControl = new UserControl();
-            userControl.setVisible(true);
-                
-            }
-			
-		});
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         jLabel1.setText("Total cost: ");
@@ -496,11 +481,6 @@ public class ViewOrdersFrame extends javax.swing.JFrame {
             fillTableViewOrders(orders);
         }
     }//GEN-LAST:event_btnViewActionPerformed
-
-    public void CloseFrame(){
-		this.setVisible(false);
-		this.dispose();
-	}
 
     private void btnViewOrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewOrdersActionPerformed
         // TODO add your handling code here:

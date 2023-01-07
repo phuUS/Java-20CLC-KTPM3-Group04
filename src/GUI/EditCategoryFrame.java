@@ -68,7 +68,7 @@ public class EditCategoryFrame extends javax.swing.JFrame {
         btnEnable = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Edit category");
         setResizable(false);
 

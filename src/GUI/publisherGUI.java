@@ -74,12 +74,12 @@ public class publisherGUI extends JFrame {
       ArrayList<PublisherPOJO> listPublisher = new ArrayList<>();
       PublisherBUS publisherBU = new PublisherBUS();
       listPublisher = publisherBU.getAllPublisher();
-      for (PublisherPOJO publisherPojo : listPublisher) {
-          String id = publisherPojo.getId();
-          String name = publisherPojo.getName();
-          String address = publisherPojo.getAddress();
-          String phone = publisherPojo.getPhone();
-          boolean disable = publisherPojo.isDisable();
+      for (PublisherPOJO PublisherPOJO : listPublisher) {
+          String id = PublisherPOJO.getId();
+          String name = PublisherPOJO.getName();
+          String address = PublisherPOJO.getAddress();
+          String phone = PublisherPOJO.getPhone();
+          boolean disable = PublisherPOJO.isDisable();
           String disableText;
           if(disable){
               disableText = "1";
@@ -101,12 +101,12 @@ public class publisherGUI extends JFrame {
       if(listPublisher == null || listPublisher.size()==0){
         JOptionPane.showMessageDialog(null,"Publisher not found");
       }else{
-          for (PublisherPOJO publisherPojo : listPublisher) {
-              String id = publisherPojo.getId();
-              String name = publisherPojo.getName();
-              String address = publisherPojo.getAddress();
-              String phone = publisherPojo.getPhone();
-              boolean disable = publisherPojo.isDisable();
+          for (PublisherPOJO PublisherPOJO : listPublisher) {
+              String id = PublisherPOJO.getId();
+              String name = PublisherPOJO.getName();
+              String address = PublisherPOJO.getAddress();
+              String phone = PublisherPOJO.getPhone();
+              boolean disable = PublisherPOJO.isDisable();
               String disableText;
               if(disable){
                   disableText = "1";
@@ -182,9 +182,6 @@ public class publisherGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
                 closeFrame();
-                UserControl userControl = new UserControl();
-                userControl.setVisible(true);
-                
             }
             
         });

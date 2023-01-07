@@ -182,8 +182,6 @@ public class AuthorGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
                 closeFrame();
-                UserControl userControl = new UserControl();
-            userControl.setVisible(true);
             }
             
         });
