@@ -44,4 +44,20 @@ public class BookBUS {
     public static ArrayList<BookPOJO> getOutOfStockBooks(){
         return BookDAO.getOutOfStockBooks();
     }
+
+    public static boolean insertBookAuthors(String bookId, ArrayList<String> listAuthorId){
+        return BookDAO.insertBookAuthors(bookId, listAuthorId);
+    }
+
+    public static boolean deleteBookAuthors(String bookId, ArrayList<String> listAuthorId){
+        return BookDAO.deleteBookAuthors(bookId, listAuthorId);
+    }
+
+    public static boolean insertBookCategories(String bookId, ArrayList<String> listCategoryId){
+        return BookDAO.insertBookCategories(bookId, listCategoryId);
+    }
+
+    public static boolean deleteBookCategories(String bookId, ArrayList<String> listCategoryId){
+        return BookDAO.deleteBookCategories(bookId, listCategoryId);
+    }
 }

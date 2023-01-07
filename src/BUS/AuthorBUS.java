@@ -42,4 +42,8 @@ public class AuthorBUS {
     boolean res = authorDA.disableAuthor(author);
     return res;
   }
+
+  static public ArrayList<AuthorPOJO> getAuthorListOfBook(String bookId){
+    return AuthorDAO.getAuthorListOfBook(bookId);
+  }
 }

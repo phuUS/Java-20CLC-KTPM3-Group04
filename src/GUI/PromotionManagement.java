@@ -39,6 +39,9 @@ public class PromotionManagement extends JFrame implements ActionListener {
     JScrollPane promotionTableScroll;
     PromotionManagement.AddPromotionFormPanel addPromotionFormPanel;
 
+    public static void main(String[] args) {
+        new PromotionManagement();
+    }
 
     public PromotionManagement() {
         setTitle("Employee - Promotion Management");
@@ -629,6 +632,13 @@ public class PromotionManagement extends JFrame implements ActionListener {
                             Integer.parseInt(limitOrdersField.getText()),
                             statusField.getSelectedItem() == "Enabled");
 
+                    Boolean result = PromotionBUS.updateOne(promotion.getId(), modifiedPromotion);
+                    if (!result) {
+                        JOptionPane.showMessageDialog(this, "Error when updating" +
+                                " promotion's information!", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
                     ArrayList<String> listInsertBookId = new ArrayList<>();
                     ArrayList<String> listDeleteBookId = new ArrayList<>();
                     ListModel<CheckboxListItem> listBookModel = listBookField.getModel();
@@ -660,25 +670,17 @@ public class PromotionManagement extends JFrame implements ActionListener {
                             }
                         }
                     }
-
-                    Boolean result = PromotionBUS.updateOne(promotion.getId(), modifiedPromotion);
-                    if (!result) {
-                        JOptionPane.showMessageDialog(this, "Error when updating" +
-                                " promotion's information!", "Error", JOptionPane.WARNING_MESSAGE);
-                        return;
-                    }
-
                     result = PromotionBUS.insertAppliedBooks(promotion.getId(), listInsertBookId);
                     if (!result) {
                         JOptionPane.showMessageDialog(this, "Error when inserting applied" +
-                                " books for this promotion!", "Error", JOptionPane.WARNING_MESSAGE);
+                                " books into this promotion!", "Error", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
 
                     result = PromotionBUS.deleteNotAppliedBooks(promotion.getId(), listDeleteBookId);
                     if (!result) {
                         JOptionPane.showMessageDialog(this, "Error when deleting not applied" +
-                                " books for this promotion!", "Error", JOptionPane.WARNING_MESSAGE);
+                                " books from this promotion!", "Error", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
 
@@ -985,6 +987,13 @@ public class PromotionManagement extends JFrame implements ActionListener {
                             Integer.parseInt(limitOrdersField.getText()),
                             statusField.getSelectedItem() == "Enabled");
 
+                    Boolean result = PromotionBUS.insertOne(promotion);
+                    if(!result){
+                        JOptionPane.showMessageDialog(this, "Error when adding new promotion!"
+                                , "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
                     ArrayList<String> listInsertBookId = new ArrayList<>();
                     ListModel<CheckboxListItem> listBookModel = listBookField.getModel();
                     for (int i = 0; i < listBookModel.getSize(); i++){
@@ -994,18 +1003,10 @@ public class PromotionManagement extends JFrame implements ActionListener {
                             listInsertBookId.add(bookId);
                         }
                     }
-
-                    Boolean result = PromotionBUS.insertOne(promotion);
-                    if(!result){
-                        JOptionPane.showMessageDialog(this, "Error when adding promotion!"
-                                , "Error", JOptionPane.WARNING_MESSAGE);
-                        return;
-                    }
-
                     result = PromotionBUS.insertAppliedBooks(promotion.getId(), listInsertBookId);
                     if (!result){
                         JOptionPane.showMessageDialog(this, "Error inserting applied" +
-                                " books for this promotion!", "Error", JOptionPane.WARNING_MESSAGE);
+                                " books into this promotion!", "Error", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
                     JOptionPane.showMessageDialog(this, "Add new promotion success!", "Success", JOptionPane.PLAIN_MESSAGE);
@@ -1014,6 +1015,46 @@ public class PromotionManagement extends JFrame implements ActionListener {
                     System.out.println(Arrays.toString(ex.getStackTrace()));
                 }
             }
+        }
+    }
+
+
+    // Represents items in the list that can be selected
+    class CheckboxListItem {
+        private String label;
+        private boolean isSelected = false;
+
+        public CheckboxListItem(String label) {
+            this.label = label;
+        }
+
+        public boolean isSelected() {
+            return isSelected;
+        }
+
+        public void setSelected(boolean isSelected) {
+            this.isSelected = isSelected;
+        }
+
+        public String toString() {
+            return label;
+        }
+    }
+
+// Handles rendering cells in the list using a checkbox
+    class CheckboxListRenderer extends JCheckBox implements
+            ListCellRenderer<CheckboxListItem> {
+        @Override
+        public Component getListCellRendererComponent(
+                JList<? extends CheckboxListItem> list, CheckboxListItem value,
+                int index, boolean isSelected, boolean cellHasFocus) {
+            setEnabled(list.isEnabled());
+            setSelected(value.isSelected());
+            setFont(list.getFont());
+            setBackground(list.getBackground());
+            setForeground(list.getForeground());
+            setText(value.toString());
+            return this;
         }
     }
 
@@ -1067,42 +1108,4 @@ public class PromotionManagement extends JFrame implements ActionListener {
         }
     }
 
-    // Represents items in the list that can be selected
-    class CheckboxListItem {
-        private String label;
-        private boolean isSelected = false;
-
-        public CheckboxListItem(String label) {
-            this.label = label;
-        }
-
-        public boolean isSelected() {
-            return isSelected;
-        }
-
-        public void setSelected(boolean isSelected) {
-            this.isSelected = isSelected;
-        }
-
-        public String toString() {
-            return label;
-        }
-    }
-
-// Handles rendering cells in the list using a checkbox
-    class CheckboxListRenderer extends JCheckBox implements
-            ListCellRenderer<CheckboxListItem> {
-        @Override
-        public Component getListCellRendererComponent(
-                JList<? extends CheckboxListItem> list, CheckboxListItem value,
-                int index, boolean isSelected, boolean cellHasFocus) {
-            setEnabled(list.isEnabled());
-            setSelected(value.isSelected());
-            setFont(list.getFont());
-            setBackground(list.getBackground());
-            setForeground(list.getForeground());
-            setText(value.toString());
-            return this;
-        }
-    }
 }
