@@ -142,7 +142,7 @@ public class LoginForm extends JFrame implements ActionListener {
             message.setForeground(Color.blue);
             message.setText("Login as admin successfully!");
             AdminControllerGUI adminControllerGUI = new AdminControllerGUI(userValue);
-            adminControllerGUI.createAndShowGUI();
+            adminControllerGUI.setVisible(true);
             setVisible(false);
             return;
         }

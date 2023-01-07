@@ -1,120 +1,164 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.*;
-import javax.swing.BorderFactory;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import BUS.AccountBUS;
+import BUS.UserBUS;
+import POJO.AccountPOJO;
+import POJO.UserPOJO;
+
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import java.awt.*;
+import javax.swing.SwingConstants;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-public class AdminControllerGUI extends JFrame implements ActionListener{
-    private JButton logoutButton;
-    static JFrame frame;
-    private JPanel menuPane;
-	private String username;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
-    private JButton editInfoButton;
-    private JPanel contentPane;
-    public AdminControllerGUI() {
-        setSize(900, 600);
-        userInterface();
-    }
+public class AdminControllerGUI extends JFrame {
 
-    private void userInterface(){
+	private JPanel contentPane;
+	private final JPanel topPane = new JPanel();
 
-         menuPane = new JPanel();
-        menuPane.setLayout(new FlowLayout(FlowLayout.LEFT));
-        menuPane.setBackground(Color.GRAY);
+	String username;
+	AccountManagement accountManagement;
 
-        logoutButton = new JButton("Logout");
-        logoutButton.setFocusable(false);
-        logoutButton.addActionListener(this);
-        menuPane.add(logoutButton);
+	BookManagement bookControlGUI;
+	PromotionManagement promotionControlGUI;
+	importSheet importSheetControlGUI;
+	AuthorGUI authorControlGUI;
+	ViewOrdersFrame orderControlGUI;
+	ViewBookCategoriesFrame bookCategoryControlGUI;
+	publisherGUI publisherControlGUI;
 
-        editInfoButton = new JButton("Information");
-        editInfoButton.setFocusable(false);
-        editInfoButton.addActionListener(this);
-        menuPane.add(editInfoButton);
+	/**
+	 * Launch the application.
+	 */
+	// public static void main(String[] args) {
+	// 	EventQueue.invokeLater(new Runnable() {
+	// 		public void run() {
+	// 			try {
+	// 				AdminControllerGUI frame = new AdminControllerGUI(username);
+	// 				frame.setVisible(true);
+	// 			} catch (Exception e) {
+	// 				e.printStackTrace();
+	// 			}
+	// 		}
+	// 	});
+	// }
 
-        JPanel main_pan = new JPanel(new GridLayout(1, 2));
-
-        JPanel left_pan = new JPanel(new BorderLayout());
-        left_pan.setBackground(Color.DARK_GRAY);
-
-        JLabel cover = new JLabel(new ImageIcon(getClass().getResource("../images/admin-img.png")));
-
-        cover.setHorizontalTextPosition(JLabel.CENTER);
-        cover.setVerticalTextPosition(JLabel.BOTTOM);
-        cover.setForeground(Color.white);
-        cover.setFont(new Font("Segoe UI", 0, 15));
-        left_pan.add(cover);
-
-        main_pan.add(left_pan);
-
-        JPanel right_pan = new JPanel(new BorderLayout());
-        right_pan.setBackground(Color.white);
-
-        JPanel right_comp = new JPanel(new BorderLayout());
-        JLabel title = new JLabel("Sign In");
-        title.setPreferredSize(new Dimension(this.getWidth(), 70));
-        title.setHorizontalAlignment(JLabel.CENTER);
-        title.setFont(new Font("Segoe UI", 0, 30));
-        right_comp.add(title, "North");
-
-        JPanel pan = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        JLabel _user = new JLabel("Username");
-        _user.setFont(new Font("Segoe UI", 0, 14));
-        _user.setPreferredSize(new Dimension(200, 20));
-        pan.add(_user);
-        
-
-        main_pan.add(right_pan);
-
-        getContentPane().add(main_pan);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == logoutButton ){
-            ///
+public UserPOJO getUser(){
+	ArrayList<AccountPOJO> accountList = AccountBUS.getAll();
+        ArrayList<UserPOJO> userList = UserBUS.getAll();
+        UserPOJO userTemp = null;
+        for(AccountPOJO a : accountList) {
+            if(a != null && a.getUsername().equals(username)) {
+                userTemp = userList.stream().filter(u -> a.getId().equals(u.getIdAccount())).findFirst().orElse(null);
+            }
         }
-    }
+		return userTemp;
+}
 
-    public static void createAndShowGUI() {
-        //Create and set up the window.
-        frame = new JFrame("Admin - Book Management");
-        frame.setPreferredSize(new Dimension(900, 600));
-        frame.setLayout(new BorderLayout(0,0));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	/**
+	 * Create the frame.
+	 */
+	public AdminControllerGUI(String username) {
+		this.setUsername(username);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 663, 493);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        //Create and set up the content pane.
-        AdminControllerGUI newContentPane = new AdminControllerGUI();
-        // newContentPane.setOpaque(true); //content panes must be opaque
-        frame.setContentPane(newContentPane);
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		topPane.setBounds(0, 0, 649, 31);
+		contentPane.add(topPane);
+		topPane.setLayout(null);
+		
+		JButton logoutBtn = new JButton("Logout");
+		logoutBtn.setBounds(10, 10, 85, 21);
+		topPane.add(logoutBtn);
+		
+		JButton editInfoBtn = new JButton("Edit info");
+		editInfoBtn.setBounds(109, 10, 85, 21);
+		topPane.add(editInfoBtn);
+		
+		JLabel userControlLabel = new JLabel("USER CONTROL");
+		userControlLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+		userControlLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		userControlLabel.setBounds(221, 41, 212, 31);
+		contentPane.add(userControlLabel);
+		
+		JLabel greetingLabel = new JLabel("Welcome, Username");
+		greetingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		greetingLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		greetingLabel.setBounds(209, 66, 268, 31);
+		contentPane.add(greetingLabel);
+		
+		JButton accountManagementBtn = new JButton("Account Management");
+		accountManagementBtn.addActionListener(new ActionListener(){
 
-        //Display the window.
-        frame.pack();
-        frame.setVisible(true);
-    }
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				accountManagement = new AccountManagement();
+				accountManagement.createAndShowGUI();
+				hideAdminControl();
+			}
+			
+		});
+		accountManagementBtn.setBounds(10, 146, 132, 31);
+		contentPane.add(accountManagementBtn);
 
-     public static void main(String[] args) {
-       //Schedule a job for the event-dispatching thread:
-       //creating and showing this application's GUI.
-       javax.swing.SwingUtilities.invokeLater(new Runnable() {
-           public void run() {
-               createAndShowGUI();
-           }
-       });
-   }
+		
+		
+		JButton importSheetBtn = new JButton("View statistics");
+		importSheetBtn.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				bookControlGUI = new BookManagement();
+				bookControlGUI.setVisible(true);
+				hideAdminControl();
+			}
+			
+		});
+		importSheetBtn.setBounds(10, 230, 132, 31);
+		contentPane.add(importSheetBtn);
+		
+		
+		BufferedImage image;
+		try {
+			image = ImageIO.read(new File("src/images/hieu-sach-nha-nam-214377.jpg"));
+			JLabel imageLable = new JLabel(new ImageIcon(image));
+			imageLable.setBounds(152, 129, 345, 253);
+			contentPane.add(imageLable);			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	private void hideAdminControl(){
+		this.setVisible(false);
+	}
 }

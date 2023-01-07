@@ -4,6 +4,7 @@ import BUS.AccountBUS;
 import BUS.UserBUS;
 import POJO.AccountPOJO;
 import POJO.UserPOJO;
+import apple.laf.JRSUIConstants.FrameOnly;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class AccountManagement extends JPanel implements ActionListener {
     private JPanel menuPane;
-    private JButton logoutButton;
+    private JButton backBtn;
 
     private JButton editInfoButton;
 
@@ -53,6 +54,7 @@ public class AccountManagement extends JPanel implements ActionListener {
     private AccountManagement.AllUsers model2;
 
     private String username;
+    private AdminControllerGUI adminControllerGUI;
 
     public String getUsername() {
         return username;
@@ -70,15 +72,26 @@ public class AccountManagement extends JPanel implements ActionListener {
         menuPane.setLayout(new FlowLayout(FlowLayout.LEFT));
         menuPane.setBackground(Color.GRAY);
 
-        logoutButton = new JButton("Logout");
-        logoutButton.setFocusable(false);
-        logoutButton.addActionListener(this);
-        menuPane.add(logoutButton);
+        backBtn = new JButton("Back");
+        backBtn.addActionListener(new ActionListener(){
 
-        editInfoButton = new JButton("Information");
-        editInfoButton.setFocusable(false);
-        editInfoButton.addActionListener(this);
-        menuPane.add(editInfoButton);
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                adminControllerGUI = new AdminControllerGUI(username);
+                adminControllerGUI.setVisible(true);
+                hideFrame();
+            }
+
+        });
+        backBtn.setFocusable(false);
+        backBtn.addActionListener(this);
+        menuPane.add(backBtn);
+
+        // editInfoButton = new JButton("Information");
+        // editInfoButton.setFocusable(false);
+        // editInfoButton.addActionListener(this);
+        // menuPane.add(editInfoButton);
 
         sidebarPane = new JPanel();
         sidebarPane.setLayout(new BoxLayout(sidebarPane, BoxLayout.Y_AXIS));
@@ -132,13 +145,7 @@ public class AccountManagement extends JPanel implements ActionListener {
                 contentPane.removeAll();
             }
             this.getTableAllUsersButton();
-        }
-        else if(e.getSource() == logoutButton){
-            LoginForm loginForm = new LoginForm();
-            setVisible(false);
-            frame.setVisible(false);
-            loginForm.setVisible(true);
-        } else if(e.getSource() == editInfoButton){
+        }else if(e.getSource() == editInfoButton){
             if(contentPane != null){
                 contentPane.removeAll();
             }
@@ -435,6 +442,10 @@ public class AccountManagement extends JPanel implements ActionListener {
             }
 
         }
+    }
+
+    public void hideFrame(){
+        frame.setVisible(false);
     }
 
     public void createAndShowGUI() {
