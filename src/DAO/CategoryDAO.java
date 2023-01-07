@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import java.lang.reflect.AnnotatedArrayType;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,11 +14,51 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Date;
+
+import POJO.AuthorPOJO;
+import POJO.BookPOJO;
 import POJO.CategoryPOJO;
+import POJO.PromotionPOJO;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 public class CategoryDAO {
+    static public ArrayList<CategoryPOJO> getAll(){
+        ArrayList<CategoryPOJO> result = null;
+        Connection connection = Database.createConnection();
+        try {
+            result = new ArrayList<>();
+            Statement statement;
+            statement = connection.createStatement();
+            String query = "SELECT * FROM category";
+            ResultSet rs = statement.executeQuery(query);
+            while(rs.next()){
+                String id = rs.getString("id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                Boolean isEnabled = rs.getBoolean("isEnabled");
+
+                CategoryPOJO category = new CategoryPOJO(id, name, description, isEnabled);
+                result.add(category);
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
     public List<CategoryPOJO> getEnabledAll(){
         List<CategoryPOJO> ans = null;
         try {
@@ -321,6 +362,41 @@ public class CategoryDAO {
             }
         return true;
     
+    }
+
+    static public ArrayList<CategoryPOJO> getCategoryListOfBook(String bookId){
+        ArrayList<CategoryPOJO> result = new ArrayList<>();
+        Connection connection = Database.createConnection();
+        try {
+            result = new ArrayList<>();
+            String query = "SELECT * FROM book_category as bc, category as c" +
+                    " WHERE bc.id_book=? and bc.id_category = c.id";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, bookId);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+                String id = rs.getString("id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                boolean isEnabled = rs.getBoolean("isEnabled");
+                CategoryPOJO category = new CategoryPOJO(id, name, description, isEnabled);
+                result.add(category);
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
     }
 }
 

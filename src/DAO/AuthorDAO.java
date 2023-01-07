@@ -1,14 +1,13 @@
 package DAO;
 
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import POJO.AuthorPOJO;
+import POJO.BookPOJO;
 
 public class AuthorDAO {
 	public ArrayList<AuthorPOJO> getAllAuthor (){
@@ -230,6 +229,42 @@ public class AuthorDAO {
     }
     return ans;
 
+  }
+
+  static public ArrayList<AuthorPOJO> getAuthorListOfBook(String bookId){
+    ArrayList<AuthorPOJO> result = null;
+    Connection connection = Database.createConnection();
+    try {
+      result = new ArrayList<>();
+      String query = "SELECT * FROM book_author as ba, author as a" +
+              " WHERE ba.id_book=? and ba.id_author = a.id";
+      PreparedStatement statement = connection.prepareStatement(query);
+      statement.setString(1, bookId);
+      ResultSet rs = statement.executeQuery();
+      while(rs.next()){
+        String id = rs.getString("id");
+        String name = rs.getString("name");
+        String address = rs.getString("address");
+        String phone = rs.getString("phone");
+        boolean disable = rs.getBoolean("is_disable");
+        AuthorPOJO author = new AuthorPOJO(id, name, address, phone, disable);
+        result.add(author);
+      }
+      rs.close();
+      statement.close();
+    } catch (SQLException ex) {
+      Logger.getLogger(BookPOJO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    finally{
+      if(connection != null){
+        try {
+          connection.close();
+        } catch (SQLException ex){
+          ex.printStackTrace();
+        }
+      }
+    }
+    return result;
   }
 
 }

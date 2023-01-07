@@ -1,6 +1,7 @@
 package DAO;
 
 import POJO.BookPOJO;
+import POJO.PromotionPOJO;
 
 import java.sql.*;
 import java.sql.*;
@@ -357,16 +358,16 @@ public class BookDAO {
                 result = true;
             }
 
-            sql = "DELETE FROM promotion_book where id_book=?";
-
-            statement = connection.prepareStatement(sql);
-            statement.setString(1, bookId);
-
-            int rowsDeleted = statement.executeUpdate();
-            if (rowsDeleted > 0){
-                System.out.println("Deleted " + rowsDeleted + " rows in promotion_book table with id_book=" + bookId);
-                result = true;
-            }
+//            sql = "DELETE FROM promotion_book where id_book=?";
+//
+//            statement = connection.prepareStatement(sql);
+//            statement.setString(1, bookId);
+//
+//            int rowsDeleted = statement.executeUpdate();
+//            if (rowsDeleted > 0){
+//                System.out.println("Deleted " + rowsDeleted + " rows in promotion_book table with id_book=" + bookId);
+//                result = true;
+//            }
 
             statement.close();
         } catch (SQLException ex) {
@@ -383,4 +384,145 @@ public class BookDAO {
         }
         return result;
     }
+
+    public static boolean insertBookAuthors(String bookId, ArrayList<String> listAuthorId) {
+        boolean result = true;
+        Connection connection = Database.createConnection();
+        try {
+            String sql = "INSERT INTO book_author (id_book, id_author) VALUES (?,?)";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            for (String authorId : listAuthorId){
+                int i = 1;
+                statement.setString(i++, bookId);
+                statement.setString(i++, authorId);
+
+                int rowsUpdated = statement.executeUpdate();
+                if (rowsUpdated <= 0) {
+                    result = false;
+                    break;
+                }
+            }
+            statement.close();
+        } catch (SQLException ex) {
+            result = false;
+            Logger.getLogger(PromotionPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
+    public static boolean deleteBookAuthors(String bookId, ArrayList<String> listAuthorId) {
+        boolean result = true;
+        Connection connection = Database.createConnection();
+        try {
+            String sql = "DELETE FROM book_author where id_book=? and id_author=?";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            for (String authorId : listAuthorId){
+                int i = 1;
+                statement.setString(i++, bookId);
+                statement.setString(i++, authorId);
+
+                int rowsUpdated = statement.executeUpdate();
+                if (rowsUpdated <= 0) {
+                    result = false;
+                    break;
+                }
+            }
+            statement.close();
+        } catch (SQLException ex) {
+            result = false;
+            Logger.getLogger(PromotionPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
+    public static boolean insertBookCategories(String bookId, ArrayList<String> listCategoryId) {
+        boolean result = true;
+        Connection connection = Database.createConnection();
+        try {
+            String sql = "INSERT INTO book_category (id_book, id_category) VALUES (?,?)";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            for (String categoryId : listCategoryId){
+                int i = 1;
+                statement.setString(i++, bookId);
+                statement.setString(i++, categoryId);
+
+                int rowsUpdated = statement.executeUpdate();
+                if (rowsUpdated <= 0) {
+                    result = false;
+                    break;
+                }
+            }
+            statement.close();
+        } catch (SQLException ex) {
+            result = false;
+            Logger.getLogger(PromotionPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
+    public static boolean deleteBookCategories(String bookId, ArrayList<String> listCategoryId) {
+        boolean result = true;
+        Connection connection = Database.createConnection();
+        try {
+            String sql = "DELETE FROM book_category where id_book=? and id_category=?";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            for (String categoryId : listCategoryId){
+                int i = 1;
+                statement.setString(i++, bookId);
+                statement.setString(i++, categoryId);
+
+                int rowsUpdated = statement.executeUpdate();
+                if (rowsUpdated <= 0) {
+                    result = false;
+                    break;
+                }
+            }
+            statement.close();
+        } catch (SQLException ex) {
+            result = false;
+            Logger.getLogger(PromotionPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
 }

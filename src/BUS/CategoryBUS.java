@@ -6,9 +6,14 @@ package BUS;
 import POJO.CategoryPOJO;
 import DAO.CategoryDAO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryBUS {
+    static public ArrayList<CategoryPOJO> getAll(){
+        return CategoryDAO.getAll();
+    }
+
     public List<CategoryPOJO> getEnabledAll(){
         CategoryDAO da = new CategoryDAO();
         
@@ -73,5 +78,9 @@ public class CategoryBUS {
         CategoryDAO da = new CategoryDAO();
         
         return da.disabledCategory(idCategory);
+    }
+
+    static public ArrayList<CategoryPOJO> getCategoryListOfBook(String bookId) {
+        return CategoryDAO.getCategoryListOfBook(bookId);
     }
 }

@@ -10,7 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
 import BUS.PublisherBUS;
-import POJO.PublisherPojo;
+import POJO.PublisherPOJO;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -71,15 +71,15 @@ public class publisherGUI extends JFrame {
       DefaultTableModel model = (DefaultTableModel) listPublisherTable.getModel();
       model.setRowCount(0);
       model.fireTableDataChanged();
-      ArrayList<PublisherPojo> listPublisher = new ArrayList<>();
+      ArrayList<PublisherPOJO> listPublisher = new ArrayList<>();
       PublisherBUS publisherBU = new PublisherBUS();
       listPublisher = publisherBU.getAllPublisher();
-      for (PublisherPojo publisherPojo : listPublisher) {
-          String id = publisherPojo.getId();
-          String name = publisherPojo.getName();
-          String address = publisherPojo.getAddress();
-          String phone = publisherPojo.getPhone();
-          boolean disable = publisherPojo.isDisable();
+      for (PublisherPOJO PublisherPOJO : listPublisher) {
+          String id = PublisherPOJO.getId();
+          String name = PublisherPOJO.getName();
+          String address = PublisherPOJO.getAddress();
+          String phone = PublisherPOJO.getPhone();
+          boolean disable = PublisherPOJO.isDisable();
           String disableText;
           if(disable){
               disableText = "1";
@@ -95,18 +95,18 @@ public class publisherGUI extends JFrame {
       DefaultTableModel model = (DefaultTableModel) listPublisherTable.getModel();
       model.setRowCount(0);
       model.fireTableDataChanged();
-      ArrayList<PublisherPojo> listPublisher = new ArrayList<>();
+      ArrayList<PublisherPOJO> listPublisher = new ArrayList<>();
       PublisherBUS publisherBU = new PublisherBUS();
       listPublisher = publisherBU.getPublisherBySearch(_id, _name);
       if(listPublisher == null || listPublisher.size()==0){
         JOptionPane.showMessageDialog(null,"Publisher not found");
       }else{
-          for (PublisherPojo publisherPojo : listPublisher) {
-              String id = publisherPojo.getId();
-              String name = publisherPojo.getName();
-              String address = publisherPojo.getAddress();
-              String phone = publisherPojo.getPhone();
-              boolean disable = publisherPojo.isDisable();
+          for (PublisherPOJO PublisherPOJO : listPublisher) {
+              String id = PublisherPOJO.getId();
+              String name = PublisherPOJO.getName();
+              String address = PublisherPOJO.getAddress();
+              String phone = PublisherPOJO.getPhone();
+              boolean disable = PublisherPOJO.isDisable();
               String disableText;
               if(disable){
                   disableText = "1";
@@ -119,19 +119,19 @@ public class publisherGUI extends JFrame {
       }
     }
 
-    public PublisherPojo getPublisherSelected(){
+    public PublisherPOJO getPublisherSelected(){
       DefaultTableModel model = (DefaultTableModel) listPublisherTable.getModel();
       int i_row = listPublisherTable.getSelectedRow();
       String id = (String) model.getValueAt(i_row, 0);
       String name = (String) model.getValueAt(i_row, 1);
       String address = (String) model.getValueAt(i_row, 2);
       String phone = (String)model.getValueAt(i_row, 3);
-      PublisherPojo publisher = new PublisherPojo(id, name, address, phone);
+      PublisherPOJO publisher = new PublisherPOJO(id, name, address, phone);
       return publisher;
     }
 
     public void showPublisherSelected(java.awt.event.MouseEvent evt){
-      PublisherPojo publisher = getPublisherSelected();
+      PublisherPOJO publisher = getPublisherSelected();
       this.manageIDInput.setText(publisher.getId());
       this.manageNameInput.setText(publisher.getName());
       this.manageAddressInput.setText(publisher.getAddress());
@@ -367,7 +367,7 @@ public class publisherGUI extends JFrame {
                 String address = manageAddressInput.getText();
                 String phone = managePhoneInput.getText();
 
-                PublisherPojo publisher = new PublisherPojo(id,name,address,phone);
+                PublisherPOJO publisher = new PublisherPOJO(id,name,address,phone);
                 PublisherBUS publisherBU = new PublisherBUS();
                 boolean res = publisherBU.addPublisher(publisher);
                 if(res){
@@ -394,7 +394,7 @@ public class publisherGUI extends JFrame {
               String name = manageNameInput.getText();
               String address = manageAddressInput.getText();
               String phone = managePhoneInput.getText();
-              PublisherPojo publisher = new PublisherPojo(id, name, address, phone);
+              PublisherPOJO publisher = new PublisherPOJO(id, name, address, phone);
               PublisherBUS publisherBU = new PublisherBUS();
               boolean res =  publisherBU.updatePublisher(publisher);
               DefaultTableModel model = (DefaultTableModel) listPublisherTable.getModel();
@@ -417,7 +417,7 @@ public class publisherGUI extends JFrame {
           public void actionPerformed(ActionEvent e) {
               // TODO Auto-generated method stub
 
-              PublisherPojo publisher = getPublisherSelected();
+              PublisherPOJO publisher = getPublisherSelected();
               PublisherBUS publisherBU = new PublisherBUS();
               boolean res = publisherBU.enablePublisher(publisher);
               showPublisher(); 
@@ -440,7 +440,7 @@ public class publisherGUI extends JFrame {
           @Override
           public void actionPerformed(ActionEvent e) {
               // TODO Auto-generated method stub
-              PublisherPojo publisher = getPublisherSelected();
+              PublisherPOJO publisher = getPublisherSelected();
               PublisherBUS publisherBU = new PublisherBUS();
               boolean res = publisherBU.disablePublisher(publisher);
               showPublisher();
