@@ -14,7 +14,7 @@ import BUS.UserBUS;
 import POJO.BookInImportSheetPOJO;
 import POJO.BookPOJO;
 import POJO.ImportSheetPOJO;
-import POJO.PublisherPojo;
+import POJO.PublisherPOJO;
 import POJO.UserPOJO;
 
 import javax.swing.JMenuBar;
@@ -86,9 +86,9 @@ public class importSheet extends JFrame {
 		return listBook; 
 	}
 
-	public ArrayList<PublisherPojo> getPublisherEnabled(){
+	public ArrayList<PublisherPOJO> getPublisherEnabled(){
 		PublisherBUS publisherBus = new PublisherBUS();
-		ArrayList<PublisherPojo> listPublisher = publisherBus.getPublisherNotDisable();
+		ArrayList<PublisherPOJO> listPublisher = publisherBus.getPublisherNotDisable();
 		return listPublisher; 
 	}
 
@@ -102,8 +102,8 @@ public class importSheet extends JFrame {
 		return book;
 	}
 
-	public PublisherPojo getPublisherSelected(ActionEvent e){
-		PublisherPojo publisher = (PublisherPojo) publisherCombobox.getSelectedItem();
+	public PublisherPOJO getPublisherSelected(ActionEvent e){
+		PublisherPOJO publisher = (PublisherPOJO) publisherCombobox.getSelectedItem();
 		return publisher;
 	}
 
@@ -576,7 +576,7 @@ public class importSheet extends JFrame {
 		
 		publisherCombobox = new JComboBox();
 
-		ArrayList<PublisherPojo> listPublisher = getPublisherEnabled();
+		ArrayList<PublisherPOJO> listPublisher = getPublisherEnabled();
 		DefaultComboBoxModel modelPublisherCombobox = new DefaultComboBoxModel(listPublisher.toArray());
 		publisherCombobox.setModel(modelPublisherCombobox);
 		publisherCombobox.addActionListener(new ActionListener(){

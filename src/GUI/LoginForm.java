@@ -12,7 +12,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Optional;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -142,9 +141,8 @@ public class LoginForm extends JFrame implements ActionListener {
         if(role == 1){
             message.setForeground(Color.blue);
             message.setText("Login as admin successfully!");
-            AccountManagement accountManagement = new AccountManagement();
-            accountManagement.setUsername(userValue);
-            accountManagement.createAndShowGUI();
+            AdminControllerGUI adminControllerGUI = new AdminControllerGUI(userValue);
+            adminControllerGUI.createAndShowGUI();
             setVisible(false);
             return;
         }
