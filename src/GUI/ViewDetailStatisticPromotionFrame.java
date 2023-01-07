@@ -176,6 +176,12 @@ public class ViewDetailStatisticPromotionFrame extends javax.swing.JFrame {
         viewRevenueStatistics.setVisible(true);
     }//GEN-LAST:event_formWindowClosed
 
+    private void btnViewTopsPromotionActionPerformed(java.awt.event.ActionEvent evt) {                                                     
+        // TODO add your handling code here:
+        ViewTopsInPromotionFrame viewTopsPromotion = new ViewTopsInPromotionFrame();
+        viewTopsPromotion.setVisible(true);
+    } 
+
     /**
      * @param args the command line arguments
      */
