@@ -18,6 +18,8 @@ import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -34,6 +36,12 @@ public class ViewOrdersFrame extends javax.swing.JFrame {
             return false;
         }
     };
+
+    public void CloseFrame(){
+		this.setVisible(false);
+		this.dispose();
+	}
+
     /**
      * Creates new form ViewOrdersFrame
      */
@@ -285,6 +293,19 @@ public class ViewOrdersFrame extends javax.swing.JFrame {
 
         btnBack.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         btnBack.setText("Back");
+        btnBack.addActionListener(new ActionListener(){
+
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                CloseFrame();
+				UserControl userControl = new UserControl();
+            userControl.setVisible(true);
+
+            }
+
+		});
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         jLabel1.setText("Total cost: ");

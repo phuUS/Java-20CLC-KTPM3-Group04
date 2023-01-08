@@ -40,6 +40,11 @@ public class BookManagement extends JFrame implements ActionListener {
         new BookManagement();
     }
 
+    public void CloseFrame(){
+		this.setVisible(false);
+		this.dispose();
+	}
+
     public BookManagement() {
         setTitle("Employee - Book Management");
         setSize(1000, 850);
@@ -59,6 +64,7 @@ public class BookManagement extends JFrame implements ActionListener {
 
         backButton = new JButton("Back");
         backButton.setFocusable(false);
+        backButton.addActionListener(this);
         menuPane.add(backButton);
 
 
@@ -196,6 +202,10 @@ public class BookManagement extends JFrame implements ActionListener {
             contentLabel.setText("Add A New Book");
             contentPane.add(contentLabel);
             contentPane.add(addBookFormPanel);
+        } else if(selectedButton == backButton){
+            UserControl userControl = new UserControl();
+            userControl.setVisible(true);
+            this.setVisible(false);
         }
         revalidate();
         repaint();

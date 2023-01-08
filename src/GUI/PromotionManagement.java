@@ -43,6 +43,10 @@ public class PromotionManagement extends JFrame implements ActionListener {
         new PromotionManagement();
     }
 
+    public void closeFrame(){
+        this.setVisible(false);
+        this.dispose();
+    }
     public PromotionManagement() {
         setTitle("Employee - Promotion Management");
         setSize(1000, 700);
@@ -62,6 +66,17 @@ public class PromotionManagement extends JFrame implements ActionListener {
 
         backButton = new JButton("Back");
         backButton.setFocusable(false);
+        backButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                closeFrame();
+                UserControl userControl = new UserControl();
+            userControl.setVisible(true);
+            }
+
+        });
         menuPane.add(backButton);
 
 
