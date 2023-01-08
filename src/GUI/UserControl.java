@@ -132,6 +132,7 @@ public class UserControl extends JFrame {
 				// TODO Auto-generated method stub
 				authorControlGUI = new AuthorGUI();
 				authorControlGUI.setVisible(true);
+				hideUserControl();
 			}
 			
 		});
