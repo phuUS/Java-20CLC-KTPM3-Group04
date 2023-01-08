@@ -14,4 +14,9 @@ public class AccountBUS {
         AccountDAO accountDAO = new AccountDAO();
         return accountDAO.update(accountPOJO);
     }
+
+    public Boolean updateActive(AccountPOJO accountPOJO) {
+        AccountDAO accountDAO = new AccountDAO();
+        return accountDAO.updateActive(accountPOJO);
+    }
 }

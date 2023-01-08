@@ -73,4 +73,38 @@ public class AccountDAO {
         }
         return result;
     }
+
+    public Boolean updateActive(AccountPOJO account) {
+        boolean result = false;
+        Connection connection = Database.createConnection();
+        Boolean setActive = true;
+        if (account.getIsActive() == true) {
+            setActive = false;
+        }
+        try {
+            String sql = "UPDATE account SET is_active=? WHERE id=?;";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setBoolean(1, setActive);
+            statement.setString(2, account.getId());
+
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated > 0) {
+                result = true;
+            }
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
 }

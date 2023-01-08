@@ -3,6 +3,7 @@ package GUI;
 import BUS.AccountBUS;
 import BUS.UserBUS;
 import DAO.AccountDAO;
+import DAO.UserDAO;
 import GUI.AdminManagement.ButtonEditor;
 import GUI.AdminManagement.ButtonRenderer;
 import POJO.AccountPOJO;
@@ -22,6 +23,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class AdminManagement extends JPanel implements ActionListener {
@@ -95,18 +97,12 @@ public class AdminManagement extends JPanel implements ActionListener {
         allAccountsButton.setFocusable(false);
         allAccountsButton.addActionListener(this);
 
-        allUserButton = new JButton("All users information");
-        allUserButton.setMaximumSize(new Dimension(SIDEBARPANE_WIDTH, 30));
-        allUserButton.setFocusable(false);
-        allUserButton.addActionListener(this);
-
         addNewAccount = new JButton("Add a new account");
         addNewAccount.setMaximumSize(new Dimension(SIDEBARPANE_WIDTH, 30));
         addNewAccount.setFocusable(false);
         addNewAccount.addActionListener(this);
 
         sidebarPane.add(allAccountsButton);
-        sidebarPane.add(allUserButton);
         sidebarPane.add(addNewAccount);
 
         contentPane = new JPanel();
@@ -123,9 +119,11 @@ public class AdminManagement extends JPanel implements ActionListener {
 
     public JTable getTableAllAccounts() {
         ArrayList<AccountPOJO> accountList = AccountDAO.getAll();
+        ArrayList<UserPOJO> userList = UserDAO.getAll();
 
         JTable table = new JTable();
-        String[] col = { "ID", "USERNAME", "PASSWORD", "STATUS", "ACTION", "EDIT" };
+        String[] col = { "ID", "USERNAME", "PASSWORD", "ID USER", "NAME", "ADDRESS", "ROLE", "STATUS", "ACTION",
+                "EDIT", "RESET_PASSWORD" };
         DefaultTableModel tableModel = new DefaultTableModel(col, 0);
 
         if (accountList != null) {
@@ -135,10 +133,20 @@ public class AdminManagement extends JPanel implements ActionListener {
                 String password = account.getPassword();
                 Boolean isActive = account.getIsActive();
 
-                String enabled = isActive ? "Enabled" : "Disabled";
+                String enabled = !isActive ? "Enable" : "Disable";
                 String status = isActive ? "Active" : "Inactive";
-                Object[] data = { id, username, password, status, enabled, "Edit" };
-                tableModel.addRow(data);
+                for (UserPOJO user : userList) {
+                    if (id.equals(user.getIdAccount())) {
+                        String idUser = user.getId();
+                        String name = user.getName();
+                        String address = user.getAddress();
+                        String role = user.getRole() == 1 ? "Admin" : "User";
+                        Object[] data = { id, username, password, idUser, name, address, role, status, enabled,
+                                "Edit", "Reset Password" };
+                        tableModel.addRow(data);
+                        break;
+                    }
+                }
             }
         }
         table.setModel(tableModel);
@@ -147,6 +155,8 @@ public class AdminManagement extends JPanel implements ActionListener {
         table.getColumn("ACTION").setCellEditor(new ButtonEditor(new JCheckBox()));
         table.getColumn("EDIT").setCellRenderer(new ButtonRenderer());
         table.getColumn("EDIT").setCellEditor(new ButtonEditor(new JCheckBox()));
+        table.getColumn("RESET_PASSWORD").setCellRenderer(new ButtonRenderer());
+        table.getColumn("RESET_PASSWORD").setCellEditor(new ButtonEditor(new JCheckBox()));
         return table;
     }
 
@@ -213,20 +223,22 @@ public class AdminManagement extends JPanel implements ActionListener {
         @Override
         public Object getCellEditorValue() {
             if (isPushed) {
-                String accountId = accountTable.getValueAt(row, 0).toString();
-                // if (Objects.equals(type, "Enable")) {
-                // AccountBUS.enable(accountId);
-                // refreshBookTable();
-                // } else if (Objects.equals(type, "Disable")) {
-                // AccountBUS.disable(accountId);
-                // refreshAccountTable();
-                // } else if (Objects.equals(type, "Edit")) {
-                // new EditBookDialog(AdminManagement.this, "Edit Book", true, accountId);
-                // refreshAccountTable();
-                // } else {
-                // System.out.println("Unknown action: " + accountTable.getValueAt(row, 0) + " -
-                // " + type);
-                // }
+                String userId = accountTable.getValueAt(row, 3).toString();
+                String usernameGet = accountTable.getValueAt(row, 1).toString();
+                if (Objects.equals(type, "Enable") || Objects.equals(type, "Disable")) {
+                    AccountPOJO accEN = getAccount(usernameGet);
+                    AccountBUS accountBUS = new AccountBUS();
+                    accountBUS.updateActive(accEN);
+                    refreshAccountTable();
+                } else if (Objects.equals(type, "Reset Password")) {
+                    new ResetPassFormPanel(usernameGet);
+                    refreshAccountTable();
+                } else if (Objects.equals(type, "Edit")) {
+                    new InfoFormPanel(userId);
+                    refreshAccountTable();
+                } else {
+                    System.out.println("Unknown action: " + accountTable.getValueAt(row, 0) + " - " + type);
+                }
             }
             isPushed = false;
             return label;
@@ -245,7 +257,7 @@ public class AdminManagement extends JPanel implements ActionListener {
     }
 
     public void refreshAccountTable() {
-        contentLabel.setText(selectedButton.getText() + " List");
+        contentLabel.setText(selectedButton.getText() + " list");
         contentPane.add(contentLabel);
         accountTable = getTableAllAccounts();
         accountTableScroll.setViewportView(accountTable);
@@ -265,10 +277,20 @@ public class AdminManagement extends JPanel implements ActionListener {
         repaint();
     }
 
+    public AccountPOJO getAccount(String usernameIn) {
+        ArrayList<AccountPOJO> accountList = AccountBUS.getAll();
+        for (AccountPOJO a : accountList) {
+            if (a != null && a.getUsername().equals(usernameIn)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
     public void createAndShowGUI() {
         // Create and set up the window.
         frame = new JFrame("Admin - Book Management");
-        frame.setPreferredSize(new Dimension(900, 600));
+        frame.setPreferredSize(new Dimension(1200, 600));
         frame.setLayout(new BorderLayout(0, 0));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -291,5 +313,334 @@ public class AdminManagement extends JPanel implements ActionListener {
                 adminManagement.createAndShowGUI();
             }
         });
+    }
+
+    class InfoFormPanel extends JDialog implements ActionListener {
+        JLabel headLabel;
+
+        JLabel idLabel;
+        JLabel idField;
+
+        JLabel nameLabel;
+        JTextField nameField;
+
+        JLabel addressLabel;
+        JTextField addressField;
+
+        JLabel idAccountLabel;
+        JLabel idAccountField;
+
+        JLabel roleLabel;
+        JTextField roleField;
+
+        JButton clearButton;
+        JButton addButton;
+
+        GridBagConstraints gbc;
+        UserPOJO user;
+
+        InfoFormPanel(String userId) {
+            user = getUser(userId);
+            this.setSize(700, 300);
+            this.setLocationRelativeTo(null);
+            this.setResizable(true);
+            setLayout(new GridBagLayout());
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            this.initComponent();
+            this.setVisible(true);
+        }
+
+        public UserPOJO getUser(String userId) {
+            ArrayList<UserPOJO> userList = UserBUS.getAll();
+            for (UserPOJO userI : userList) {
+                if (userI.getId().equals(userId)) {
+                    return userI;
+                }
+            }
+            return null;
+        }
+
+        public void initComponent() {
+            headLabel = new JLabel("User's information");
+            headLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+            headLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            headLabel.setBounds(221, 41, 212, 31);
+
+            idLabel = new JLabel("ID:");
+            idField = new JLabel(user.getId());
+
+            nameLabel = new JLabel("Name:");
+            nameField = new JTextField(user.getName());
+
+            addressLabel = new JLabel("Address:");
+            addressField = new JTextField(user.getAddress());
+
+            idAccountLabel = new JLabel("ID Account:");
+            idAccountField = new JLabel(user.getIdAccount());
+            roleLabel = new JLabel("Role: ");
+            String roleString = user.getRole() == 1 ? "Admin" : "User";
+            roleField = new JTextField(roleString);
+
+            clearButton = new JButton("Clear");
+            clearButton.addActionListener(this);
+
+            addButton = new JButton("Update");
+            addButton.addActionListener(this);
+
+            gbc = new GridBagConstraints();
+            gbc.insets = new Insets(5, 20, 5, 20);
+
+            gbc.fill = GridBagConstraints.BOTH;
+
+            // add labels
+            int i;
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            add(headLabel, gbc);
+            i = 2;
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(idLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(nameLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(addressLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(roleLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(idAccountLabel, gbc);
+
+            // add fields
+            gbc.weightx = 2;
+            i = 2;
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(idField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(nameField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(addressField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(roleField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(idAccountField, gbc);
+
+            // add buttons
+            gbc.weightx = 1;
+            gbc.gridx = 0;
+            gbc.gridy = i;
+            add(clearButton, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i;
+            add(addButton, gbc);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == clearButton) {
+                nameField.setText("");
+                addressField.setText("");
+                roleField.setText("");
+            } else if (e.getSource() == addButton) {
+                try {
+                    int roleSet = 0;
+                    if (roleField.getText().contentEquals("Admin")) {
+                        roleSet = 1;
+                    }
+                    UserPOJO userUpdate = new UserPOJO(
+                            user.getId(),
+                            nameField.getText(),
+                            user.getIdAccount(),
+                            addressField.getText(),
+                            roleSet);
+                    UserBUS userBUS = new UserBUS();
+                    Boolean result = userBUS.update(userUpdate);
+                    if (result) {
+                        JOptionPane.showMessageDialog(this, "Update success!", "Success", JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Something went wrong..., please review the " +
+                                "information", "Error", JOptionPane.WARNING_MESSAGE);
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
+                    System.out.println(Arrays.toString(ex.getStackTrace()));
+                }
+            }
+
+        }
+
+    }
+
+    class ResetPassFormPanel extends JDialog implements ActionListener {
+        JLabel headLabel;
+
+        JLabel usernameLabel;
+        JLabel usernameShowLabel;
+
+        JLabel oldPasswordLabel;
+        JPasswordField oldPasswordFieldEn;
+        JTextField oldPasswordField;
+
+        JLabel newPasswordLabel;
+        JPasswordField newPasswordFieldEn;
+        JTextField newPasswordField;
+
+        JLabel repeatPasswordLabel;
+        JPasswordField repeatPasswordFieldEn;
+        JTextField repeatPasswordField;
+
+        JButton addButton;
+
+        GridBagConstraints gbc;
+        AccountPOJO acc;
+
+        ResetPassFormPanel(String usernameIn) {
+            acc = getAccount(usernameIn);
+
+            this.setSize(700, 300);
+            this.setLocationRelativeTo(null);
+            this.setResizable(true);
+            setLayout(new GridBagLayout());
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            this.initComponent();
+            this.setVisible(true);
+        }
+
+        public AccountPOJO getAccount(String usernameIn) {
+            ArrayList<AccountPOJO> accountList = AccountBUS.getAll();
+            for (AccountPOJO a : accountList) {
+                if (a != null && a.getUsername().equals(usernameIn)) {
+                    return a;
+                }
+            }
+            return null;
+        }
+
+        public void initComponent() {
+            headLabel = new JLabel("Change password");
+            headLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+            headLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            headLabel.setBounds(221, 41, 212, 31);
+            usernameLabel = new JLabel("Username:");
+            usernameShowLabel = new JLabel(acc.getUsername());
+
+            newPasswordLabel = new JLabel("Input new password:");
+            newPasswordField = new JTextField();
+
+            repeatPasswordLabel = new JLabel("Repeat your new password:");
+            repeatPasswordField = new JTextField();
+
+            addButton = new JButton("Update");
+            addButton.addActionListener(this);
+
+            gbc = new GridBagConstraints();
+            gbc.insets = new Insets(5, 20, 5, 20);
+
+            gbc.fill = GridBagConstraints.BOTH;
+
+            // add labels
+            int i;
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            add(headLabel, gbc);
+            i = 2;
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(usernameLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(newPasswordLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(repeatPasswordLabel, gbc);
+
+            // add fields
+            gbc.weightx = 2;
+            i = 2;
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(usernameShowLabel, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(newPasswordField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(repeatPasswordField, gbc);
+
+            // add buttons
+
+            gbc.gridx = 1;
+            gbc.gridy = i;
+            add(addButton, gbc);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == addButton) {
+                Boolean result = doChangePassword();
+                if (!result)
+                    JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
+            }
+        }
+
+        public Boolean doChangePassword() {
+
+            String newPasswordFieldVal = newPasswordField.getText();
+            String repeatPasswordFieldVal = repeatPasswordField.getText();
+            if (newPasswordFieldVal.isEmpty()
+                    || repeatPasswordFieldVal.isEmpty()) {
+                return false;
+            }
+
+            if (!newPasswordFieldVal.equals(repeatPasswordFieldVal)) {
+                return false;
+            }
+            try {
+
+                AccountPOJO accountUpdate = new AccountPOJO(
+                        acc.getId(),
+                        acc.getUsername(),
+                        newPasswordFieldVal,
+                        acc.getIsActive());
+                AccountBUS accountBUS = new AccountBUS();
+                Boolean result = accountBUS.update(accountUpdate);
+                if (result) {
+                    JOptionPane.showMessageDialog(this, "Change password success!", "Success",
+                            JOptionPane.PLAIN_MESSAGE);
+                    this.setVisible(false);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Something went wrong..., please review the " +
+                            "information", "Error", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
+                System.out.println(Arrays.toString(ex.getStackTrace()));
+            }
+
+            return true;
+        }
     }
 }
