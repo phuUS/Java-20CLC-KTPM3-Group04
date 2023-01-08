@@ -6,7 +6,12 @@ import POJO.AccountPOJO;
 import java.util.ArrayList;
 
 public class AccountBUS {
-    public static ArrayList<AccountPOJO> getAll(){
+    public static ArrayList<AccountPOJO> getAll() {
         return AccountDAO.getAll();
+    }
+
+    public Boolean update(AccountPOJO accountPOJO) {
+        AccountDAO accountDAO = new AccountDAO();
+        return accountDAO.update(accountPOJO);
     }
 }

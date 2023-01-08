@@ -56,6 +56,16 @@ public class AdminControllerGUI extends JFrame {
     // });
     // }
 
+    public AccountPOJO getAccount() {
+        ArrayList<AccountPOJO> accountList = AccountBUS.getAll();
+        for (AccountPOJO a : accountList) {
+            if (a != null && a.getUsername().equals(username)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
     public UserPOJO getUser() {
         ArrayList<AccountPOJO> accountList = AccountBUS.getAll();
         ArrayList<UserPOJO> userList = UserBUS.getAll();
@@ -114,6 +124,21 @@ public class AdminControllerGUI extends JFrame {
 
         });
         topPane.add(editInfoBtn);
+
+        JButton changePasswordBtn = new JButton("Change password");
+        changePasswordBtn.setBounds(200, 10, 140, 21);
+        changePasswordBtn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                ChangePasswordForm changePasswordForm = new ChangePasswordForm();
+                changePasswordForm.setVisible(true);
+
+            }
+
+        });
+        topPane.add(changePasswordBtn);
 
         JLabel userControlLabel = new JLabel("ADMIN CONTROL");
         userControlLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -225,12 +250,6 @@ public class AdminControllerGUI extends JFrame {
 
             nameLabel = new JLabel("Name:");
             nameField = new JTextField(user.getName());
-
-            ArrayList<PublisherPOJO> publishers = PublisherBUS.getAll();
-            ArrayList<String> publisherModel = new ArrayList<>();
-            for (PublisherPOJO publisher : publishers) {
-                publisherModel.add(publisher.getId() + " - " + publisher.getName());
-            }
 
             addressLabel = new JLabel("Address:");
             addressField = new JTextField(user.getAddress());
@@ -345,6 +364,164 @@ public class AdminControllerGUI extends JFrame {
                 }
             }
 
+        }
+
+    }
+
+    class ChangePasswordForm extends JDialog implements ActionListener {
+        JLabel headLabel;
+
+        JLabel usernameLabel;
+        JLabel usernameShowLabel;
+
+        JLabel oldPasswordLabel;
+        JPasswordField oldPasswordFieldEn;
+        JTextField oldPasswordField;
+
+        JLabel newPasswordLabel;
+        JPasswordField newPasswordFieldEn;
+        JTextField newPasswordField;
+
+        JLabel repeatPasswordLabel;
+        JPasswordField repeatPasswordFieldEn;
+        JTextField repeatPasswordField;
+
+        JButton addButton;
+
+        GridBagConstraints gbc;
+        AccountPOJO acc;
+
+        ChangePasswordForm() {
+            this.setSize(700, 300);
+            this.setLocationRelativeTo(null);
+            this.setResizable(true);
+            setLayout(new GridBagLayout());
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            this.initComponent();
+            this.setVisible(true);
+        }
+
+        public void initComponent() {
+            headLabel = new JLabel("Change password");
+            headLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+            headLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            headLabel.setBounds(221, 41, 212, 31);
+            acc = getAccount();
+            usernameLabel = new JLabel("Username:");
+            usernameShowLabel = new JLabel(acc.getUsername());
+
+            oldPasswordLabel = new JLabel("Input old password:");
+            oldPasswordFieldEn = new JPasswordField();
+
+            newPasswordLabel = new JLabel("Input new password:");
+            newPasswordFieldEn = new JPasswordField();
+
+            repeatPasswordLabel = new JLabel("Repeat your new password:");
+            repeatPasswordFieldEn = new JPasswordField();
+
+            addButton = new JButton("Update");
+            addButton.addActionListener(this);
+
+            gbc = new GridBagConstraints();
+            gbc.insets = new Insets(5, 20, 5, 20);
+
+            gbc.fill = GridBagConstraints.BOTH;
+
+            // add labels
+            int i;
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            add(headLabel, gbc);
+            i = 2;
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(usernameLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(oldPasswordLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(newPasswordLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(repeatPasswordLabel, gbc);
+
+            // add fields
+            gbc.weightx = 2;
+            i = 2;
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(usernameShowLabel, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(oldPasswordFieldEn, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(newPasswordFieldEn, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(repeatPasswordFieldEn, gbc);
+
+            // add buttons
+
+            gbc.gridx = 1;
+            gbc.gridy = i;
+            add(addButton, gbc);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == addButton) {
+                Boolean result = doChangePassword();
+                if (!result)
+                    JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
+            }
+        }
+
+        public Boolean doChangePassword() {
+            String oldPasswordFieldVal = String.valueOf(oldPasswordFieldEn.getPassword());
+            String newPasswordFieldVal = String.valueOf(newPasswordFieldEn.getPassword());
+            String repeatPasswordFieldVal = String.valueOf(repeatPasswordFieldEn.getPassword());
+            if (oldPasswordFieldVal.isEmpty() || newPasswordFieldVal.isEmpty()
+                    || repeatPasswordFieldVal.isEmpty()) {
+                return false;
+            }
+            if (!oldPasswordFieldVal.equals(acc.getPassword())) {
+                return false;
+            }
+            if (!newPasswordFieldVal.equals(repeatPasswordFieldVal)) {
+                return false;
+            }
+            try {
+
+                AccountPOJO accountUpdate = new AccountPOJO(
+                        acc.getId(),
+                        acc.getUsername(),
+                        newPasswordFieldVal,
+                        acc.getIsActive());
+                AccountBUS accountBUS = new AccountBUS();
+                Boolean result = accountBUS.update(accountUpdate);
+                if (result) {
+                    JOptionPane.showMessageDialog(this, "Change password success!", "Success",
+                            JOptionPane.PLAIN_MESSAGE);
+                    this.setVisible(false);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Something went wrong..., please review the " +
+                            "information", "Error", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
+                System.out.println(Arrays.toString(ex.getStackTrace()));
+            }
+
+            return true;
         }
 
     }
