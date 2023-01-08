@@ -1,6 +1,5 @@
 package GUI;
 
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -24,179 +23,169 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import BUS.BookBUS;
 import BUS.PublisherBUS;
-import POJO.BookPOJO;
 import POJO.PublisherPOJO;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.*;
 
 public class AdminControllerGUI extends JFrame {
 
-	private JPanel contentPane;
-	private final JPanel topPane = new JPanel();
+    private JPanel contentPane;
+    private final JPanel topPane = new JPanel();
 
-	String username;
-	AccountManagement accountManagement;
-	UserPOJO user;
+    String username;
+    AdminManagement accountManagement;
+    ViewRevenueStatisticsFrame viewRevenueStatisticsFrame;
+    UserPOJO user;
 
-	BookManagement bookControlGUI;
-	PromotionManagement promotionControlGUI;
-	importSheet importSheetControlGUI;
-	AuthorGUI authorControlGUI;
-	ViewOrdersFrame orderControlGUI;
-	ViewBookCategoriesFrame bookCategoryControlGUI;
-	publisherGUI publisherControlGUI;
+    /**
+     * Launch the application.
+     */
+    // public static void main(String[] args) {
+    // EventQueue.invokeLater(new Runnable() {
+    // public void run() {
+    // try {
+    // AdminControllerGUI frame = new AdminControllerGUI(username);
+    // frame.setVisible(true);
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // }
+    // }
+    // });
+    // }
 
-	/**
-	 * Launch the application.
-	 */
-	// public static void main(String[] args) {
-	// 	EventQueue.invokeLater(new Runnable() {
-	// 		public void run() {
-	// 			try {
-	// 				AdminControllerGUI frame = new AdminControllerGUI(username);
-	// 				frame.setVisible(true);
-	// 			} catch (Exception e) {
-	// 				e.printStackTrace();
-	// 			}
-	// 		}
-	// 	});
-	// }
-
-public UserPOJO getUser(){
-	ArrayList<AccountPOJO> accountList = AccountBUS.getAll();
+    public UserPOJO getUser() {
+        ArrayList<AccountPOJO> accountList = AccountBUS.getAll();
         ArrayList<UserPOJO> userList = UserBUS.getAll();
         UserPOJO userTemp = null;
-        for(AccountPOJO a : accountList) {
-            if(a != null && a.getUsername().equals(username)) {
+        for (AccountPOJO a : accountList) {
+            if (a != null && a.getUsername().equals(username)) {
                 userTemp = userList.stream().filter(u -> a.getId().equals(u.getIdAccount())).findFirst().orElse(null);
             }
         }
-		return userTemp;
-}
+        return userTemp;
+    }
 
-	/**
-	 * Create the frame.
-	 */
-	public AdminControllerGUI(String username) {
-		this.setUsername(username);
-		user = this.getUser();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 663, 493);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+    /**
+     * Create the frame.
+     */
+    public AdminControllerGUI(String username) {
+        this.setUsername(username);
+        user = this.getUser();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 663, 493);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		topPane.setBounds(0, 0, 649, 31);
-		contentPane.add(topPane);
-		topPane.setLayout(null);
-		
-		JButton logoutBtn = new JButton("Logout");
-		logoutBtn.setBounds(10, 10, 85, 21);
-		topPane.add(logoutBtn);
-		
-		JButton editInfoBtn = new JButton("Edit info");
-		editInfoBtn.setBounds(109, 10, 85, 21);
-		editInfoBtn.addActionListener(new ActionListener(){
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
+        topPane.setBounds(0, 0, 649, 31);
+        contentPane.add(topPane);
+        topPane.setLayout(null);
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				InfoFormPanel infoFormPanel = new InfoFormPanel();
-				infoFormPanel.setVisible(true);
-			}
+        JButton logoutBtn = new JButton("Logout");
+        logoutBtn.setBounds(10, 10, 85, 21);
+        logoutBtn.addActionListener(new ActionListener() {
 
-		});
-		topPane.add(editInfoBtn);
-		
-		JLabel userControlLabel = new JLabel("USER CONTROL");
-		userControlLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
-		userControlLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		userControlLabel.setBounds(221, 41, 212, 31);
-		contentPane.add(userControlLabel);
-		
-		JLabel greetingLabel = new JLabel("Welcome, Username");
-		greetingLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		greetingLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		greetingLabel.setBounds(209, 66, 268, 31);
-		contentPane.add(greetingLabel);
-		
-		JButton accountManagementBtn = new JButton("Account Management");
-		accountManagementBtn.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                LoginForm loginForm = new LoginForm();
+                loginForm.setVisible(true);
+                hideAdminControl();
+            }
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				accountManagement = new AccountManagement();
-				accountManagement.createAndShowGUI();
-				hideAdminControl();
-			}
-			
-		});
-		accountManagementBtn.setBounds(10, 146, 132, 31);
-		contentPane.add(accountManagementBtn);
+        });
+        topPane.add(logoutBtn);
 
-		
-		
-		JButton importSheetBtn = new JButton("View statistics");
-		importSheetBtn.addActionListener(new ActionListener(){
+        JButton editInfoBtn = new JButton("Edit info");
+        editInfoBtn.setBounds(109, 10, 85, 21);
+        editInfoBtn.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				bookControlGUI = new BookManagement();
-				bookControlGUI.setVisible(true);
-				hideAdminControl();
-			}
-			
-		});
-		importSheetBtn.setBounds(10, 230, 132, 31);
-		contentPane.add(importSheetBtn);
-		
-		
-		BufferedImage image;
-		try {
-			image = ImageIO.read(new File("src/images/hieu-sach-nha-nam-214377.jpg"));
-			JLabel imageLable = new JLabel(new ImageIcon(image));
-			imageLable.setBounds(152, 129, 345, 253);
-			contentPane.add(imageLable);			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                InfoFormPanel infoFormPanel = new InfoFormPanel();
+                infoFormPanel.setVisible(true);
 
-	
+            }
 
-	public String getUsername() {
-		return username;
-	}
+        });
+        topPane.add(editInfoBtn);
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+        JLabel userControlLabel = new JLabel("ADMIN CONTROL");
+        userControlLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+        userControlLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        userControlLabel.setBounds(221, 41, 212, 31);
+        contentPane.add(userControlLabel);
 
-	private void hideAdminControl(){
-		this.setVisible(false);
-	}
+        JLabel greetingLabel = new JLabel("Welcome, " + username);
+        greetingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        greetingLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        greetingLabel.setBounds(209, 66, 268, 31);
+        contentPane.add(greetingLabel);
 
-	class InfoFormPanel extends JDialog implements ActionListener{
+        JButton accountManagementBtn = new JButton("Account Management");
+        accountManagementBtn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                accountManagement = new AdminManagement();
+                accountManagement.createAndShowGUI();
+                hideAdminControl();
+            }
+
+        });
+        accountManagementBtn.setBounds(10, 146, 132, 31);
+        contentPane.add(accountManagementBtn);
+
+        JButton viewStatisticsBtn = new JButton("View statistics");
+        viewStatisticsBtn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                viewRevenueStatisticsFrame = new ViewRevenueStatisticsFrame();
+                viewRevenueStatisticsFrame.setVisible(true);
+                hideAdminControl();
+            }
+
+        });
+        viewStatisticsBtn.setBounds(10, 230, 132, 31);
+        contentPane.add(viewStatisticsBtn);
+
+        BufferedImage image;
+        try {
+            image = ImageIO.read(new File("src/images/hieu-sach-nha-nam-214377.jpg"));
+            JLabel imageLable = new JLabel(new ImageIcon(image));
+            imageLable.setBounds(152, 129, 345, 253);
+            contentPane.add(imageLable);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    private void hideAdminControl() {
+        this.setVisible(false);
+    }
+
+    class InfoFormPanel extends JDialog implements ActionListener {
         JLabel headLabel;
 
         JLabel idLabel;
-        JTextField idField;
+        JLabel idField;
 
         JLabel nameLabel;
         JTextField nameField;
@@ -205,7 +194,7 @@ public UserPOJO getUser(){
         JTextField addressField;
 
         JLabel idAccountLabel;
-        JTextField idAccountField;
+        JLabel idAccountField;
 
         JLabel roleLabel;
         JTextField roleField;
@@ -215,8 +204,7 @@ public UserPOJO getUser(){
 
         GridBagConstraints gbc;
 
-
-        InfoFormPanel(){
+        InfoFormPanel() {
             this.setSize(700, 300);
             this.setLocationRelativeTo(null);
             this.setResizable(true);
@@ -225,21 +213,22 @@ public UserPOJO getUser(){
             this.initComponent();
             this.setVisible(true);
         }
+
         public void initComponent() {
-            headLabel = new JLabel("User's information");
-			headLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
-		headLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		headLabel.setBounds(221, 41, 212, 31);
+            headLabel = new JLabel("Admin's information");
+            headLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+            headLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            headLabel.setBounds(221, 41, 212, 31);
 
             idLabel = new JLabel("ID:");
-            idField = new JTextField(user.getId());
+            idField = new JLabel(user.getId());
 
             nameLabel = new JLabel("Name:");
             nameField = new JTextField(user.getName());
 
             ArrayList<PublisherPOJO> publishers = PublisherBUS.getAll();
             ArrayList<String> publisherModel = new ArrayList<>();
-            for (PublisherPOJO publisher : publishers){
+            for (PublisherPOJO publisher : publishers) {
                 publisherModel.add(publisher.getId() + " - " + publisher.getName());
             }
 
@@ -247,11 +236,10 @@ public UserPOJO getUser(){
             addressField = new JTextField(user.getAddress());
 
             idAccountLabel = new JLabel("ID Account:");
-            idAccountField = new JTextField(user.getIdAccount());
+            idAccountField = new JLabel(user.getIdAccount());
             roleLabel = new JLabel("Role: ");
-			String roleString = user.getRole() == 1 ? "Admin" : "User";
+            String roleString = user.getRole() == 1 ? "Admin" : "User";
             roleField = new JTextField(roleString);
-            
 
             clearButton = new JButton("Clear");
             clearButton.addActionListener(this);
@@ -259,13 +247,12 @@ public UserPOJO getUser(){
             addButton = new JButton("Update");
             addButton.addActionListener(this);
 
-
             gbc = new GridBagConstraints();
             gbc.insets = new Insets(5, 20, 5, 20);
 
             gbc.fill = GridBagConstraints.BOTH;
 
-            //add labels
+            // add labels
             int i;
             gbc.gridx = 0;
             gbc.gridy = 0;
@@ -288,13 +275,11 @@ public UserPOJO getUser(){
             gbc.gridy = i++;
             add(roleLabel, gbc);
 
-			gbc.gridx = 0;
+            gbc.gridx = 0;
             gbc.gridy = i++;
             add(idAccountLabel, gbc);
 
-            
-
-            //add fields
+            // add fields
             gbc.weightx = 2;
             i = 2;
             gbc.gridx = 1;
@@ -317,9 +302,7 @@ public UserPOJO getUser(){
             gbc.gridy = i++;
             add(idAccountField, gbc);
 
-            
-
-            //add buttons
+            // add buttons
             gbc.weightx = 1;
             gbc.gridx = 0;
             gbc.gridy = i;
@@ -332,32 +315,31 @@ public UserPOJO getUser(){
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == clearButton){
-                idField.setText("");
+            if (e.getSource() == clearButton) {
                 nameField.setText("");
                 addressField.setText("");
                 roleField.setText("");
-                idAccountField.setText("");
-            }
-            else if (e.getSource() == addButton){
+            } else if (e.getSource() == addButton) {
                 try {
-                    UserPOJO book = new UserPOJO(
-                            idField.getText(),
-                            nameField.getText(),
-							idAccountField.getText(),
-							addressField.getText(),
-							Boolean.parseBoolean(roleField.getText())
-					);
-					UserBUS userBUS = new UserBUS();
-                    Boolean result = userBUS.update(book);
-                    if (result){
-                        JOptionPane.showMessageDialog(this, "Update success!", "Success", JOptionPane.PLAIN_MESSAGE);
+                    int roleSet = 0;
+                    if (roleField.getText().contentEquals("Admin")) {
+                        roleSet = 1;
                     }
-                    else{
+                    UserPOJO userUpdate = new UserPOJO(
+                            user.getId(),
+                            nameField.getText(),
+                            user.getIdAccount(),
+                            addressField.getText(),
+                            roleSet);
+                    UserBUS userBUS = new UserBUS();
+                    Boolean result = userBUS.update(userUpdate);
+                    if (result) {
+                        JOptionPane.showMessageDialog(this, "Update success!", "Success", JOptionPane.PLAIN_MESSAGE);
+                    } else {
                         JOptionPane.showMessageDialog(this, "Something went wrong..., please review the " +
                                 "information", "Error", JOptionPane.WARNING_MESSAGE);
                     }
-                } catch (Exception ex){
+                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
                     System.out.println(Arrays.toString(ex.getStackTrace()));
                 }

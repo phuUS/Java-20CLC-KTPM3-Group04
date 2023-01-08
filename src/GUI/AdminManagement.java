@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class AccountManagement extends JPanel implements ActionListener {
+public class AdminManagement extends JPanel implements ActionListener {
     private JPanel menuPane;
     private JButton backBtn;
 
@@ -44,11 +44,11 @@ public class AccountManagement extends JPanel implements ActionListener {
     private JTextField filterText;
     private JTextField statusText;
 
-    private TableRowSorter<AccountManagement.AllAccounts> sorter1;
-    private AccountManagement.AllAccounts model1;
+    private TableRowSorter<AdminManagement.AllAccounts> sorter1;
+    private AdminManagement.AllAccounts model1;
 
-    private TableRowSorter<AccountManagement.AllUsers> sorter2;
-    private AccountManagement.AllUsers model2;
+    private TableRowSorter<AdminManagement.AllUsers> sorter2;
+    private AdminManagement.AllUsers model2;
 
     private String username;
     private AdminControllerGUI adminControllerGUI;
@@ -61,16 +61,16 @@ public class AccountManagement extends JPanel implements ActionListener {
         this.username = username;
     }
 
-    public AccountManagement() {
+    public AdminManagement() {
         super();
-        setLayout(new BorderLayout(0,0));
+        setLayout(new BorderLayout(0, 0));
 
         menuPane = new JPanel();
         menuPane.setLayout(new FlowLayout(FlowLayout.LEFT));
         menuPane.setBackground(Color.GRAY);
 
         backBtn = new JButton("Back");
-        backBtn.addActionListener(new ActionListener(){
+        backBtn.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -122,7 +122,6 @@ public class AccountManagement extends JPanel implements ActionListener {
         contentLabel.setText("WELCOME TO THE ADMIN PAGE!");
         contentPane.add(contentLabel);
 
-
         add(menuPane, BorderLayout.NORTH);
         add(sidebarPane, BorderLayout.WEST);
         add(contentPane, BorderLayout.CENTER);
@@ -131,32 +130,31 @@ public class AccountManagement extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getSource() == allAccountsButton){
-            if(contentPane != null){
+        if (e.getSource() == allAccountsButton) {
+            if (contentPane != null) {
                 contentPane.removeAll();
             }
             this.getTableAllAccountsButton();
 
-        } else if (e.getSource() == allUserButton){
-            if(contentPane != null){
+        } else if (e.getSource() == allUserButton) {
+            if (contentPane != null) {
                 contentPane.removeAll();
             }
             this.getTableAllUsersButton();
-        }else if(e.getSource() == editInfoButton){
-            if(contentPane != null){
+        } else if (e.getSource() == editInfoButton) {
+            if (contentPane != null) {
                 contentPane.removeAll();
             }
             this.getInfoEditScreen();
         }
     }
 
-
-    private void getInfoEditScreen(){
+    private void getInfoEditScreen() {
         ArrayList<AccountPOJO> accountList = AccountBUS.getAll();
         ArrayList<UserPOJO> userList = UserBUS.getAll();
         UserPOJO userTemp = null;
-        for(AccountPOJO a : accountList) {
-            if(a != null && a.getUsername().equals(username)) {
+        for (AccountPOJO a : accountList) {
+            if (a != null && a.getUsername().equals(username)) {
                 userTemp = userList.stream().filter(u -> a.getId().equals(u.getIdAccount())).findFirst().orElse(null);
             }
         }
@@ -164,10 +162,9 @@ public class AccountManagement extends JPanel implements ActionListener {
         contentPane.add(label);
     }
 
-
-    private void getTableAllAccountsButton(){
-        model1 = new AccountManagement.AllAccounts();
-        sorter1 = new TableRowSorter<AccountManagement.AllAccounts>(model1);
+    private void getTableAllAccountsButton() {
+        model1 = new AdminManagement.AllAccounts();
+        sorter1 = new TableRowSorter<AdminManagement.AllAccounts>(model1);
         table = new JTable(model1);
         table.setRowSorter(sorter1);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -178,16 +175,14 @@ public class AccountManagement extends JPanel implements ActionListener {
                         if (viewRow < 0) {
                             statusText.setText("");
                         } else {
-                            int modelRow =
-                                    table.convertRowIndexToModel(viewRow);
+                            int modelRow = table.convertRowIndexToModel(viewRow);
                             statusText.setText(
                                     String.format("Selected Row in view: %d. " +
-                                                    "Selected Row in model: %d.",
+                                            "Selected Row in model: %d.",
                                             viewRow, modelRow));
                         }
                     }
-                }
-        );
+                });
         scrollPane = new JScrollPane(table);
         form = new JPanel(new SpringLayout());
         menu = new JPanel(new SpringLayout());
@@ -207,9 +202,11 @@ public class AccountManagement extends JPanel implements ActionListener {
                     public void changedUpdate(DocumentEvent e) {
                         newFilter1();
                     }
+
                     public void insertUpdate(DocumentEvent e) {
                         newFilter1();
                     }
+
                     public void removeUpdate(DocumentEvent e) {
                         newFilter1();
                     }
@@ -229,9 +226,9 @@ public class AccountManagement extends JPanel implements ActionListener {
         revalidate();
     }
 
-    private void getTableAllUsersButton(){
-        model2 = new AccountManagement.AllUsers();
-        sorter2 = new TableRowSorter<AccountManagement.AllUsers>(model2);
+    private void getTableAllUsersButton() {
+        model2 = new AdminManagement.AllUsers();
+        sorter2 = new TableRowSorter<AdminManagement.AllUsers>(model2);
         table = new JTable(model2);
         table.setRowSorter(sorter2);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -242,16 +239,14 @@ public class AccountManagement extends JPanel implements ActionListener {
                         if (viewRow < 0) {
                             statusText.setText("");
                         } else {
-                            int modelRow =
-                                    table.convertRowIndexToModel(viewRow);
+                            int modelRow = table.convertRowIndexToModel(viewRow);
                             statusText.setText(
                                     String.format("Selected Row in view: %d. " +
-                                                    "Selected Row in model: %d.",
+                                            "Selected Row in model: %d.",
                                             viewRow, modelRow));
                         }
                     }
-                }
-        );
+                });
         scrollPane = new JScrollPane(table);
         form = new JPanel(new SpringLayout());
         JLabel l1 = new JLabel("Filter Text:", SwingConstants.TRAILING);
@@ -262,9 +257,11 @@ public class AccountManagement extends JPanel implements ActionListener {
                     public void changedUpdate(DocumentEvent e) {
                         newFilter2();
                     }
+
                     public void insertUpdate(DocumentEvent e) {
                         newFilter2();
                     }
+
                     public void removeUpdate(DocumentEvent e) {
                         newFilter2();
                     }
@@ -284,8 +281,8 @@ public class AccountManagement extends JPanel implements ActionListener {
     }
 
     private void newFilter1() {
-        RowFilter<AccountManagement.AllAccounts, Object> rf = null;
-        //If current expression doesn't parse, don't update.
+        RowFilter<AdminManagement.AllAccounts, Object> rf = null;
+        // If current expression doesn't parse, don't update.
         try {
             rf = RowFilter.regexFilter(filterText.getText());
         } catch (java.util.regex.PatternSyntaxException e) {
@@ -295,8 +292,8 @@ public class AccountManagement extends JPanel implements ActionListener {
     }
 
     private void newFilter2() {
-        RowFilter<AccountManagement.AllUsers, Object> rf = null;
-        //If current expression doesn't parse, don't update.
+        RowFilter<AdminManagement.AllUsers, Object> rf = null;
+        // If current expression doesn't parse, don't update.
         try {
             rf = RowFilter.regexFilter(filterText.getText());
         } catch (java.util.regex.PatternSyntaxException e) {
@@ -306,15 +303,15 @@ public class AccountManagement extends JPanel implements ActionListener {
     }
 
     class AllUsers extends AbstractTableModel {
-        private String[] columnNames = {"USER ID",
+        private String[] columnNames = { "USER ID",
                 "NAME",
                 "ID ACCOUNT",
                 "ADDRESS",
-                "ROLE"};
+                "ROLE" };
 
         private ArrayList<UserPOJO> data;
 
-        public AllUsers(){
+        public AllUsers() {
             data = new ArrayList<>();
             data = UserBUS.getAll();
         }
@@ -334,21 +331,20 @@ public class AccountManagement extends JPanel implements ActionListener {
         public Object getValueAt(int row, int col) {
             UserPOJO p = data.get(row);
 
-            if(col == 0){
+            if (col == 0) {
                 return p.getId();
             }
-            if(col == 1){
+            if (col == 1) {
                 return p.getName();
             }
-            if(col == 2){
+            if (col == 2) {
                 return p.getIdAccount();
             }
-            if(col == 3){
+            if (col == 3) {
                 return p.getAddress();
             }
 
-                return p.getRole();
-
+            return p.getRole();
 
         }
 
@@ -376,14 +372,14 @@ public class AccountManagement extends JPanel implements ActionListener {
     }
 
     class AllAccounts extends AbstractTableModel {
-        private String[] columnNames = {"ID",
+        private String[] columnNames = { "ID",
                 "USERNAME",
                 "PASSWORD",
-                "IS ACTIVE"};
+                "IS ACTIVE" };
 
         private ArrayList<AccountPOJO> data;
 
-        public AllAccounts(){
+        public AllAccounts() {
             data = new ArrayList<>();
             data = AccountBUS.getAll();
         }
@@ -403,18 +399,17 @@ public class AccountManagement extends JPanel implements ActionListener {
         public Object getValueAt(int row, int col) {
             AccountPOJO p = data.get(row);
 
-            if(col == 0){
+            if (col == 0) {
                 return p.getId();
             }
-            if(col == 1){
+            if (col == 1) {
                 return p.getUsername();
             }
 
-            if(col == 2){
+            if (col == 2) {
                 return p.getPassword();
             }
             return p.getIsActive();
-
 
         }
 
@@ -441,34 +436,34 @@ public class AccountManagement extends JPanel implements ActionListener {
         }
     }
 
-    public void hideFrame(){
+    public void hideFrame() {
         frame.setVisible(false);
     }
 
     public void createAndShowGUI() {
-        //Create and set up the window.
+        // Create and set up the window.
         frame = new JFrame("Admin - Book Management");
         frame.setPreferredSize(new Dimension(900, 600));
-        frame.setLayout(new BorderLayout(0,0));
+        frame.setLayout(new BorderLayout(0, 0));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //Create and set up the content pane.
-        AccountManagement newContentPane = new AccountManagement();
-        newContentPane.setOpaque(true); //content panes must be opaque
+        // Create and set up the content pane.
+        AdminManagement newContentPane = new AdminManagement();
+        newContentPane.setOpaque(true); // content panes must be opaque
         frame.setContentPane(newContentPane);
 
-        //Display the window.
+        // Display the window.
         frame.pack();
         frame.setVisible(true);
     }
 
-//    public static void main(String[] args) {
-//        //Schedule a job for the event-dispatching thread:
-//        //creating and showing this application's GUI.
-//        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-//                createAndShowGUI();
-//            }
-//        });
-//    }
+    // public static void main(String[] args) {
+    // //Schedule a job for the event-dispatching thread:
+    // //creating and showing this application's GUI.
+    // javax.swing.SwingUtilities.invokeLater(new Runnable() {
+    // public void run() {
+    // createAndShowGUI();
+    // }
+    // });
+    // }
 }
