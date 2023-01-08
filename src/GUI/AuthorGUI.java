@@ -41,29 +41,39 @@ public class AuthorGUI extends JFrame {
     private JTextField manageNameInput;
     private JTextField manageAddressInput;
     private JTextField managePhoneInput;
+    String username;
 
     /**
      * Launch the application.
-     */  
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                	AuthorGUI frame = new AuthorGUI();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+     */
+
+    // public static void main(String[] args) {
+    // EventQueue.invokeLater(new Runnable() {
+    // public void run() {
+    // try {
+    // AuthorGUI frame = new AuthorGUI();
+    // frame.setVisible(true);
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // }
+    // }
+    // });
+    // }
+
+    public String getUsername() {
+        return username;
     }
 
-    public void closeFrame(){
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void closeFrame() {
         this.setVisible(false);
         this.dispose();
     }
 
-    public void showAuthor(){
+    public void showAuthor() {
         DefaultTableModel model = (DefaultTableModel) listAuthorTable.getModel();
         model.setRowCount(0);
         model.fireTableDataChanged();
@@ -77,28 +87,27 @@ public class AuthorGUI extends JFrame {
             String phone = authorPojo.getPhone();
             boolean disable = authorPojo.isDisable();
             String disableText;
-            if(disable){
+            if (disable) {
                 disableText = "1";
-            }else{
-                disableText="0";
+            } else {
+                disableText = "0";
             }
-            String[] row = {id, name, address, phone,disableText};
+            String[] row = { id, name, address, phone, disableText };
             model.addRow(row);
         }
 
-        
     }
 
-    public void showAuthorSearch(String _id, String _name){
+    public void showAuthorSearch(String _id, String _name) {
         DefaultTableModel model = (DefaultTableModel) listAuthorTable.getModel();
         model.setRowCount(0);
         model.fireTableDataChanged();
         ArrayList<AuthorPOJO> listAuthor = new ArrayList<>();
         AuthorBUS authorBU = new AuthorBUS();
         listAuthor = authorBU.getAuthorBySearch(_id, _name);
-        if(listAuthor == null || listAuthor.size()==0){
+        if (listAuthor == null || listAuthor.size() == 0) {
             JOptionPane.showMessageDialog(null, "Author not found");
-        }else{
+        } else {
 
             for (AuthorPOJO authorPojo : listAuthor) {
                 String id = authorPojo.getId();
@@ -107,29 +116,29 @@ public class AuthorGUI extends JFrame {
                 String phone = authorPojo.getPhone();
                 boolean disable = authorPojo.isDisable();
                 String disableText;
-                if(disable){
+                if (disable) {
                     disableText = "1";
-                }else{
-                    disableText="0";
+                } else {
+                    disableText = "0";
                 }
-                String[] row = {id, name, address, phone,disableText};
+                String[] row = { id, name, address, phone, disableText };
                 model.addRow(row);
             }
         }
     }
 
-    public AuthorPOJO getAuthorSelected(){
+    public AuthorPOJO getAuthorSelected() {
         DefaultTableModel model = (DefaultTableModel) listAuthorTable.getModel();
         int i_row = listAuthorTable.getSelectedRow();
         String id = (String) model.getValueAt(i_row, 0);
         String name = (String) model.getValueAt(i_row, 1);
         String address = (String) model.getValueAt(i_row, 2);
-        String phone = (String)model.getValueAt(i_row, 3);
+        String phone = (String) model.getValueAt(i_row, 3);
         AuthorPOJO author = new AuthorPOJO(id, name, address, phone);
         return author;
     }
 
-    public void showAuthorSelected(java.awt.event.MouseEvent evt){
+    public void showAuthorSelected(java.awt.event.MouseEvent evt) {
         AuthorPOJO author = getAuthorSelected();
         this.manageIDInput.setText(author.getId());
         this.manageNameInput.setText(author.getName());
@@ -140,7 +149,8 @@ public class AuthorGUI extends JFrame {
     /**
      * Create the frame.
      */
-    public AuthorGUI() {
+    public AuthorGUI(String username) {
+        setUsername(username);
         setResizable(false);
         setTitle("Bookstore Management - Employee");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -176,20 +186,19 @@ public class AuthorGUI extends JFrame {
         JButton backButton = new JButton("Back");
         backButton.setBounds(10, 10, 101, 22);
 
-        backButton.addActionListener(new ActionListener(){
+        backButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
                 closeFrame();
-                UserControl userControl = new UserControl();
+                UserControl userControl = new UserControl(username);
                 userControl.setVisible(true);
             }
-            
+
         });
 
         contentPane.add(backButton);
-
 
         JSeparator separator_1 = new JSeparator();
         separator_1.setBounds(10, 30, 926, 2);
@@ -203,21 +212,19 @@ public class AuthorGUI extends JFrame {
         JButton displayAuthorBtn = new JButton("Display Author");
         displayAuthorBtn.setBounds(10, 60, 153, 41);
         sidebarPane.add(displayAuthorBtn);
-        
+
         displayAuthorBtn.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-				// must get model of table, so we can get/set row,column and so on
-				showAuthor();
-				
-			}
-        	
-		}
-        );
-        
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+
+                // must get model of table, so we can get/set row,column and so on
+                showAuthor();
+
+            }
+
+        });
 
         JSeparator separator_2 = new JSeparator();
         separator_2.setOrientation(SwingConstants.VERTICAL);
@@ -258,7 +265,7 @@ public class AuthorGUI extends JFrame {
         searchNameInput.setColumns(10);
 
         JButton searchNameBtn = new JButton("Search");
-        searchNameBtn.addActionListener(new ActionListener(){
+        searchNameBtn.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -267,7 +274,7 @@ public class AuthorGUI extends JFrame {
                 String nameFind = searchNameInput.getText();
                 showAuthorSearch(IdFind, nameFind);
             }
-            
+
         });
         searchNameBtn.setBounds(613, 5, 87, 21);
         searchControlPane.add(searchNameBtn);
@@ -296,25 +303,25 @@ public class AuthorGUI extends JFrame {
         JScrollPane listAuthorPane = new JScrollPane();
         listAuthorPane.setBounds(0, 93, 731, 205);
         manageAuthorPane.add(listAuthorPane);
-        
-        String[] columnNames = {"ID","Name","Address","Phone","Disable"};
-        
-        listAuthorTable = new JTable(){
+
+        String[] columnNames = { "ID", "Name", "Address", "Phone", "Disable" };
+
+        listAuthorTable = new JTable() {
             @Override
             public java.awt.Component prepareRenderer(TableCellRenderer renderer, int row, int col) {
                 java.awt.Component comp = super.prepareRenderer(renderer, row, col);
                 Object value = getModel().getValueAt(row, 4);
                 if (value.equals("1")) {
                     comp.setBackground(Color.RED);
-                }  else {
+                } else {
                     comp.setBackground(Color.WHITE);
                 }
                 return comp;
             }
         };
-        
+
         // Must set jtable'model to DefaultTableModel to add each row
-        listAuthorTable.setModel(new DefaultTableModel(new Object[][] {},columnNames));
+        listAuthorTable.setModel(new DefaultTableModel(new Object[][] {}, columnNames));
         listAuthorTable.setAutoCreateRowSorter(true);
         listAuthorTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -379,16 +386,16 @@ public class AuthorGUI extends JFrame {
                 String address = manageAddressInput.getText();
                 String phone = managePhoneInput.getText();
 
-                AuthorPOJO author = new AuthorPOJO(id,name,address,phone);
+                AuthorPOJO author = new AuthorPOJO(id, name, address, phone);
                 AuthorBUS authorBU = new AuthorBUS();
                 boolean res = authorBU.addAuthor(author);
-                if(res){
+                if (res) {
                     System.out.println("Add author successfully");
                     JOptionPane.showMessageDialog(contentPane, "Add author successfully");
                     DefaultTableModel model = (DefaultTableModel) listAuthorTable.getModel();
                     model.setRowCount(0);
                     showAuthor();
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(contentPane, "Add author failed");
                 }
             }
@@ -397,7 +404,7 @@ public class AuthorGUI extends JFrame {
         manageControlPane.add(manageAddBtn);
 
         JButton manageUpdateBtn = new JButton("Update");
-        manageUpdateBtn.addActionListener(new ActionListener(){
+        manageUpdateBtn.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -408,13 +415,13 @@ public class AuthorGUI extends JFrame {
                 String phone = managePhoneInput.getText();
                 AuthorPOJO author = new AuthorPOJO(id, name, address, phone);
                 AuthorBUS authorBU = new AuthorBUS();
-                boolean res =  authorBU.updateAuthor(author);
+                boolean res = authorBU.updateAuthor(author);
                 DefaultTableModel model = (DefaultTableModel) listAuthorTable.getModel();
                 model.setRowCount(0);
                 showAuthor();
-                if(res){
+                if (res) {
                     JOptionPane.showMessageDialog(null, "Update author successfully");
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Update author failed");
                 }
             }
@@ -428,7 +435,7 @@ public class AuthorGUI extends JFrame {
 
         JButton manageEnableBtn = new JButton("Enable");
 
-        manageEnableBtn.addActionListener(new ActionListener(){
+        manageEnableBtn.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -437,13 +444,13 @@ public class AuthorGUI extends JFrame {
                 AuthorPOJO author = getAuthorSelected();
                 AuthorBUS authorBU = new AuthorBUS();
                 boolean res = authorBU.enableAuthor(author);
-                showAuthor(); 
-                if(res){
+                showAuthor();
+                if (res) {
                     JOptionPane.showMessageDialog(null, "Enable successfully");
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Error");
                 }
-                  
+
             }
 
         });
@@ -452,7 +459,7 @@ public class AuthorGUI extends JFrame {
         manageControlPane.add(manageEnableBtn);
 
         JButton manageDisableBtn = new JButton("Disable");
-        manageDisableBtn.addActionListener(new ActionListener(){
+        manageDisableBtn.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -461,9 +468,9 @@ public class AuthorGUI extends JFrame {
                 AuthorBUS authorBU = new AuthorBUS();
                 boolean res = authorBU.disableAuthor(author);
                 showAuthor();
-                if(res){
+                if (res) {
                     JOptionPane.showMessageDialog(null, "Disable successfully");
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Error");
                 }
             }
@@ -472,15 +479,15 @@ public class AuthorGUI extends JFrame {
         manageControlPane.add(manageDisableBtn);
 
         JButton manageCancelBtn = new JButton("Cancel");
-        manageCancelBtn.addActionListener(new ActionListener(){
+        manageCancelBtn.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
                 closeFrame();
-                
+
             }
-            
+
         });
         manageCancelBtn.setBounds(628, 151, 93, 39);
         manageControlPane.add(manageCancelBtn);

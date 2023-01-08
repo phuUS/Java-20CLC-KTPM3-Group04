@@ -21,7 +21,7 @@ import java.util.*;
 public class PromotionManagement extends JFrame implements ActionListener {
     JPanel menuPane;
     JButton backButton;
-
+    String username;
 
     final int SIDEBAR_PANE_WIDTH = 170;
     JPanel sidebarPane;
@@ -32,53 +32,57 @@ public class PromotionManagement extends JFrame implements ActionListener {
     JButton upcomingPromotionsButton;
     JButton addPromotionButton;
 
-
     JPanel contentPane;
     JLabel contentLabel;
     JTable promotionTable;
     JScrollPane promotionTableScroll;
     PromotionManagement.AddPromotionFormPanel addPromotionFormPanel;
 
-    public static void main(String[] args) {
-        new PromotionManagement();
+    public String getUsername() {
+        return username;
     }
 
-    public void closeFrame(){
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void closeFrame() {
         this.setVisible(false);
         this.dispose();
     }
-    public PromotionManagement() {
+
+    public PromotionManagement(String username) {
+        setUsername(username);
         setTitle("Employee - Promotion Management");
         setSize(1000, 700);
         setLocationRelativeTo(null);
         setResizable(true);
-        setLayout(new BorderLayout(0,0));
+        setLayout(new BorderLayout(0, 0));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBackground(Color.BLUE);
         initComponent();
         this.setVisible(true);
     }
 
-    private void initComponent(){
+    private void initComponent() {
         menuPane = new JPanel();
         menuPane.setLayout(new FlowLayout(FlowLayout.LEFT));
         menuPane.setBackground(Color.CYAN);
 
         backButton = new JButton("Back");
         backButton.setFocusable(false);
-        backButton.addActionListener(new ActionListener(){
+        backButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
                 closeFrame();
-                UserControl userControl = new UserControl();
-            userControl.setVisible(true);
+                UserControl userControl = new UserControl(username);
+                userControl.setVisible(true);
             }
 
         });
         menuPane.add(backButton);
-
 
         sidebarPane = new JPanel();
         sidebarPane.setLayout(new BoxLayout(sidebarPane, BoxLayout.Y_AXIS));
@@ -117,7 +121,6 @@ public class PromotionManagement extends JFrame implements ActionListener {
         sidebarPane.add(upcomingPromotionsButton);
         sidebarPane.add(addPromotionButton);
 
-
         contentPane = new JPanel();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
@@ -129,26 +132,22 @@ public class PromotionManagement extends JFrame implements ActionListener {
 
         contentPane.add(contentLabel);
 
-
         add(menuPane, BorderLayout.NORTH);
         add(sidebarPane, BorderLayout.WEST);
         add(contentPane, BorderLayout.CENTER);
     }
 
     public JTable getPromotionTable() {
-        String[] col ={"ID", "NAME", "DESCRIPTION", "START DATE", "END DATE",
-                "PERCENT" , "APPLY FOR", "LIMIT", "STATUS", "ACTION", "EDIT", "BOOKS APPLIED"};
+        String[] col = { "ID", "NAME", "DESCRIPTION", "START DATE", "END DATE",
+                "PERCENT", "APPLY FOR", "LIMIT", "STATUS", "ACTION", "EDIT", "BOOKS APPLIED" };
         ArrayList<PromotionPOJO> promotionList = null;
-        if (selectedButton == allPromotionsButton){
+        if (selectedButton == allPromotionsButton) {
             promotionList = PromotionBUS.getAll();
-        }
-        else if (selectedButton == pastPromotionsButton){
+        } else if (selectedButton == pastPromotionsButton) {
             promotionList = PromotionBUS.getPastPromotions();
-        }
-        else if (selectedButton == currentPromotionsButton){
+        } else if (selectedButton == currentPromotionsButton) {
             promotionList = PromotionBUS.getCurrentPromotions();
-        }
-        else if (selectedButton == upcomingPromotionsButton){
+        } else if (selectedButton == upcomingPromotionsButton) {
             promotionList = PromotionBUS.getUpcomingPromotions();
         }
 
@@ -168,8 +167,8 @@ public class PromotionManagement extends JFrame implements ActionListener {
                 String status = promotion.isEnabled() ? "Enabled" : "Disabled";
                 String action = promotion.isEnabled() ? "Disable" : "Enable";
 
-                Object[] data = {id, name, description, startDate, endDate, percent, applyOption, limitOrders,
-                        status, action, "Edit", "Show"};
+                Object[] data = { id, name, description, startDate, endDate, percent, applyOption, limitOrders,
+                        status, action, "Edit", "Show" };
                 tableModel.addRow(data);
             }
         }
@@ -185,7 +184,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
     }
 
     // class methods
-    public void refreshPromotionTable(){
+    public void refreshPromotionTable() {
         contentLabel.setText(selectedButton.getText() + " List");
         contentPane.add(contentLabel);
         promotionTable = getPromotionTable();
@@ -201,10 +200,9 @@ public class PromotionManagement extends JFrame implements ActionListener {
         selectedButton = (JButton) e.getSource();
 
         if (selectedButton == allPromotionsButton || selectedButton == pastPromotionsButton
-                || selectedButton == currentPromotionsButton || selectedButton == upcomingPromotionsButton){
+                || selectedButton == currentPromotionsButton || selectedButton == upcomingPromotionsButton) {
             refreshPromotionTable();
-        }
-        else if (selectedButton == addPromotionButton){
+        } else if (selectedButton == addPromotionButton) {
             addPromotionFormPanel = new AddPromotionFormPanel();
             contentLabel.setText("Add A New Promotion");
             contentPane.add(contentLabel);
@@ -214,7 +212,6 @@ public class PromotionManagement extends JFrame implements ActionListener {
         repaint();
     }
 
-
     // local classes
     static class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -223,7 +220,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
         }
 
         public Component getTableCellRendererComponent(JTable table, Object value,
-                                                       boolean isSelected, boolean hasFocus, int row, int column) {
+                boolean isSelected, boolean hasFocus, int row, int column) {
             if (isSelected) {
                 setForeground(table.getSelectionForeground());
                 setBackground(table.getSelectionBackground());
@@ -255,7 +252,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value,
-                                                     boolean isSelected, int row, int column) {
+                boolean isSelected, int row, int column) {
             if (isSelected) {
                 button.setForeground(table.getSelectionForeground());
                 button.setBackground(table.getSelectionBackground());
@@ -279,14 +276,15 @@ public class PromotionManagement extends JFrame implements ActionListener {
                 if (Objects.equals(type, "Enable")) {
                     PromotionBUS.enable(promotionId);
                     refreshPromotionTable();
-                } else if (Objects.equals(type, "Disable")){
+                } else if (Objects.equals(type, "Disable")) {
                     PromotionBUS.disable(promotionId);
                     refreshPromotionTable();
-                } else if (Objects.equals(type, "Edit")){
+                } else if (Objects.equals(type, "Edit")) {
                     new EditPromotionDialog(PromotionManagement.this, "Edit Promotion", true, promotionId);
                     refreshPromotionTable();
                 } else if (Objects.equals(type, "Show")) {
-                    new ShowListOfBooksAppliedDialog(PromotionManagement.this, "List Of Books Applied", true, promotionId);
+                    new ShowListOfBooksAppliedDialog(PromotionManagement.this, "List Of Books Applied", true,
+                            promotionId);
                 } else {
                     System.out.println("ERROR: " + promotionTable.getValueAt(row, 0) + " - " + type);
                 }
@@ -342,7 +340,6 @@ public class PromotionManagement extends JFrame implements ActionListener {
         JLabel descriptionLabel;
         JTextField descriptionField;
 
-
         JLabel startDateLabel;
         UtilDateModel startDateModel;
         JDatePanelImpl startDatePanel;
@@ -375,8 +372,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
 
         GridBagConstraints gbc;
 
-
-        EditPromotionDialog(JFrame parent, String title, boolean modal, String promotionId){
+        EditPromotionDialog(JFrame parent, String title, boolean modal, String promotionId) {
             super(parent, title, modal);
             this.promotion = PromotionBUS.getOne(promotionId);
 
@@ -388,6 +384,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
             this.initComponent();
             this.setVisible(true);
         }
+
         public void initComponent() {
             headLabel = new JLabel("You are editing promotion ID: " + promotion.getId());
 
@@ -407,10 +404,11 @@ public class PromotionManagement extends JFrame implements ActionListener {
             p.put("text.year", "Year");
             startDateLabel = new JLabel("Start Date: ");
             startDateModel = new UtilDateModel();
-            if (promotion.getStartDate() != null){
+            if (promotion.getStartDate() != null) {
                 Calendar startDateCalendar = Calendar.getInstance();
                 startDateCalendar.setTime(promotion.getStartDate());
-                startDateModel.setDate(startDateCalendar.get(Calendar.YEAR), startDateCalendar.get(Calendar.MONTH), startDateCalendar.get(Calendar.DAY_OF_MONTH));
+                startDateModel.setDate(startDateCalendar.get(Calendar.YEAR), startDateCalendar.get(Calendar.MONTH),
+                        startDateCalendar.get(Calendar.DAY_OF_MONTH));
                 startDateModel.setSelected(true);
             }
             startDatePanel = new JDatePanelImpl(startDateModel, p);
@@ -418,10 +416,11 @@ public class PromotionManagement extends JFrame implements ActionListener {
 
             endDateLabel = new JLabel("End Date: ");
             endDateModel = new UtilDateModel();
-            if (promotion.getEndDate() != null){
+            if (promotion.getEndDate() != null) {
                 Calendar endDateCalendar = Calendar.getInstance();
                 endDateCalendar.setTime(promotion.getEndDate());
-                endDateModel.setDate(endDateCalendar.get(Calendar.YEAR), endDateCalendar.get(Calendar.MONTH), endDateCalendar.get(Calendar.DAY_OF_MONTH));
+                endDateModel.setDate(endDateCalendar.get(Calendar.YEAR), endDateCalendar.get(Calendar.MONTH),
+                        endDateCalendar.get(Calendar.DAY_OF_MONTH));
                 endDateModel.setSelected(true);
             }
             endDatePanel = new JDatePanelImpl(endDateModel, p);
@@ -433,21 +432,20 @@ public class PromotionManagement extends JFrame implements ActionListener {
                 public void keyPressed(KeyEvent ke) {
                     char key = ke.getKeyChar();
                     percentField.setEditable(key >= '0' && key <= '9' || key == '\b' || key == '.');
-                    try{
+                    try {
                         double currentPercent = Double.parseDouble(percentField.getText() + key);
-                        if (key == 'd' || currentPercent > 1.0){
+                        if (key == 'd' || currentPercent > 1.0) {
                             throw new Exception();
                         }
                         percentField.setEditable(true);
-                    }
-                    catch (Exception ex){
+                    } catch (Exception ex) {
                         percentField.setEditable(false);
                     }
                 }
             });
 
             applyOptionLabel = new JLabel("Apply For: ");
-            String[] applyOptions = {"All", "Only Official Customer"};
+            String[] applyOptions = { "All", "Only Official Customer" };
             applyOptionField = new JComboBox<>(applyOptions);
             applyOptionField.setSelectedItem(promotion.getApplyOption());
 
@@ -461,16 +459,15 @@ public class PromotionManagement extends JFrame implements ActionListener {
             });
 
             statusLabel = new JLabel("Status:");
-            String[] statuses = {"Enabled", "Disabled"};
+            String[] statuses = { "Enabled", "Disabled" };
             statusField = new JComboBox<>(statuses);
             String status = promotion.isEnabled() ? "Enabled" : "Disabled";
             statusField.setSelectedItem(status);
 
-
             allBooks = BookBUS.getAll();
             listBookLabel = new JLabel("List Of Books Applied: ");
             ArrayList<CheckboxListItem> listBookItem = new ArrayList<>();
-            for (BookPOJO book : allBooks){
+            for (BookPOJO book : allBooks) {
                 if (book.isEnabled()) {
                     String bookLabel = book.getId() + " - " + book.getName();
                     listBookItem.add(new CheckboxListItem(bookLabel));
@@ -482,11 +479,11 @@ public class PromotionManagement extends JFrame implements ActionListener {
             ArrayList<BookPOJO> listBookApplied = promotion.getListBook();
             ListModel<CheckboxListItem> listBookModel = listBookField.getModel();
 
-            for (int i = 0; i < listBookModel.getSize(); i++){
+            for (int i = 0; i < listBookModel.getSize(); i++) {
                 CheckboxListItem item = listBookModel.getElementAt(i);
                 String bookId = item.toString().split("-")[0].trim();
-                for (BookPOJO book : listBookApplied){
-                    if (bookId.equals(book.getId())){
+                for (BookPOJO book : listBookApplied) {
+                    if (bookId.equals(book.getId())) {
                         item.setSelected(true);
                     }
                 }
@@ -508,20 +505,18 @@ public class PromotionManagement extends JFrame implements ActionListener {
             listBookScroll = new JScrollPane();
             listBookScroll.setViewportView(listBookField);
 
-
             cancelButton = new JButton("Cancel");
             cancelButton.addActionListener(this);
 
             saveButton = new JButton("Save");
             saveButton.addActionListener(this);
 
-
             gbc = new GridBagConstraints();
             gbc.insets = new Insets(5, 20, 5, 20);
 
             gbc.fill = GridBagConstraints.BOTH;
 
-            //add labels
+            // add labels
             int i;
             gbc.gridx = 0;
             gbc.gridy = 0;
@@ -568,7 +563,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
             gbc.gridy = i++;
             add(listBookLabel, gbc);
 
-            //add fields
+            // add fields
             gbc.weightx = 2;
             i = 2;
             gbc.gridx = 1;
@@ -611,7 +606,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
             gbc.gridy = i++;
             add(listBookScroll, gbc);
 
-            //add buttons
+            // add buttons
             gbc.weightx = 1;
             gbc.gridx = 0;
             gbc.gridy = i;
@@ -625,13 +620,12 @@ public class PromotionManagement extends JFrame implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == cancelButton){
+            if (e.getSource() == cancelButton) {
                 this.dispose();
-            }
-            else if (e.getSource() == saveButton){
+            } else if (e.getSource() == saveButton) {
                 Date startDate = (Date) startDateField.getModel().getValue();
                 Date endDate = (Date) endDateField.getModel().getValue();
-                if ((startDate != null && endDate != null) && startDate.compareTo(endDate) > 0){
+                if ((startDate != null && endDate != null) && startDate.compareTo(endDate) > 0) {
                     JOptionPane.showMessageDialog(this, "Start date cannot be after end date!");
                     return;
                 }
@@ -701,8 +695,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
 
                     JOptionPane.showMessageDialog(this, "Update success!", "Success", JOptionPane.PLAIN_MESSAGE);
                     this.dispose();
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
                     System.out.println(Arrays.toString(ex.getStackTrace()));
                 }
@@ -805,7 +798,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
             });
 
             applyOptionLabel = new JLabel("Apply For: ");
-            String[] applyOptions = {"All", "Only Official Customer"};
+            String[] applyOptions = { "All", "Only Official Customer" };
             applyOptionField = new JComboBox<>(applyOptions);
 
             limitOrdersLabel = new JLabel("Limit First Orders: ");
@@ -818,14 +811,13 @@ public class PromotionManagement extends JFrame implements ActionListener {
             });
 
             statusLabel = new JLabel("Status:");
-            String[] statuses = {"Enabled", "Disabled"};
+            String[] statuses = { "Enabled", "Disabled" };
             statusField = new JComboBox<>(statuses);
-
 
             allBooks = BookBUS.getAll();
             listBookLabel = new JLabel("List Of Books Applied: ");
             ArrayList<CheckboxListItem> listBookItem = new ArrayList<>();
-            for (BookPOJO book : allBooks){
+            for (BookPOJO book : allBooks) {
                 if (book.isEnabled()) {
                     String bookLabel = book.getId() + " - " + book.getName();
                     listBookItem.add(new CheckboxListItem(bookLabel));
@@ -851,20 +843,18 @@ public class PromotionManagement extends JFrame implements ActionListener {
             listBookScroll = new JScrollPane();
             listBookScroll.setViewportView(listBookField);
 
-
             clearButton = new JButton("Clear");
             clearButton.addActionListener(this);
 
             addButton = new JButton("Add");
             addButton.addActionListener(this);
 
-
             gbc = new GridBagConstraints();
             gbc.insets = new Insets(5, 20, 5, 20);
 
             gbc.fill = GridBagConstraints.BOTH;
 
-            //add labels
+            // add labels
             int i;
             gbc.gridx = 0;
             gbc.gridy = 0;
@@ -911,7 +901,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
             gbc.gridy = i++;
             add(listBookLabel, gbc);
 
-            //add fields
+            // add fields
             gbc.weightx = 2;
             i = 2;
             gbc.gridx = 1;
@@ -954,7 +944,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
             gbc.gridy = i++;
             add(listBookScroll, gbc);
 
-            //add buttons
+            // add buttons
             gbc.weightx = 1;
             gbc.gridx = 0;
             gbc.gridy = i;
@@ -977,7 +967,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
                 limitOrdersField.setText("");
                 statusField.setSelectedIndex(0);
                 ListModel<CheckboxListItem> listBookModel = listBookField.getModel();
-                for (int i = 0; i < listBookModel.getSize(); i++){
+                for (int i = 0; i < listBookModel.getSize(); i++) {
                     listBookModel.getElementAt(i).setSelected(false);
                 }
                 revalidate();
@@ -986,7 +976,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
             } else if (e.getSource() == addButton) {
                 Date startDate = (Date) startDateField.getModel().getValue();
                 Date endDate = (Date) endDateField.getModel().getValue();
-                if ((startDate != null && endDate != null) && startDate.compareTo(endDate) > 0){
+                if ((startDate != null && endDate != null) && startDate.compareTo(endDate) > 0) {
                     JOptionPane.showMessageDialog(this, "Start date cannot be after end date!");
                     return;
                 }
@@ -1003,36 +993,36 @@ public class PromotionManagement extends JFrame implements ActionListener {
                             statusField.getSelectedItem() == "Enabled");
 
                     Boolean result = PromotionBUS.insertOne(promotion);
-                    if(!result){
-                        JOptionPane.showMessageDialog(this, "Error when adding new promotion!"
-                                , "Error", JOptionPane.WARNING_MESSAGE);
+                    if (!result) {
+                        JOptionPane.showMessageDialog(this, "Error when adding new promotion!", "Error",
+                                JOptionPane.WARNING_MESSAGE);
                         return;
                     }
 
                     ArrayList<String> listInsertBookId = new ArrayList<>();
                     ListModel<CheckboxListItem> listBookModel = listBookField.getModel();
-                    for (int i = 0; i < listBookModel.getSize(); i++){
+                    for (int i = 0; i < listBookModel.getSize(); i++) {
                         CheckboxListItem item = listBookModel.getElementAt(i);
                         String bookId = item.toString().split("-")[0].trim();
-                        if (item.isSelected()){
+                        if (item.isSelected()) {
                             listInsertBookId.add(bookId);
                         }
                     }
                     result = PromotionBUS.insertAppliedBooks(promotion.getId(), listInsertBookId);
-                    if (!result){
+                    if (!result) {
                         JOptionPane.showMessageDialog(this, "Error inserting applied" +
                                 " books into this promotion!", "Error", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
-                    JOptionPane.showMessageDialog(this, "Add new promotion success!", "Success", JOptionPane.PLAIN_MESSAGE);
-                } catch (Exception ex){
+                    JOptionPane.showMessageDialog(this, "Add new promotion success!", "Success",
+                            JOptionPane.PLAIN_MESSAGE);
+                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Invalid information, please check again!");
                     System.out.println(Arrays.toString(ex.getStackTrace()));
                 }
             }
         }
     }
-
 
     // Represents items in the list that can be selected
     class CheckboxListItem {
@@ -1056,7 +1046,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
         }
     }
 
-// Handles rendering cells in the list using a checkbox
+    // Handles rendering cells in the list using a checkbox
     class CheckboxListRenderer extends JCheckBox implements
             ListCellRenderer<CheckboxListItem> {
         @Override
@@ -1079,7 +1069,8 @@ public class PromotionManagement extends JFrame implements ActionListener {
         JLabel headLabel;
         JTable bookTable;
         JScrollPane bookTableScroll;
-        ShowListOfBooksAppliedDialog(JFrame parent, String title, boolean modal, String promotionId){
+
+        ShowListOfBooksAppliedDialog(JFrame parent, String title, boolean modal, String promotionId) {
             super(parent, title, modal);
             this.promotion = PromotionBUS.getOne(promotionId);
 
@@ -1092,10 +1083,11 @@ public class PromotionManagement extends JFrame implements ActionListener {
             this.setVisible(true);
         }
 
-        public void initComponent(){
+        public void initComponent() {
             headLabel = new JLabel("List of books applied for promotion with id: " + promotion.getId());
 
-            String[] col ={"ID","NAME","ID PUBLISHER", "PRICE", "STOCK", "TOTAL PURCHASE", "RELEASE DATE", "STATUS"};
+            String[] col = { "ID", "NAME", "ID PUBLISHER", "PRICE", "STOCK", "TOTAL PURCHASE", "RELEASE DATE",
+                    "STATUS" };
             ArrayList<BookPOJO> bookList = promotion.getListBook();
 
             bookTable = new JTable();
@@ -1111,7 +1103,7 @@ public class PromotionManagement extends JFrame implements ActionListener {
                 Date releaseDate = book.getReleaseDate();
                 String enabled = book.isEnabled() ? "Enabled" : "Disabled";
 
-                Object[] data = {id, name, idPublisher, price, stock, totalPurchase, releaseDate, enabled};
+                Object[] data = { id, name, idPublisher, price, stock, totalPurchase, releaseDate, enabled };
                 tableModel.addRow(data);
             }
             bookTable.setModel(tableModel);

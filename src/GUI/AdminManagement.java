@@ -57,8 +57,9 @@ public class AdminManagement extends JPanel implements ActionListener {
         this.username = username;
     }
 
-    public AdminManagement() {
+    public AdminManagement(String username) {
         super();
+        setUsername(username);
         setLayout(new BorderLayout(0, 0));
 
         menuPane = new JPanel();
@@ -300,7 +301,7 @@ public class AdminManagement extends JPanel implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Create and set up the content pane.
-        AdminManagement newContentPane = new AdminManagement();
+        AdminManagement newContentPane = new AdminManagement(username);
         newContentPane.setOpaque(true); // content panes must be opaque
         frame.setContentPane(newContentPane);
 
@@ -309,16 +310,16 @@ public class AdminManagement extends JPanel implements ActionListener {
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        // Schedule a job for the event-dispatching thread:
-        // creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                AdminManagement adminManagement = new AdminManagement();
-                adminManagement.createAndShowGUI();
-            }
-        });
-    }
+    // public static void main(String[] args) {
+    // // Schedule a job for the event-dispatching thread:
+    // // creating and showing this application's GUI.
+    // javax.swing.SwingUtilities.invokeLater(new Runnable() {
+    // public void run() {
+    // AdminManagement adminManagement = new AdminManagement(username);
+    // adminManagement.createAndShowGUI();
+    // }
+    // });
+    // }
 
     class InfoFormPanel extends JDialog implements ActionListener {
         JLabel headLabel;

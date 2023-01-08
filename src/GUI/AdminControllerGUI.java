@@ -158,7 +158,7 @@ public class AdminControllerGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                accountManagement = new AdminManagement();
+                accountManagement = new AdminManagement(username);
                 accountManagement.createAndShowGUI();
                 hideAdminControl();
             }
@@ -173,7 +173,7 @@ public class AdminControllerGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                viewRevenueStatisticsFrame = new ViewRevenueStatisticsFrame();
+                viewRevenueStatisticsFrame = new ViewRevenueStatisticsFrame(username);
                 viewRevenueStatisticsFrame.setVisible(true);
                 hideAdminControl();
             }

@@ -17,7 +17,7 @@ import java.util.*;
 public class BookManagement extends JFrame implements ActionListener {
     JPanel menuPane;
     JButton backButton;
-
+    String username;
 
     final int SIDEBAR_PANE_WIDTH = 170;
     JPanel sidebarPane;
@@ -28,36 +28,39 @@ public class BookManagement extends JFrame implements ActionListener {
     JButton outOfStockBooksButton;
     JButton addBookButton;
 
-
-
     JPanel contentPane;
     JLabel contentLabel;
     JTable bookTable;
     JScrollPane bookTableScroll;
     AddBookFormPanel addBookFormPanel;
 
-    public static void main(String[] args) {
-        new BookManagement();
+    public String getUsername() {
+        return username;
     }
 
-    public void CloseFrame(){
-		this.setVisible(false);
-		this.dispose();
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public BookManagement() {
+    public void CloseFrame() {
+        this.setVisible(false);
+        this.dispose();
+    }
+
+    public BookManagement(String username) {
+        setUsername(username);
         setTitle("Employee - Book Management");
         setSize(1000, 850);
         setLocationRelativeTo(null);
         setResizable(true);
-        setLayout(new BorderLayout(0,0));
+        setLayout(new BorderLayout(0, 0));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBackground(Color.BLUE);
         initComponent();
         this.setVisible(true);
     }
 
-    private void initComponent(){
+    private void initComponent() {
         menuPane = new JPanel();
         menuPane.setLayout(new FlowLayout(FlowLayout.LEFT));
         menuPane.setBackground(Color.CYAN);
@@ -66,7 +69,6 @@ public class BookManagement extends JFrame implements ActionListener {
         backButton.setFocusable(false);
         backButton.addActionListener(this);
         menuPane.add(backButton);
-
 
         sidebarPane = new JPanel();
         sidebarPane.setLayout(new BoxLayout(sidebarPane, BoxLayout.Y_AXIS));
@@ -99,14 +101,11 @@ public class BookManagement extends JFrame implements ActionListener {
         addBookButton.setFocusable(false);
         addBookButton.addActionListener(this);
 
-
         sidebarPane.add(allBooksButton);
         sidebarPane.add(newBooksButton);
         sidebarPane.add(hotBooksButton);
         sidebarPane.add(outOfStockBooksButton);
         sidebarPane.add(addBookButton);
-
-
 
         contentPane = new JPanel();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
@@ -119,7 +118,6 @@ public class BookManagement extends JFrame implements ActionListener {
 
         contentPane.add(contentLabel);
 
-
         add(menuPane, BorderLayout.NORTH);
         add(sidebarPane, BorderLayout.WEST);
         add(contentPane, BorderLayout.CENTER);
@@ -131,21 +129,19 @@ public class BookManagement extends JFrame implements ActionListener {
     // Hot books are books that have total purchase >= 100
     public JTable getBookTable() {
         ArrayList<BookPOJO> bookList = null;
-        if (selectedButton == allBooksButton){
+        if (selectedButton == allBooksButton) {
             bookList = BookBUS.getAll();
-        }
-        else if (selectedButton == newBooksButton){
+        } else if (selectedButton == newBooksButton) {
             bookList = BookBUS.getNewBooks();
-        }
-        else if (selectedButton == hotBooksButton){
+        } else if (selectedButton == hotBooksButton) {
             bookList = BookBUS.getHotBooks();
-        }
-        else if (selectedButton == outOfStockBooksButton){
+        } else if (selectedButton == outOfStockBooksButton) {
             bookList = BookBUS.getOutOfStockBooks();
         }
 
         JTable table = new JTable();
-        String[] col = {"ID", "NAME", "AUTHOR", "CATEGORY", "ID PUBLISHER", "PRICE", "STOCK", "TOTAL PURCHASE", "RELEASE DATE", "STATUS", "ACTION", "EDIT"};
+        String[] col = { "ID", "NAME", "AUTHOR", "CATEGORY", "ID PUBLISHER", "PRICE", "STOCK", "TOTAL PURCHASE",
+                "RELEASE DATE", "STATUS", "ACTION", "EDIT" };
         DefaultTableModel tableModel = new DefaultTableModel(col, 0);
 
         if (bookList != null) {
@@ -162,7 +158,8 @@ public class BookManagement extends JFrame implements ActionListener {
                 String enabled = book.isEnabled() ? "Enabled" : "Disabled";
                 String action = book.isEnabled() ? "Disable" : "Enable";
 
-                Object[] data = {id, name, author, category, idPublisher, price, stock, totalPurchase, releaseDate, enabled, action, "Edit"};
+                Object[] data = { id, name, author, category, idPublisher, price, stock, totalPurchase, releaseDate,
+                        enabled, action, "Edit" };
                 tableModel.addRow(data);
             }
         }
@@ -179,7 +176,7 @@ public class BookManagement extends JFrame implements ActionListener {
         return table;
     }
 
-    public void refreshBookTable(){
+    public void refreshBookTable() {
         contentLabel.setText(selectedButton.getText() + " List");
         contentPane.add(contentLabel);
         bookTable = getBookTable();
@@ -192,25 +189,23 @@ public class BookManagement extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         contentPane.removeAll();
-        selectedButton = (JButton)e.getSource();
+        selectedButton = (JButton) e.getSource();
         if (selectedButton == allBooksButton || selectedButton == newBooksButton
-                || selectedButton == hotBooksButton || selectedButton == outOfStockBooksButton){
+                || selectedButton == hotBooksButton || selectedButton == outOfStockBooksButton) {
             refreshBookTable();
-        }
-        else if (selectedButton == addBookButton){
+        } else if (selectedButton == addBookButton) {
             addBookFormPanel = new AddBookFormPanel();
             contentLabel.setText("Add A New Book");
             contentPane.add(contentLabel);
             contentPane.add(addBookFormPanel);
-        } else if(selectedButton == backButton){
-            UserControl userControl = new UserControl();
+        } else if (selectedButton == backButton) {
+            UserControl userControl = new UserControl(username);
             userControl.setVisible(true);
             this.setVisible(false);
         }
         revalidate();
         repaint();
     }
-
 
     // local classes
     static class ButtonRenderer extends JButton implements TableCellRenderer {
@@ -220,7 +215,7 @@ public class BookManagement extends JFrame implements ActionListener {
         }
 
         public Component getTableCellRendererComponent(JTable table, Object value,
-                                                       boolean isSelected, boolean hasFocus, int row, int column) {
+                boolean isSelected, boolean hasFocus, int row, int column) {
             if (isSelected) {
                 setForeground(table.getSelectionForeground());
                 setBackground(table.getSelectionBackground());
@@ -252,7 +247,7 @@ public class BookManagement extends JFrame implements ActionListener {
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value,
-                                                     boolean isSelected, int row, int column) {
+                boolean isSelected, int row, int column) {
             if (isSelected) {
                 button.setForeground(table.getSelectionForeground());
                 button.setBackground(table.getSelectionBackground());
@@ -273,17 +268,17 @@ public class BookManagement extends JFrame implements ActionListener {
         public Object getCellEditorValue() {
             if (isPushed) {
                 String bookId = bookTable.getValueAt(row, 0).toString();
-                if (Objects.equals(type, "Show Author")){
+                if (Objects.equals(type, "Show Author")) {
                     new ShowAuthorListDialog(BookManagement.this, "Author List", true, bookId);
                 } else if (Objects.equals(type, "Show Category")) {
                     new ShowCategoryListDialog(BookManagement.this, "Category List", true, bookId);
                 } else if (Objects.equals(type, "Enable")) {
                     BookBUS.enable(bookId);
                     refreshBookTable();
-                } else if (Objects.equals(type, "Disable")){
+                } else if (Objects.equals(type, "Disable")) {
                     BookBUS.disable(bookId);
                     refreshBookTable();
-                } else if (Objects.equals(type, "Edit")){
+                } else if (Objects.equals(type, "Edit")) {
                     new EditBookDialog(BookManagement.this, "Edit Book", true, bookId);
                     refreshBookTable();
                 } else {
@@ -352,8 +347,7 @@ public class BookManagement extends JFrame implements ActionListener {
 
         GridBagConstraints gbc;
 
-
-        EditBookDialog(JFrame parent, String title, boolean modal, String bookId){
+        EditBookDialog(JFrame parent, String title, boolean modal, String bookId) {
             super(parent, title, modal);
             this.book = BookBUS.getOne(bookId);
 
@@ -365,6 +359,7 @@ public class BookManagement extends JFrame implements ActionListener {
             this.initComponent();
             this.setVisible(true);
         }
+
         public void initComponent() {
             headLabel = new JLabel("You are editing book ID: " + book.getId());
 
@@ -378,7 +373,7 @@ public class BookManagement extends JFrame implements ActionListener {
             allAuthors = new AuthorBUS().getAllAuthor();
             listAuthorLabel = new JLabel("Author List: ");
             ArrayList<CheckboxListItem> listAuthorItem = new ArrayList<>();
-            for (AuthorPOJO author : allAuthors){
+            for (AuthorPOJO author : allAuthors) {
                 if (!author.isDisable()) {
                     String authorLabel = author.getId() + " - " + author.getName();
                     listAuthorItem.add(new CheckboxListItem(authorLabel));
@@ -390,11 +385,11 @@ public class BookManagement extends JFrame implements ActionListener {
             ArrayList<AuthorPOJO> listAuthor = AuthorBUS.getAuthorListOfBook(book.getId());
             ListModel<CheckboxListItem> listAuthorModel = listAuthorField.getModel();
 
-            for (int i = 0; i < listAuthorModel.getSize(); i++){
+            for (int i = 0; i < listAuthorModel.getSize(); i++) {
                 CheckboxListItem item = listAuthorModel.getElementAt(i);
                 String authorId = item.toString().split("-")[0].trim();
-                for (AuthorPOJO author : listAuthor){
-                    if (authorId.equals(author.getId())){
+                for (AuthorPOJO author : listAuthor) {
+                    if (authorId.equals(author.getId())) {
                         item.setSelected(true);
                     }
                 }
@@ -419,7 +414,7 @@ public class BookManagement extends JFrame implements ActionListener {
             allCategories = CategoryBUS.getAll();
             listCategoryLabel = new JLabel("Category List: ");
             ArrayList<CheckboxListItem> listCategoryItem = new ArrayList<>();
-            for (CategoryPOJO category : allCategories){
+            for (CategoryPOJO category : allCategories) {
                 if (category.isIsEnabled()) {
                     String CategoryLabel = category.getId() + " - " + category.getName();
                     listCategoryItem.add(new CheckboxListItem(CategoryLabel));
@@ -431,11 +426,11 @@ public class BookManagement extends JFrame implements ActionListener {
             ArrayList<CategoryPOJO> listCategory = CategoryBUS.getCategoryListOfBook(book.getId());
             ListModel<CheckboxListItem> listCategoryModel = listCategoryField.getModel();
 
-            for (int i = 0; i < listCategoryModel.getSize(); i++){
+            for (int i = 0; i < listCategoryModel.getSize(); i++) {
                 CheckboxListItem item = listCategoryModel.getElementAt(i);
                 String categoryId = item.toString().split("-")[0].trim();
-                for (CategoryPOJO category : listCategory){
-                    if (categoryId.equals(category.getId())){
+                for (CategoryPOJO category : listCategory) {
+                    if (categoryId.equals(category.getId())) {
                         item.setSelected(true);
                     }
                 }
@@ -461,8 +456,8 @@ public class BookManagement extends JFrame implements ActionListener {
             ArrayList<PublisherPOJO> publishers = PublisherBUS.getAll();
             ArrayList<String> publisherModel = new ArrayList<>();
             String selectedItem = "";
-            for (PublisherPOJO publisher : publishers){
-                if (publisher.getId().equals(book.getIdPublisher())){
+            for (PublisherPOJO publisher : publishers) {
+                if (publisher.getId().equals(book.getIdPublisher())) {
                     selectedItem = publisher.getId() + " - " + publisher.getName();
                 }
                 publisherModel.add(publisher.getId() + " - " + publisher.getName());
@@ -503,21 +498,21 @@ public class BookManagement extends JFrame implements ActionListener {
             p.put("text.year", "Year");
             releaseDateLabel = new JLabel("Release Date: ");
             releaseDateModel = new UtilDateModel();
-            if (book.getReleaseDate() != null){
+            if (book.getReleaseDate() != null) {
                 Calendar releaseDate = Calendar.getInstance();
                 releaseDate.setTime(book.getReleaseDate());
-                releaseDateModel.setDate(releaseDate.get(Calendar.YEAR), releaseDate.get(Calendar.MONTH), releaseDate.get(Calendar.DAY_OF_MONTH));
+                releaseDateModel.setDate(releaseDate.get(Calendar.YEAR), releaseDate.get(Calendar.MONTH),
+                        releaseDate.get(Calendar.DAY_OF_MONTH));
                 releaseDateModel.setSelected(true);
             }
             releaseDatePanel = new JDatePanelImpl(releaseDateModel, p);
             releaseDateField = new JDatePickerImpl(releaseDatePanel, new PromotionManagement.DateLabelFormatter());
 
             statusLabel = new JLabel("Status:");
-            String[] statuses = {"Enabled", "Disabled"};
+            String[] statuses = { "Enabled", "Disabled" };
             statusField = new JComboBox<>(statuses);
             String status = book.isEnabled() ? "Enabled" : "Disabled";
             statusField.setSelectedItem(status);
-
 
             cancelButton = new JButton("Cancel");
             cancelButton.addActionListener(this);
@@ -525,13 +520,12 @@ public class BookManagement extends JFrame implements ActionListener {
             saveButton = new JButton("Save");
             saveButton.addActionListener(this);
 
-
             gbc = new GridBagConstraints();
             gbc.insets = new Insets(5, 20, 5, 20);
 
             gbc.fill = GridBagConstraints.BOTH;
 
-            //add labels
+            // add labels
             int i;
             gbc.gridx = 0;
             gbc.gridy = 0;
@@ -578,7 +572,7 @@ public class BookManagement extends JFrame implements ActionListener {
             gbc.gridy = i;
             add(statusLabel, gbc);
 
-            //add fields
+            // add fields
             gbc.weightx = 2;
             i = 2;
             gbc.gridx = 1;
@@ -621,7 +615,7 @@ public class BookManagement extends JFrame implements ActionListener {
             gbc.gridy = i++;
             add(statusField, gbc);
 
-            //add buttons
+            // add buttons
             gbc.weightx = 1;
             gbc.gridx = 0;
             gbc.gridy = i;
@@ -635,10 +629,9 @@ public class BookManagement extends JFrame implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == cancelButton){
+            if (e.getSource() == cancelButton) {
                 this.dispose();
-            }
-            else if (e.getSource() == saveButton){
+            } else if (e.getSource() == saveButton) {
                 try {
                     BookPOJO modifiedBook = new BookPOJO(
                             idField.getText(),
@@ -748,8 +741,7 @@ public class BookManagement extends JFrame implements ActionListener {
 
                     JOptionPane.showMessageDialog(this, "Update success!", "Success", JOptionPane.PLAIN_MESSAGE);
                     this.dispose();
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
                     System.out.println(Arrays.toString(ex.getStackTrace()));
                 }
@@ -757,7 +749,7 @@ public class BookManagement extends JFrame implements ActionListener {
         }
     }
 
-    class AddBookFormPanel extends JPanel implements ActionListener{
+    class AddBookFormPanel extends JPanel implements ActionListener {
         JLabel headLabel;
 
         JLabel idLabel;
@@ -801,11 +793,11 @@ public class BookManagement extends JFrame implements ActionListener {
 
         GridBagConstraints gbc;
 
-
-        AddBookFormPanel(){
+        AddBookFormPanel() {
             setLayout(new GridBagLayout());
             this.initComponent();
         }
+
         public void initComponent() {
             headLabel = new JLabel("Book's information");
 
@@ -818,7 +810,7 @@ public class BookManagement extends JFrame implements ActionListener {
             allAuthors = new AuthorBUS().getAllAuthor();
             listAuthorLabel = new JLabel("Author List: ");
             ArrayList<CheckboxListItem> listAuthorItem = new ArrayList<>();
-            for (AuthorPOJO author : allAuthors){
+            for (AuthorPOJO author : allAuthors) {
                 if (!author.isDisable()) {
                     String authorLabel = author.getId() + " - " + author.getName();
                     listAuthorItem.add(new CheckboxListItem(authorLabel));
@@ -847,7 +839,7 @@ public class BookManagement extends JFrame implements ActionListener {
             allCategories = CategoryBUS.getAll();
             listCategoryLabel = new JLabel("Category List: ");
             ArrayList<CheckboxListItem> listCategoryItem = new ArrayList<>();
-            for (CategoryPOJO category : allCategories){
+            for (CategoryPOJO category : allCategories) {
                 if (category.isIsEnabled()) {
                     String CategoryLabel = category.getId() + " - " + category.getName();
                     listCategoryItem.add(new CheckboxListItem(CategoryLabel));
@@ -876,7 +868,7 @@ public class BookManagement extends JFrame implements ActionListener {
             publisherIdLabel = new JLabel("Publisher:");
             ArrayList<PublisherPOJO> publishers = PublisherBUS.getAll();
             ArrayList<String> publisherModel = new ArrayList<>();
-            for (PublisherPOJO publisher : publishers){
+            for (PublisherPOJO publisher : publishers) {
                 publisherModel.add(publisher.getId() + " - " + publisher.getName());
             }
             publisherIdField = new JComboBox<>(publisherModel.toArray(new String[0]));
@@ -909,7 +901,7 @@ public class BookManagement extends JFrame implements ActionListener {
             });
 
             statusLabel = new JLabel("Status:");
-            String[] statuses = {"Enabled", "Disabled"};
+            String[] statuses = { "Enabled", "Disabled" };
             statusField = new JComboBox<>(statuses);
 
             Properties p = new Properties();
@@ -927,13 +919,12 @@ public class BookManagement extends JFrame implements ActionListener {
             addButton = new JButton("Add");
             addButton.addActionListener(this);
 
-
             gbc = new GridBagConstraints();
             gbc.insets = new Insets(5, 20, 5, 20);
 
             gbc.fill = GridBagConstraints.BOTH;
 
-            //add labels
+            // add labels
             int i;
             gbc.gridx = 0;
             gbc.gridy = 0;
@@ -980,7 +971,7 @@ public class BookManagement extends JFrame implements ActionListener {
             gbc.gridy = i;
             add(statusLabel, gbc);
 
-            //add fields
+            // add fields
             gbc.weightx = 2;
             i = 2;
             gbc.gridx = 1;
@@ -1023,7 +1014,7 @@ public class BookManagement extends JFrame implements ActionListener {
             gbc.gridy = i++;
             add(statusField, gbc);
 
-            //add buttons
+            // add buttons
             gbc.weightx = 1;
             gbc.gridx = 0;
             gbc.gridy = i;
@@ -1036,15 +1027,15 @@ public class BookManagement extends JFrame implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == clearButton){
+            if (e.getSource() == clearButton) {
                 idField.setText("");
                 nameField.setText("");
                 ListModel<CheckboxListItem> listAuthorModel = listAuthorField.getModel();
-                for (int i = 0; i < listAuthorModel.getSize(); i++){
+                for (int i = 0; i < listAuthorModel.getSize(); i++) {
                     listAuthorModel.getElementAt(i).setSelected(false);
                 }
                 ListModel<CheckboxListItem> listCategoryModel = listCategoryField.getModel();
-                for (int i = 0; i < listCategoryModel.getSize(); i++){
+                for (int i = 0; i < listCategoryModel.getSize(); i++) {
                     listCategoryModel.getElementAt(i).setSelected(false);
                 }
                 publisherIdField.setSelectedIndex(0);
@@ -1054,8 +1045,7 @@ public class BookManagement extends JFrame implements ActionListener {
                 statusField.setSelectedIndex(0);
                 revalidate();
                 repaint();
-            }
-            else if (e.getSource() == addButton){
+            } else if (e.getSource() == addButton) {
                 try {
                     BookPOJO book = new BookPOJO(
                             idField.getText(),
@@ -1067,9 +1057,9 @@ public class BookManagement extends JFrame implements ActionListener {
                             (Date) releaseDateField.getModel().getValue(),
                             statusField.getSelectedItem() == "Enabled");
                     Boolean result = BookBUS.insertOne(book);
-                    if (!result){
-                        JOptionPane.showMessageDialog(this, "Error when adding new book!"
-                                , "Error", JOptionPane.WARNING_MESSAGE);
+                    if (!result) {
+                        JOptionPane.showMessageDialog(this, "Error when adding new book!", "Error",
+                                JOptionPane.WARNING_MESSAGE);
                         return;
                     }
 
@@ -1106,7 +1096,7 @@ public class BookManagement extends JFrame implements ActionListener {
                     }
 
                     JOptionPane.showMessageDialog(this, "Add new book success!", "Success", JOptionPane.PLAIN_MESSAGE);
-                } catch (Exception ex){
+                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
                     System.out.println(Arrays.toString(ex.getStackTrace()));
                 }
@@ -1160,7 +1150,8 @@ public class BookManagement extends JFrame implements ActionListener {
         JLabel headLabel;
         JTable authorTable;
         JScrollPane authorTableScroll;
-        ShowAuthorListDialog(JFrame parent, String title, boolean modal, String bookId){
+
+        ShowAuthorListDialog(JFrame parent, String title, boolean modal, String bookId) {
             super(parent, title, modal);
             this.book = BookBUS.getOne(bookId);
 
@@ -1173,10 +1164,10 @@ public class BookManagement extends JFrame implements ActionListener {
             this.setVisible(true);
         }
 
-        public void initComponent(){
+        public void initComponent() {
             headLabel = new JLabel("Author list of book: " + book.getId() + " - " + book.getName());
 
-            String[] col ={"ID","NAME","ADDRESS", "PHONE NUMBER", "STATUS"};
+            String[] col = { "ID", "NAME", "ADDRESS", "PHONE NUMBER", "STATUS" };
             authorTable = new JTable();
             DefaultTableModel tableModel = new DefaultTableModel(col, 0);
 
@@ -1188,7 +1179,7 @@ public class BookManagement extends JFrame implements ActionListener {
                 String phone = author.getPhone();
                 String enabled = author.isDisable() ? "Disabled" : "Enabled";
 
-                Object[] data = {id, name, address, phone, enabled};
+                Object[] data = { id, name, address, phone, enabled };
                 tableModel.addRow(data);
             }
             authorTable.setModel(tableModel);
@@ -1206,7 +1197,8 @@ public class BookManagement extends JFrame implements ActionListener {
         JLabel headLabel;
         JTable categoryTable;
         JScrollPane categoryTableScroll;
-        ShowCategoryListDialog(JFrame parent, String title, boolean modal, String bookId){
+
+        ShowCategoryListDialog(JFrame parent, String title, boolean modal, String bookId) {
             super(parent, title, modal);
             this.book = BookBUS.getOne(bookId);
 
@@ -1219,10 +1211,10 @@ public class BookManagement extends JFrame implements ActionListener {
             this.setVisible(true);
         }
 
-        public void initComponent(){
+        public void initComponent() {
             headLabel = new JLabel("Category list of book: " + book.getId() + " - " + book.getName());
 
-            String[] col ={"ID","NAME","DESCRIPTION", "STATUS"};
+            String[] col = { "ID", "NAME", "DESCRIPTION", "STATUS" };
             categoryTable = new JTable();
             DefaultTableModel tableModel = new DefaultTableModel(col, 0);
 
@@ -1233,7 +1225,7 @@ public class BookManagement extends JFrame implements ActionListener {
                 String description = category.getDescription();
                 String enabled = category.isIsEnabled() ? "Enabled" : "Disabled";
 
-                Object[] data = {id, name, description, enabled};
+                Object[] data = { id, name, description, enabled };
                 tableModel.addRow(data);
             }
             categoryTable.setModel(tableModel);
@@ -1246,4 +1238,3 @@ public class BookManagement extends JFrame implements ActionListener {
     }
 
 }
-

@@ -156,7 +156,7 @@ public class UserControl extends JFrame {
 		userControlLabel.setBounds(221, 41, 212, 31);
 		contentPane.add(userControlLabel);
 
-		JLabel greetingLabel = new JLabel("Welcome, Username");
+		JLabel greetingLabel = new JLabel("Welcome, " + username);
 		greetingLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		greetingLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		greetingLabel.setBounds(209, 66, 268, 31);
@@ -168,7 +168,7 @@ public class UserControl extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				bookControlGUI = new BookManagement();
+				bookControlGUI = new BookManagement(username);
 				hideUserControl();
 			}
 
@@ -182,7 +182,7 @@ public class UserControl extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				promotionControlGUI = new PromotionManagement();
+				promotionControlGUI = new PromotionManagement(username);
 				promotionControlGUI.setVisible(true);
 				hideUserControl();
 			}
@@ -198,7 +198,7 @@ public class UserControl extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				importSheetControlGUI = new importSheet();
+				importSheetControlGUI = new importSheet(username);
 				importSheetControlGUI.setVisible(true);
 				hideUserControl();
 			}
@@ -213,7 +213,7 @@ public class UserControl extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				authorControlGUI = new AuthorGUI();
+				authorControlGUI = new AuthorGUI(username);
 				authorControlGUI.setVisible(true);
 				hideUserControl();
 			}
@@ -228,7 +228,7 @@ public class UserControl extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				orderControlGUI = new ViewOrdersFrame();
+				orderControlGUI = new ViewOrdersFrame(username);
 				orderControlGUI.setVisible(true);
 				hideUserControl();
 			}
@@ -243,9 +243,8 @@ public class UserControl extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				bookCategoryControlGUI = new ViewBookCategoriesFrame();
+				bookCategoryControlGUI = new ViewBookCategoriesFrame(username);
 				bookCategoryControlGUI.setVisible(true);
-				hideUserControl();
 			}
 
 		});
@@ -258,7 +257,7 @@ public class UserControl extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				publisherControlGUI = new publisherGUI();
+				publisherControlGUI = new publisherGUI(username);
 				publisherControlGUI.setVisible(true);
 				hideUserControl();
 			}
