@@ -27,6 +27,8 @@ public class LoginForm extends JFrame implements ActionListener {
     JPasswordField pass;
     JTextField user;
     JLabel message;
+    AdminControllerGUI adminControllerGUI;
+    UserControl userControl;
 
     public LoginForm() {
         // setUndecorated(true);
@@ -134,7 +136,7 @@ public class LoginForm extends JFrame implements ActionListener {
         if (role == 0) {
             message.setForeground(Color.blue);
             message.setText("Login as user successfully!");
-            UserControl userControl = new UserControl(userValue);
+            userControl = new UserControl(userValue);
             userControl.setVisible(true);
             setVisible(false);
             return;
@@ -142,7 +144,7 @@ public class LoginForm extends JFrame implements ActionListener {
         if (role == 1) {
             message.setForeground(Color.blue);
             message.setText("Login as admin successfully!");
-            AdminControllerGUI adminControllerGUI = new AdminControllerGUI(userValue);
+            adminControllerGUI = new AdminControllerGUI(userValue);
             adminControllerGUI.setVisible(true);
             setVisible(false);
             return;

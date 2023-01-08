@@ -340,6 +340,12 @@ public class AdminControllerGUI extends JFrame {
                 roleField.setText("");
             } else if (e.getSource() == addButton) {
                 try {
+                    if (nameField.getText().isEmpty() || addressField.getText().isEmpty()
+                            || roleField.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Something went wrong..., please review the " +
+                                "information", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
                     int roleSet = 0;
                     if (roleField.getText().contentEquals("Admin")) {
                         roleSet = 1;
