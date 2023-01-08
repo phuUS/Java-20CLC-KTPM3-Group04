@@ -110,6 +110,9 @@ public class AdminManagement extends JPanel implements ActionListener {
 
         contentLabel = new JLabel();
         contentLabel.setText("WELCOME TO THE ADMIN PAGE!");
+        contentLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+        contentLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        contentLabel.setBounds(221, 41, 212, 31);
         contentPane.add(contentLabel);
         accountTableScroll = new JScrollPane();
         add(menuPane, BorderLayout.NORTH);
@@ -268,10 +271,12 @@ public class AdminManagement extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        contentPane.removeAll();
         selectedButton = (JButton) e.getSource();
         if (selectedButton == allAccountsButton) {
+            contentPane.removeAll();
             refreshAccountTable();
+        } else if (selectedButton == addNewAccount) {
+            new CreateNewAccountUserFrame();
         }
         revalidate();
         repaint();
@@ -642,5 +647,263 @@ public class AdminManagement extends JPanel implements ActionListener {
 
             return true;
         }
+    }
+
+    class CreateNewAccountUserFrame extends JDialog implements ActionListener {
+        JLabel headLabel;
+
+        JLabel idLabel;
+        JTextField idField;
+
+        JLabel usernameLabel;
+        JTextField usernameField;
+
+        JLabel passwordLabel;
+        JTextField passwordField;
+
+        JLabel idUserLabel;
+        JTextField idUserField;
+
+        JLabel nameLabel;
+        JTextField nameField;
+
+        JLabel addressLabel;
+        JTextField addressField;
+
+        JLabel roleLabel;
+        JTextField roleField;
+
+        JButton clearButton;
+        JButton addButton;
+
+        GridBagConstraints gbc;
+        UserPOJO user;
+
+        CreateNewAccountUserFrame() {
+
+            this.setSize(700, 400);
+            this.setLocationRelativeTo(null);
+            this.setResizable(true);
+            setLayout(new GridBagLayout());
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            this.initComponent();
+            this.setVisible(true);
+        }
+
+        public UserPOJO getUser(String userId) {
+            ArrayList<UserPOJO> userList = UserBUS.getAll();
+            for (UserPOJO userI : userList) {
+                if (userI.getId().equals(userId)) {
+                    return userI;
+                }
+            }
+            return null;
+        }
+
+        public void initComponent() {
+            headLabel = new JLabel("Add a new user");
+            headLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+            headLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            headLabel.setBounds(221, 41, 212, 31);
+
+            idLabel = new JLabel("ID Account:");
+            idField = new JTextField();
+
+            usernameLabel = new JLabel("Username:");
+            usernameField = new JTextField();
+
+            passwordLabel = new JLabel("Password:");
+            passwordField = new JTextField();
+
+            nameLabel = new JLabel("Name:");
+            nameField = new JTextField();
+
+            addressLabel = new JLabel("Address:");
+            addressField = new JTextField();
+
+            idUserLabel = new JLabel("ID User:");
+            idUserField = new JTextField();
+
+            roleLabel = new JLabel("Role: ");
+            roleField = new JTextField("Admin /or/ User");
+
+            clearButton = new JButton("Clear");
+            clearButton.addActionListener(this);
+
+            addButton = new JButton("Update");
+            addButton.addActionListener(this);
+
+            gbc = new GridBagConstraints();
+            gbc.insets = new Insets(5, 20, 5, 20);
+
+            gbc.fill = GridBagConstraints.BOTH;
+
+            // add labels
+            int i;
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            add(headLabel, gbc);
+            i = 2;
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(idLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(usernameLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(passwordLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(idUserLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(nameLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(addressLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(roleLabel, gbc);
+
+            // add fields
+            gbc.weightx = 2;
+            i = 2;
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(idField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(usernameField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(passwordField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(idUserField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(nameField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(addressField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(roleField, gbc);
+
+            // add buttons
+            gbc.weightx = 1;
+            gbc.gridx = 0;
+            gbc.gridy = i;
+            add(clearButton, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i;
+            add(addButton, gbc);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == clearButton) {
+                idField.setText("");
+                usernameField.setText("");
+                passwordField.setText("");
+                idUserField.setText("");
+                nameField.setText("");
+                addressField.setText("");
+                roleField.setText("");
+            } else if (e.getSource() == addButton) {
+                if (idField.getText().isEmpty() || usernameField.getText().isEmpty() ||
+                        passwordField.getText().isEmpty() || idUserField.getText().isEmpty()
+                        || nameField.getText().isEmpty() || addressField.getText().isEmpty()
+                        || roleField.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Something went wrong..., please review the " +
+                            "information", "Error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                if (isExistAccountId(idField.getText())) {
+                    JOptionPane.showMessageDialog(this, "Something went wrong..., please review the " +
+                            "ID Account field", "Error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                if (isExistUserId(idUserField.getText())) {
+                    JOptionPane.showMessageDialog(this, "Something went wrong..., please review the " +
+                            "ID User field", "Error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                if (!roleField.getText().trim().equals("Admin") && !roleField.getText().trim().equals("User")) {
+                    JOptionPane.showMessageDialog(this, "Something went wrong..., please review the " +
+                            "role field, it must be the Admin or User", "Error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                try {
+                    int roleSet = 0;
+                    if (roleField.getText().trim().contentEquals("Admin")) {
+                        roleSet = 1;
+                    }
+                    AccountPOJO accountNew = new AccountPOJO(idField.getText(), usernameField.getText(),
+                            passwordField.getText(), true);
+                    AccountBUS accountBUS = new AccountBUS();
+                    Boolean result = accountBUS.insert(accountNew);
+                    UserPOJO newUser = new UserPOJO(
+                            idUserField.getText(),
+                            nameField.getText(),
+                            idField.getText(),
+                            addressField.getText(),
+                            roleSet);
+                    UserBUS userBUS = new UserBUS();
+                    result = userBUS.insert(newUser);
+                    if (result) {
+                        JOptionPane.showMessageDialog(this, "Update success!", "Success",
+                                JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Something went wrong..., please review the " +
+                                "information", "Error", JOptionPane.WARNING_MESSAGE);
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
+                    System.out.println(Arrays.toString(ex.getStackTrace()));
+                }
+            }
+
+        }
+
+    }
+
+    private Boolean isExistAccountId(String accountId) {
+        ArrayList<AccountPOJO> accList = AccountBUS.getAll();
+        for (AccountPOJO acc : accList) {
+            if (acc.getId().equals(accountId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Boolean isExistUserId(String userId) {
+        ArrayList<UserPOJO> userList = UserBUS.getAll();
+
+        for (UserPOJO userCheck : userList) {
+            if (userCheck.getId().equals(userId)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

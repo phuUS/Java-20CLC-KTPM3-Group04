@@ -107,4 +107,34 @@ public class AccountDAO {
         return result;
     }
 
+    public Boolean insert(AccountPOJO account) {
+        boolean result = false;
+        Connection connection = Database.createConnection();
+        try {
+            String sql = "INSERT INTO account(id, username, password, is_active) VALUES (?,?,?,1);";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, account.getId());
+            statement.setString(2, account.getUsername());
+            statement.setString(3, account.getPassword());
+
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated > 0) {
+                result = true;
+            }
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
 }

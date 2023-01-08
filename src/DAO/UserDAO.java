@@ -113,4 +113,36 @@ public class UserDAO {
     }
     return result;
   }
+
+  public Boolean insert(UserPOJO user) {
+    boolean result = false;
+    Connection connection = Database.createConnection();
+    try {
+      String sql = "INSERT INTO user(id, name, id_account, address, role) VALUES (?,?,?,?,?);";
+
+      PreparedStatement statement = connection.prepareStatement(sql);
+      statement.setString(1, user.getId());
+      statement.setString(2, user.getName());
+      statement.setString(3, user.getIdAccount());
+      statement.setString(4, user.getAddress());
+      statement.setInt(5, user.getRole());
+
+      int rowsUpdated = statement.executeUpdate();
+      if (rowsUpdated > 0) {
+        result = true;
+      }
+      statement.close();
+    } catch (SQLException ex) {
+      Logger.getLogger(UserPOJO.class.getName()).log(Level.SEVERE, null, ex);
+    } finally {
+      if (connection != null) {
+        try {
+          connection.close();
+        } catch (SQLException ex) {
+          ex.printStackTrace();
+        }
+      }
+    }
+    return result;
+  }
 }
