@@ -3,6 +3,7 @@ package GUI;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import BUS.AccountBUS;
@@ -23,6 +24,23 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import BUS.BookBUS;
+import BUS.PublisherBUS;
+import POJO.BookPOJO;
+import POJO.PublisherPOJO;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.*;
+
 public class AdminControllerGUI extends JFrame {
 
 	private JPanel contentPane;
@@ -30,6 +48,7 @@ public class AdminControllerGUI extends JFrame {
 
 	String username;
 	AccountManagement accountManagement;
+	UserPOJO user;
 
 	BookManagement bookControlGUI;
 	PromotionManagement promotionControlGUI;
@@ -72,6 +91,7 @@ public UserPOJO getUser(){
 	 */
 	public AdminControllerGUI(String username) {
 		this.setUsername(username);
+		user = this.getUser();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 663, 493);
 		contentPane = new JPanel();
@@ -89,6 +109,16 @@ public UserPOJO getUser(){
 		
 		JButton editInfoBtn = new JButton("Edit info");
 		editInfoBtn.setBounds(109, 10, 85, 21);
+		editInfoBtn.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				InfoFormPanel infoFormPanel = new InfoFormPanel();
+				infoFormPanel.setVisible(true);
+			}
+
+		});
 		topPane.add(editInfoBtn);
 		
 		JLabel userControlLabel = new JLabel("USER CONTROL");
@@ -161,4 +191,180 @@ public UserPOJO getUser(){
 	private void hideAdminControl(){
 		this.setVisible(false);
 	}
+
+	class InfoFormPanel extends JDialog implements ActionListener{
+        JLabel headLabel;
+
+        JLabel idLabel;
+        JTextField idField;
+
+        JLabel nameLabel;
+        JTextField nameField;
+
+        JLabel addressLabel;
+        JTextField addressField;
+
+        JLabel idAccountLabel;
+        JTextField idAccountField;
+
+        JLabel roleLabel;
+        JTextField roleField;
+
+        JButton clearButton;
+        JButton addButton;
+
+        GridBagConstraints gbc;
+
+
+        InfoFormPanel(){
+            this.setSize(700, 300);
+            this.setLocationRelativeTo(null);
+            this.setResizable(true);
+            setLayout(new GridBagLayout());
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            this.initComponent();
+            this.setVisible(true);
+        }
+        public void initComponent() {
+            headLabel = new JLabel("User's information");
+			headLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+		headLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		headLabel.setBounds(221, 41, 212, 31);
+
+            idLabel = new JLabel("ID:");
+            idField = new JTextField(user.getId());
+
+            nameLabel = new JLabel("Name:");
+            nameField = new JTextField(user.getName());
+
+            ArrayList<PublisherPOJO> publishers = PublisherBUS.getAll();
+            ArrayList<String> publisherModel = new ArrayList<>();
+            for (PublisherPOJO publisher : publishers){
+                publisherModel.add(publisher.getId() + " - " + publisher.getName());
+            }
+
+            addressLabel = new JLabel("Address:");
+            addressField = new JTextField(user.getAddress());
+
+            idAccountLabel = new JLabel("ID Account:");
+            idAccountField = new JTextField(user.getIdAccount());
+            roleLabel = new JLabel("Role: ");
+			String roleString = user.getRole() == 1 ? "Admin" : "User";
+            roleField = new JTextField(roleString);
+            
+
+            clearButton = new JButton("Clear");
+            clearButton.addActionListener(this);
+
+            addButton = new JButton("Update");
+            addButton.addActionListener(this);
+
+
+            gbc = new GridBagConstraints();
+            gbc.insets = new Insets(5, 20, 5, 20);
+
+            gbc.fill = GridBagConstraints.BOTH;
+
+            //add labels
+            int i;
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            add(headLabel, gbc);
+            i = 2;
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(idLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(nameLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(addressLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(roleLabel, gbc);
+
+			gbc.gridx = 0;
+            gbc.gridy = i++;
+            add(idAccountLabel, gbc);
+
+            
+
+            //add fields
+            gbc.weightx = 2;
+            i = 2;
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(idField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(nameField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(addressField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(roleField, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i++;
+            add(idAccountField, gbc);
+
+            
+
+            //add buttons
+            gbc.weightx = 1;
+            gbc.gridx = 0;
+            gbc.gridy = i;
+            add(clearButton, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = i;
+            add(addButton, gbc);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == clearButton){
+                idField.setText("");
+                nameField.setText("");
+                addressField.setText("");
+                roleField.setText("");
+                idAccountField.setText("");
+            }
+            else if (e.getSource() == addButton){
+                try {
+                    UserPOJO book = new UserPOJO(
+                            idField.getText(),
+                            nameField.getText(),
+							idAccountField.getText(),
+							addressField.getText(),
+							Boolean.parseBoolean(roleField.getText())
+					);
+					UserBUS userBUS = new UserBUS();
+                    Boolean result = userBUS.update(book);
+                    if (result){
+                        JOptionPane.showMessageDialog(this, "Update success!", "Success", JOptionPane.PLAIN_MESSAGE);
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this, "Something went wrong..., please review the " +
+                                "information", "Error", JOptionPane.WARNING_MESSAGE);
+                    }
+                } catch (Exception ex){
+                    JOptionPane.showMessageDialog(this, "Invalid Information, please check again!");
+                    System.out.println(Arrays.toString(ex.getStackTrace()));
+                }
+            }
+
+        }
+
+    }
+
 }

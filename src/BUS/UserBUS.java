@@ -15,4 +15,10 @@ public class UserBUS {
     public static ArrayList<UserPOJO> getAll(){
         return UserDAO.getAll();
     }
+
+    public boolean update(UserPOJO userPOJO){
+      UserDAO userDao = new UserDAO();
+      
+      return userDao.update(userPOJO); 
+    }
 }

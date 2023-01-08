@@ -82,4 +82,38 @@ public class UserDAO {
 
     return listUser;
   }
+
+  public Boolean update(UserPOJO user){
+    boolean result = false;
+    Connection connection = Database.createConnection();
+    try {
+            String sql = "UPDATE user SET name=?, id_account=?, address=?, role=? WHERE id=?;";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            int i = 1;
+            statement.setString(i++, user.getName());
+            statement.setString(i++, user.getIdAccount());
+            statement.setString(i++, user.getAddress());
+            statement.setInt(i++, user.getRole());
+            statement.setString(i, user.getId());
+
+             int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated > 0) {
+                result = true;
+            }
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserPOJO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
+  }
 }
