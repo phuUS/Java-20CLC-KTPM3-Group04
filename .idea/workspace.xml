@@ -5,10 +5,96 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4e409101-b9b5-47be-8c5b-e6ac23aff927" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/Java-20CLC-KTPM3-Group04.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Java-20CLC-KTPM3-Group04.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/.idea/Java-20CLC-KTPM3-Group04.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/BUS/AccountBUS.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/BUS/BookBUS.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/BUS/PromotionBUS.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/BUS/PublisherBUS.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/BUS/UserBUS.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/AccountDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/BookDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/Database.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/PromotionDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/PublisherDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/DAO/UserDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$AllAccounts.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement$AllUsers.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/AccountManagement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement$AddBookFormPanel$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement$AddBookFormPanel$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement$AddBookFormPanel$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement$AddBookFormPanel.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement$ButtonEditor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement$ButtonRenderer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement$EditBookDialog$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement$EditBookDialog$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement$EditBookDialog$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement$EditBookDialog.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/BookManagement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/LoginForm$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/LoginForm.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement$AddPromotionFormPanel$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement$AddPromotionFormPanel$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement$AddPromotionFormPanel$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement$AddPromotionFormPanel.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement$ButtonEditor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement$ButtonRenderer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement$CheckboxListItem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement$CheckboxListRenderer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement$DateLabelFormatter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement$EditPromotionDialog$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement$EditPromotionDialog$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement$EditPromotionDialog$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement$EditPromotionDialog.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement$ShowListOfBooksAppliedDialog.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/PromotionManagement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/GUI/SpringUtilities.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/POJO/AccountPOJO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/POJO/BookPOJO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/POJO/PromotionPOJO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/POJO/PublisherPOJO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/POJO/UserPOJO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/images/cover.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/src/main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/src/view/author$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/src/view/author$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/src/view/author.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/src/view/importSheet$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/src/view/importSheet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/src/view/listImportSheet$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/src/view/listImportSheet$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/src/view/listImportSheet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/src/view/publisher$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/src/view/publisher$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Java-20CLC-KTPM3-Group04/src/view/publisher.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BUS/AuthorBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/AuthorBUS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BUS/BookBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/BookBUS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BUS/CategoryBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/CategoryBUS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BUS/PublisherBUS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BUS/PublisherBUS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO/AuthorDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/AuthorDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DAO/BookDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/BookDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO/CategoryDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/CategoryDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO/PublisherDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/PublisherDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/BookManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/BookManagement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI/PromotionManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/PromotionManagement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/importSheet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/importSheet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/publisherGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/publisherGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,30 +120,52 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "E:/OneDrive/Documents/GitHub/Java-20CLC-KTPM3-Group04/jcalendar-1.1.4.jar",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
-}</component>
-  <component name="RunManager">
-    <configuration name="main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="src.main" />
+}]]></component>
+  <component name="RunManager" selected="Application.PromotionManagement">
+    <configuration name="BookManagement" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="GUI.BookManagement" />
       <module name="Java-20CLC-KTPM3-Group04" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="PromotionManagement" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="GUI.PromotionManagement" />
+      <module name="Java-20CLC-KTPM3-Group04" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="GUI.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.PromotionManagement" />
+      <item itemvalue="Application.BookManagement" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.main" />
+        <item itemvalue="Application.BookManagement" />
+        <item itemvalue="Application.PromotionManagement" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="9e9be398-25c1-4b9b-9134-c8660574923b" name="Changes" comment="" />
+      <changelist id="4e409101-b9b5-47be-8c5b-e6ac23aff927" name="Changes" comment="" />
       <created>1670218075379</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
