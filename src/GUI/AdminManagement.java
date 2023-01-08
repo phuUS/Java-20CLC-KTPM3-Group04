@@ -2,6 +2,9 @@ package GUI;
 
 import BUS.AccountBUS;
 import BUS.UserBUS;
+import DAO.AccountDAO;
+import GUI.AdminManagement.ButtonEditor;
+import GUI.AdminManagement.ButtonRenderer;
 import POJO.AccountPOJO;
 import POJO.UserPOJO;
 
@@ -12,43 +15,34 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AdminManagement extends JPanel implements ActionListener {
     private JPanel menuPane;
     private JButton backBtn;
+    JTable accountTable;
 
     private JButton editInfoButton;
+    JButton selectedButton;
 
     private final int SIDEBARPANE_WIDTH = 180;
     private JPanel sidebarPane;
     private JButton allAccountsButton;
     private JButton allUserButton;
+    JScrollPane accountTableScroll;
 
     private JButton addNewAccount;
 
     private JPanel contentPane;
     private JLabel contentLabel;
-    private JScrollPane scrollPane;
-    private JPanel form;
-
-    private JPanel menu;
     static JFrame frame;
-
-    private boolean DEBUG = false;
-    private JTable table;
-    private JTextField filterText;
-    private JTextField statusText;
-
-    private TableRowSorter<AdminManagement.AllAccounts> sorter1;
-    private AdminManagement.AllAccounts model1;
-
-    private TableRowSorter<AdminManagement.AllUsers> sorter2;
-    private AdminManagement.AllUsers model2;
 
     private String username;
     private AdminControllerGUI adminControllerGUI;
@@ -121,323 +115,154 @@ public class AdminManagement extends JPanel implements ActionListener {
         contentLabel = new JLabel();
         contentLabel.setText("WELCOME TO THE ADMIN PAGE!");
         contentPane.add(contentLabel);
-
+        accountTableScroll = new JScrollPane();
         add(menuPane, BorderLayout.NORTH);
         add(sidebarPane, BorderLayout.WEST);
         add(contentPane, BorderLayout.CENTER);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    public JTable getTableAllAccounts() {
+        ArrayList<AccountPOJO> accountList = AccountDAO.getAll();
 
-        if (e.getSource() == allAccountsButton) {
-            if (contentPane != null) {
-                contentPane.removeAll();
-            }
-            this.getTableAllAccountsButton();
+        JTable table = new JTable();
+        String[] col = { "ID", "USERNAME", "PASSWORD", "STATUS", "ACTION", "EDIT" };
+        DefaultTableModel tableModel = new DefaultTableModel(col, 0);
 
-        } else if (e.getSource() == allUserButton) {
-            if (contentPane != null) {
-                contentPane.removeAll();
-            }
-            this.getTableAllUsersButton();
-        } else if (e.getSource() == editInfoButton) {
-            if (contentPane != null) {
-                contentPane.removeAll();
-            }
-            this.getInfoEditScreen();
-        }
-    }
+        if (accountList != null) {
+            for (AccountPOJO account : accountList) {
+                String id = account.getId();
+                String username = account.getUsername();
+                String password = account.getPassword();
+                Boolean isActive = account.getIsActive();
 
-    private void getInfoEditScreen() {
-        ArrayList<AccountPOJO> accountList = AccountBUS.getAll();
-        ArrayList<UserPOJO> userList = UserBUS.getAll();
-        UserPOJO userTemp = null;
-        for (AccountPOJO a : accountList) {
-            if (a != null && a.getUsername().equals(username)) {
-                userTemp = userList.stream().filter(u -> a.getId().equals(u.getIdAccount())).findFirst().orElse(null);
+                String enabled = isActive ? "Enabled" : "Disabled";
+                String status = isActive ? "Active" : "Inactive";
+                Object[] data = { id, username, password, status, enabled, "Edit" };
+                tableModel.addRow(data);
             }
         }
-        JLabel label = new JLabel("Admin Information");
-        contentPane.add(label);
-    }
-
-    private void getTableAllAccountsButton() {
-        model1 = new AdminManagement.AllAccounts();
-        sorter1 = new TableRowSorter<AdminManagement.AllAccounts>(model1);
-        table = new JTable(model1);
-        table.setRowSorter(sorter1);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.getSelectionModel().addListSelectionListener(
-                new ListSelectionListener() {
-                    public void valueChanged(ListSelectionEvent event) {
-                        int viewRow = table.getSelectedRow();
-                        if (viewRow < 0) {
-                            statusText.setText("");
-                        } else {
-                            int modelRow = table.convertRowIndexToModel(viewRow);
-                            statusText.setText(
-                                    String.format("Selected Row in view: %d. " +
-                                            "Selected Row in model: %d.",
-                                            viewRow, modelRow));
-                        }
-                    }
-                });
-        scrollPane = new JScrollPane(table);
-        form = new JPanel(new SpringLayout());
-        menu = new JPanel(new SpringLayout());
-        JButton disableButton = new JButton("Disable");
-        menu.add(disableButton);
-        JButton enableButton = new JButton("Enable");
-        menu.add(enableButton);
-        JButton resetPassButton = new JButton("Reset password");
-        menu.add(resetPassButton);
-        menu.setBackground(Color.red);
-        SpringUtilities.makeCompactGrid(menu, 1, 3, 6, 6, 6, 6);
-        JLabel l1 = new JLabel("Filter Text:", SwingConstants.TRAILING);
-        form.add(l1);
-        filterText = new JTextField();
-        filterText.getDocument().addDocumentListener(
-                new DocumentListener() {
-                    public void changedUpdate(DocumentEvent e) {
-                        newFilter1();
-                    }
-
-                    public void insertUpdate(DocumentEvent e) {
-                        newFilter1();
-                    }
-
-                    public void removeUpdate(DocumentEvent e) {
-                        newFilter1();
-                    }
-                });
-        l1.setLabelFor(filterText);
-        form.add(filterText);
-        JLabel l2 = new JLabel("Status:", SwingConstants.TRAILING);
-        form.add(l2);
-        statusText = new JTextField();
-        l2.setLabelFor(statusText);
-        form.add(statusText);
-        SpringUtilities.makeCompactGrid(form, 2, 2, 6, 6, 6, 6);
-
-        contentPane.add(scrollPane);
-        contentPane.add(menu);
-        contentPane.add(form);
-        revalidate();
-    }
-
-    private void getTableAllUsersButton() {
-        model2 = new AdminManagement.AllUsers();
-        sorter2 = new TableRowSorter<AdminManagement.AllUsers>(model2);
-        table = new JTable(model2);
-        table.setRowSorter(sorter2);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.getSelectionModel().addListSelectionListener(
-                new ListSelectionListener() {
-                    public void valueChanged(ListSelectionEvent event) {
-                        int viewRow = table.getSelectedRow();
-                        if (viewRow < 0) {
-                            statusText.setText("");
-                        } else {
-                            int modelRow = table.convertRowIndexToModel(viewRow);
-                            statusText.setText(
-                                    String.format("Selected Row in view: %d. " +
-                                            "Selected Row in model: %d.",
-                                            viewRow, modelRow));
-                        }
-                    }
-                });
-        scrollPane = new JScrollPane(table);
-        form = new JPanel(new SpringLayout());
-        JLabel l1 = new JLabel("Filter Text:", SwingConstants.TRAILING);
-        form.add(l1);
-        filterText = new JTextField();
-        filterText.getDocument().addDocumentListener(
-                new DocumentListener() {
-                    public void changedUpdate(DocumentEvent e) {
-                        newFilter2();
-                    }
-
-                    public void insertUpdate(DocumentEvent e) {
-                        newFilter2();
-                    }
-
-                    public void removeUpdate(DocumentEvent e) {
-                        newFilter2();
-                    }
-                });
-        l1.setLabelFor(filterText);
-        form.add(filterText);
-        JLabel l2 = new JLabel("Status:", SwingConstants.TRAILING);
-        form.add(l2);
-        statusText = new JTextField();
-        l2.setLabelFor(statusText);
-        form.add(statusText);
-        SpringUtilities.makeCompactGrid(form, 2, 2, 6, 6, 6, 6);
-
-        contentPane.add(scrollPane);
-        contentPane.add(form);
-        revalidate();
-    }
-
-    private void newFilter1() {
-        RowFilter<AdminManagement.AllAccounts, Object> rf = null;
-        // If current expression doesn't parse, don't update.
-        try {
-            rf = RowFilter.regexFilter(filterText.getText());
-        } catch (java.util.regex.PatternSyntaxException e) {
-            return;
-        }
-        sorter1.setRowFilter(rf);
-    }
-
-    private void newFilter2() {
-        RowFilter<AdminManagement.AllUsers, Object> rf = null;
-        // If current expression doesn't parse, don't update.
-        try {
-            rf = RowFilter.regexFilter(filterText.getText());
-        } catch (java.util.regex.PatternSyntaxException e) {
-            return;
-        }
-        sorter2.setRowFilter(rf);
-    }
-
-    class AllUsers extends AbstractTableModel {
-        private String[] columnNames = { "USER ID",
-                "NAME",
-                "ID ACCOUNT",
-                "ADDRESS",
-                "ROLE" };
-
-        private ArrayList<UserPOJO> data;
-
-        public AllUsers() {
-            data = new ArrayList<>();
-            data = UserBUS.getAll();
-        }
-
-        public int getColumnCount() {
-            return columnNames.length;
-        }
-
-        public int getRowCount() {
-            return data.size();
-        }
-
-        public String getColumnName(int col) {
-            return columnNames[col];
-        }
-
-        public Object getValueAt(int row, int col) {
-            UserPOJO p = data.get(row);
-
-            if (col == 0) {
-                return p.getId();
-            }
-            if (col == 1) {
-                return p.getName();
-            }
-            if (col == 2) {
-                return p.getIdAccount();
-            }
-            if (col == 3) {
-                return p.getAddress();
-            }
-
-            return p.getRole();
-
-        }
-
-        public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
-        }
-
-        public boolean isCellEditable(int row, int col) {
-            if (col < 2) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-
-        public void setValueAt(Object value, int row, int col) {
-            if (DEBUG) {
-                System.out.println("Setting value at " + row + "," + col
-                        + " to " + value
-                        + " (an instance of "
-                        + value.getClass() + ")");
-            }
-
-        }
-    }
-
-    class AllAccounts extends AbstractTableModel {
-        private String[] columnNames = { "ID",
-                "USERNAME",
-                "PASSWORD",
-                "IS ACTIVE" };
-
-        private ArrayList<AccountPOJO> data;
-
-        public AllAccounts() {
-            data = new ArrayList<>();
-            data = AccountBUS.getAll();
-        }
-
-        public int getColumnCount() {
-            return columnNames.length;
-        }
-
-        public int getRowCount() {
-            return data.size();
-        }
-
-        public String getColumnName(int col) {
-            return columnNames[col];
-        }
-
-        public Object getValueAt(int row, int col) {
-            AccountPOJO p = data.get(row);
-
-            if (col == 0) {
-                return p.getId();
-            }
-            if (col == 1) {
-                return p.getUsername();
-            }
-
-            if (col == 2) {
-                return p.getPassword();
-            }
-            return p.getIsActive();
-
-        }
-
-        public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
-        }
-
-        public boolean isCellEditable(int row, int col) {
-            if (col < 2) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-
-        public void setValueAt(Object value, int row, int col) {
-            if (DEBUG) {
-                System.out.println("Setting value at " + row + "," + col
-                        + " to " + value
-                        + " (an instance of "
-                        + value.getClass() + ")");
-            }
-
-        }
+        table.setModel(tableModel);
+        table.setAutoCreateRowSorter(true);
+        table.getColumn("ACTION").setCellRenderer(new ButtonRenderer());
+        table.getColumn("ACTION").setCellEditor(new ButtonEditor(new JCheckBox()));
+        table.getColumn("EDIT").setCellRenderer(new ButtonRenderer());
+        table.getColumn("EDIT").setCellEditor(new ButtonEditor(new JCheckBox()));
+        return table;
     }
 
     public void hideFrame() {
         frame.setVisible(false);
+    }
+
+    static class ButtonRenderer extends JButton implements TableCellRenderer {
+
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            if (isSelected) {
+                setForeground(table.getSelectionForeground());
+                setBackground(table.getSelectionBackground());
+            } else {
+                setForeground(table.getForeground());
+                setBackground(UIManager.getColor("Button.background"));
+            }
+            setText((value == null) ? "" : value.toString());
+            return this;
+        }
+    }
+
+    class ButtonEditor extends DefaultCellEditor {
+        protected JButton button;
+
+        private String label;
+
+        private boolean isPushed;
+        int row;
+        int column;
+        String type;
+
+        public ButtonEditor(JCheckBox checkBox) {
+            super(checkBox);
+            button = new JButton();
+            button.setOpaque(true);
+            button.addActionListener(e -> fireEditingStopped());
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                boolean isSelected, int row, int column) {
+            if (isSelected) {
+                button.setForeground(table.getSelectionForeground());
+                button.setBackground(table.getSelectionBackground());
+            } else {
+                button.setForeground(table.getForeground());
+                button.setBackground(table.getBackground());
+            }
+            label = (value == null) ? "" : value.toString();
+            button.setText(label);
+            type = label;
+            isPushed = true;
+            this.row = row;
+            this.column = column;
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            if (isPushed) {
+                String accountId = accountTable.getValueAt(row, 0).toString();
+                // if (Objects.equals(type, "Enable")) {
+                // AccountBUS.enable(accountId);
+                // refreshBookTable();
+                // } else if (Objects.equals(type, "Disable")) {
+                // AccountBUS.disable(accountId);
+                // refreshAccountTable();
+                // } else if (Objects.equals(type, "Edit")) {
+                // new EditBookDialog(AdminManagement.this, "Edit Book", true, accountId);
+                // refreshAccountTable();
+                // } else {
+                // System.out.println("Unknown action: " + accountTable.getValueAt(row, 0) + " -
+                // " + type);
+                // }
+            }
+            isPushed = false;
+            return label;
+        }
+
+        @Override
+        public boolean stopCellEditing() {
+            isPushed = false;
+            return super.stopCellEditing();
+        }
+
+        @Override
+        protected void fireEditingStopped() {
+            super.fireEditingStopped();
+        }
+    }
+
+    public void refreshAccountTable() {
+        contentLabel.setText(selectedButton.getText() + " List");
+        contentPane.add(contentLabel);
+        accountTable = getTableAllAccounts();
+        accountTableScroll.setViewportView(accountTable);
+        contentPane.add(accountTableScroll);
+        revalidate();
+        repaint();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        contentPane.removeAll();
+        selectedButton = (JButton) e.getSource();
+        if (selectedButton == allAccountsButton) {
+            refreshAccountTable();
+        }
+        revalidate();
+        repaint();
     }
 
     public void createAndShowGUI() {
@@ -457,13 +282,14 @@ public class AdminManagement extends JPanel implements ActionListener {
         frame.setVisible(true);
     }
 
-    // public static void main(String[] args) {
-    // //Schedule a job for the event-dispatching thread:
-    // //creating and showing this application's GUI.
-    // javax.swing.SwingUtilities.invokeLater(new Runnable() {
-    // public void run() {
-    // createAndShowGUI();
-    // }
-    // });
-    // }
+    public static void main(String[] args) {
+        // Schedule a job for the event-dispatching thread:
+        // creating and showing this application's GUI.
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                AdminManagement adminManagement = new AdminManagement();
+                adminManagement.createAndShowGUI();
+            }
+        });
+    }
 }
