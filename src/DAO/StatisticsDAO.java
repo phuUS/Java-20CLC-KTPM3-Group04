@@ -373,6 +373,10 @@ public class StatisticsDAO {
             //Set parameters
             pstmt.setInt(1, month);
             pstmt.setInt(2, year);
+            pstmt.setInt(3, month);
+            pstmt.setInt(4, year);
+            pstmt.setInt(5, month);
+            pstmt.setInt(6, year);
             
             ResultSet rs = pstmt.executeQuery();
             
